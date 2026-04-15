@@ -59,7 +59,7 @@ export default function CinematicBackground({ questionNumber, temperament }: Cin
   const particlesRef = useRef<Particle[]>([])
   const runesRef = useRef<Rune[]>([])
   const timeRef = useRef(0)
-  const rafRef = useRef<number>()
+  const rafRef = useRef<number | undefined>(undefined)
 
   // Calculate color temperature based on question progress (warm gold -> cold blue)
   const getProgressColor = useCallback((progress: number) => {

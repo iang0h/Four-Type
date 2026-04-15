@@ -64,7 +64,7 @@ export function InteractiveTemperamentCard({
   );
 }
 
-export function StatProgressBar({ stat, percentage, color }: TemperamentStats) {
+export function StatProgressBar({ trait, percentage, color }: TemperamentStats) {
   const [displayPercentage, setDisplayPercentage] = useState(0);
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export function StatProgressBar({ stat, percentage, color }: TemperamentStats) {
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center">
-        <span className="text-sm font-semibold text-white">{stat}</span>
+        <span className="text-sm font-semibold text-white">{trait}</span>
         <span className="text-xs font-bold" style={{ color }}>
           {displayPercentage}%
         </span>
