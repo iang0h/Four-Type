@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { BookOpen, Brain, Sparkles, Users } from 'lucide-react'
@@ -73,6 +73,17 @@ const features = [
 
 export default function HomePage() {
   const [hoveredTemp, setHoveredTemp] = useState<string | null>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+    // Attempt to play — required on some mobile browsers that ignore autoPlay attribute
+    video.muted = true
+    video.play().catch(() => {
+      // Silent catch — user gesture will be needed on some restricted browsers
+    })
+  }, [])
 
   return (
     <>
@@ -124,12 +135,15 @@ export default function HomePage() {
                   boxShadow: '0 0 0 1px rgba(255,215,0,0.18), 0 8px 48px rgba(0,0,0,0.7)',
                 }}
               >
-                <video 
-                  loop 
-                  muted 
-                  playsInline 
+                <video
+                  ref={videoRef}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  preload="auto"
                   className="w-full h-full object-cover"
-                  poster="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/grok-video-poster-a2da9931-dd77-40ca-b351-adddc5cc3a08-PYDgy4CNaLVdiZe0hjEl7V7Jxejpnr.jpg"
+                  style={{ WebkitTransform: 'translateZ(0)' }}
                 >
                   <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/grok-video-a2da9931-dd77-40ca-b351-adddc5cc3a08-PYDgy4CNaLVdiZe0hjEl7V7Jxejpnr.mp4" type="video/mp4" />
                 </video>
