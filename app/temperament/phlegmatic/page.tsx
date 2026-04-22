@@ -2,17 +2,17 @@ import { Metadata } from 'next';
 import PhlegmaticPageClient from './PhlegmaticPageClient';
 
 export const metadata: Metadata = {
-  title: 'Phlegmatic Temperament: The Complete Guide to the Guardian Personality | FourType',
-  description: 'Understand the Phlegmatic temperament deeply. Explore their peaceful strengths, loyal nature, ideal careers, and relationship dynamics. Learn to thrive as or with a Phlegmatic.',
-  keywords: ['phlegmatic temperament', 'phlegmatic personality', 'four temperaments', 'personality test', 'the guardian', 'peaceful personality', 'loyal personality', 'introvert'],
+  title: 'Phlegmatic Temperament — Peaceful, Loyal & Free Personality Test | FourType',
+  description: 'Discover the Phlegmatic personality: calm, loyal, peaceful peacemaker. Learn their strengths, peaceful nature, challenges, ideal careers, and take the free temperament test.',
+  keywords: ['phlegmatic temperament', 'phlegmatic personality', 'phlegmatic personality traits', 'the guardian', 'peaceful personality', 'loyal personality', 'introvert personality', 'four temperaments test', 'am i phlegmatic'],
   openGraph: {
-    title: 'Phlegmatic Temperament: The Complete Guide | FourType',
-    description: 'The Phlegmatic is calm, loyal, and profoundly supportive. Discover what makes this temperament exceptional.',
+    title: 'Phlegmatic Temperament — The Calm Peacemaker | FourType',
+    description: 'The Phlegmatic is calm, loyal, and profoundly supportive. Discover their peaceful strengths, harmony-building abilities, and how to thrive with this grounding personality type.',
     type: 'article',
     images: [{ url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/The%20Guardian-98lWuYWNazfR3hvOW2FUE3dkp13BLy.png', width: 400, height: 500, alt: 'The Guardian - Phlegmatic Temperament Character' }],
   },
-  twitter: { card: 'summary_large_image', title: 'Phlegmatic Temperament: The Complete Guide | FourType', description: 'The Phlegmatic is calm, loyal, and profoundly supportive.' },
-  alternates: { canonical: '/temperament/phlegmatic' },
+  twitter: { card: 'summary_large_image', title: 'Phlegmatic Temperament — Personality & Traits Guide | FourType', description: 'Phlegmatic personality explained: calm nature, loyalty, harmony-building, and how to embrace your peaceful strength.' },
+  alternates: { canonical: 'https://www.fourtype.com/temperament/phlegmatic' },
 };
 
 const faqSchema = {

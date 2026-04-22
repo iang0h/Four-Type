@@ -124,7 +124,13 @@ export default function HomePage() {
                   boxShadow: '0 0 0 1px rgba(255,215,0,0.18), 0 8px 48px rgba(0,0,0,0.7)',
                 }}
               >
-                <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+                <video 
+                  loop 
+                  muted 
+                  playsInline 
+                  className="w-full h-full object-cover"
+                  poster="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/grok-video-poster-a2da9931-dd77-40ca-b351-adddc5cc3a08-PYDgy4CNaLVdiZe0hjEl7V7Jxejpnr.jpg"
+                >
                   <source src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/grok-video-a2da9931-dd77-40ca-b351-adddc5cc3a08-PYDgy4CNaLVdiZe0hjEl7V7Jxejpnr.mp4" type="video/mp4" />
                 </video>
               </div>
@@ -317,7 +323,57 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Features Section */}
+        {/* Introductory Text Section — Crawlable SEO Content */}
+        <section className="relative py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-background">
+          <div className="max-w-3xl mx-auto">
+            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-6 sr-only">
+              Free Four Temperaments Test — Discover Your Personality Type Online
+            </h1>
+            <div className="prose prose-invert max-w-none">
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-4">
+                The four temperaments is an ancient framework for understanding personality that has influenced psychology for over 2,500 years. Originating with Hippocrates, this timeless model identifies four core personality types: <strong className="text-foreground">Sanguine</strong> (the enthusiastic connector), <strong className="text-foreground">Choleric</strong> (the driven leader), <strong className="text-foreground">Melancholic</strong> (the thoughtful analyst), and <strong className="text-foreground">Phlegmatic</strong> (the calm peacemaker).
+              </p>
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed mb-4">
+                Unlike personality frameworks like the Myers-Briggs Type Indicator (MBTI) or Big Five personality traits, the four temperaments focus on your core motivations, stress responses, and natural strengths. Our free temperament test goes deeper — it identifies not just your primary type, but your unique blend of all four temperaments, revealing 15 distinct personality subtypes for a complete picture of who you are.
+              </p>
+              <p className="text-base sm:text-lg text-muted-foreground leading-relaxed">
+                Take our 40-question online personality test to discover your temperament profile, understand how you naturally think and feel, learn practical strategies for growth, and improve your relationships with others. Whether you&apos;re seeking personal development, professional growth, or simply curious about personality psychology, this free temperament assessment offers actionable insights based on centuries of wisdom and modern psychology.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Social Proof Section */}
+        <section className="relative py-12 px-4 sm:px-6 lg:px-8 bg-card/50 border-y border-border">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+              <div>
+                <p className="font-serif text-4xl sm:text-5xl font-bold text-[#FFD700] mb-2">
+                  50,000+
+                </p>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  People Tested
+                </p>
+              </div>
+              <div>
+                <p className="font-serif text-4xl sm:text-5xl font-bold text-[#4CC9F0] mb-2">
+                  15
+                </p>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  Unique Temperament Blends
+                </p>
+              </div>
+              <div>
+                <p className="font-serif text-4xl sm:text-5xl font-bold text-[#52B788] mb-2">
+                  2,500+
+                </p>
+                <p className="text-sm sm:text-base text-muted-foreground">
+                  Years of Wisdom
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
         <section className="relative py-24 lg:py-32 bg-card/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">

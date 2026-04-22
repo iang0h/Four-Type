@@ -2,12 +2,12 @@ import { Metadata } from 'next';
 import SanguinePageClient from './SanguinePageClient';
 
 export const metadata: Metadata = {
-  title: 'Sanguine Temperament: The Complete Guide to the Bard Personality | FourType',
-  description: 'Discover everything about the Sanguine temperament. Learn their strengths, weaknesses, career paths, relationships, and how to thrive as or with a Sanguine personality type.',
-  keywords: ['sanguine temperament', 'sanguine personality', 'four temperaments', 'personality test', 'the bard', 'extrovert personality', 'optimistic personality'],
+  title: 'Sanguine Temperament — Traits, Strengths & Free Personality Test | FourType',
+  description: 'Discover the Sanguine personality: enthusiastic, creative, charismatic. Learn their core traits, natural strengths, ideal careers, relationship styles, and take the free temperament test to find your unique blend.',
+  keywords: ['sanguine temperament', 'sanguine personality', 'sanguine personality traits', 'the bard', 'extrovert personality', 'optimistic personality type', 'four temperaments test', 'am i sanguine'],
   openGraph: {
-    title: 'Sanguine Temperament: The Complete Guide | FourType',
-    description: 'The Sanguine is enthusiastic, creative, and socially magnetic. Discover what makes this temperament unique and how to harness its power.',
+    title: 'Sanguine Temperament — The Enthusiastic Connector | FourType',
+    description: 'The Sanguine is enthusiastic, creative, and socially magnetic. Discover their strengths, challenges, relationships, and career fit.',
     type: 'article',
     images: [
       {
@@ -20,11 +20,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sanguine Temperament: The Complete Guide | FourType',
-    description: 'The Sanguine is enthusiastic, creative, and socially magnetic. Discover what makes this temperament unique.',
+    title: 'Sanguine Temperament — Traits & Personality Guide | FourType',
+    description: 'Sanguine personality explained: traits, strengths, weaknesses, and how to thrive as or with a Sanguine type.',
   },
   alternates: {
-    canonical: '/temperament/sanguine',
+    canonical: 'https://www.fourtype.com/temperament/sanguine',
   },
 };
 

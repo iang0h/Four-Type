@@ -2,12 +2,12 @@ import { Metadata } from 'next';
 import CholericPageClient from './CholericPageClient';
 
 export const metadata: Metadata = {
-  title: 'Choleric Temperament: The Complete Guide to the Commander Personality | FourType',
-  description: 'Master the Choleric temperament. Discover their leadership strengths, challenges, ideal careers, and relationship dynamics. Learn how to thrive as or work with a Choleric.',
-  keywords: ['choleric temperament', 'choleric personality', 'four temperaments', 'personality test', 'the commander', 'type a personality', 'leadership personality'],
+  title: 'Choleric Temperament — Leadership, Traits & Free Personality Test | FourType',
+  description: 'Discover the Choleric personality: ambitious, decisive, natural leader. Learn their core traits, leadership strengths, challenges, ideal careers, and take the free temperament test.',
+  keywords: ['choleric temperament', 'choleric personality', 'choleric personality traits', 'the commander', 'type a personality', 'leadership personality', 'four temperaments test', 'am i choleric'],
   openGraph: {
-    title: 'Choleric Temperament: The Complete Guide | FourType',
-    description: 'The Choleric is decisive, ambitious, and born to lead. Discover what makes this temperament powerful and how to channel its drive.',
+    title: 'Choleric Temperament — The Natural Leader | FourType',
+    description: 'The Choleric is decisive, ambitious, and born to lead. Discover their strengths, challenges, and how to thrive as or work with this powerful personality.',
     type: 'article',
     images: [
       {
@@ -20,11 +20,11 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Choleric Temperament: The Complete Guide | FourType',
-    description: 'The Choleric is decisive, ambitious, and born to lead. Discover what makes this temperament powerful.',
+    title: 'Choleric Temperament — Leadership & Personality Guide | FourType',
+    description: 'Choleric personality explained: traits, leadership style, strengths, weaknesses, and how to channel your natural drive.',
   },
   alternates: {
-    canonical: '/temperament/choleric',
+    canonical: 'https://www.fourtype.com/temperament/choleric',
   },
 };
 

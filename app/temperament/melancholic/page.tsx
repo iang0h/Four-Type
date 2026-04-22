@@ -2,17 +2,17 @@ import { Metadata } from 'next';
 import MelancholicPageClient from './MelancholicPageClient';
 
 export const metadata: Metadata = {
-  title: 'Melancholic Temperament: The Complete Guide to the Strategist Personality | FourType',
-  description: 'Understand the Melancholic temperament deeply. Explore their analytical strengths, perfectionist tendencies, ideal careers, and relationship dynamics. Learn to thrive as or with a Melancholic.',
-  keywords: ['melancholic temperament', 'melancholic personality', 'four temperaments', 'personality test', 'the strategist', 'perfectionist personality', 'analytical personality', 'introvert'],
+  title: 'Melancholic Temperament — Analytical, Perfectionist & Free Personality Test | FourType',
+  description: 'Understand the Melancholic personality: analytical, thoughtful, perfectionist. Explore their strengths, analytical gifts, challenges, ideal careers, and take the free temperament test.',
+  keywords: ['melancholic temperament', 'melancholic personality', 'melancholic personality traits', 'the strategist', 'perfectionist personality', 'analytical personality', 'introvert personality', 'four temperaments test'],
   openGraph: {
-    title: 'Melancholic Temperament: The Complete Guide | FourType',
-    description: 'The Melancholic is analytical, detail-oriented, and deeply thoughtful. Discover what makes this temperament exceptional.',
+    title: 'Melancholic Temperament — The Thoughtful Analyst | FourType',
+    description: 'The Melancholic is analytical, detail-oriented, and deeply thoughtful. Discover their analytical strengths, perfectionism, and how to thrive with this profound personality type.',
     type: 'article',
     images: [{ url: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/The%20Strategist-11A2ki2xYEb1yOkVrQ2xjaZ1etfh3Z.png', width: 400, height: 500, alt: 'The Strategist - Melancholic Temperament Character' }],
   },
-  twitter: { card: 'summary_large_image', title: 'Melancholic Temperament: The Complete Guide | FourType', description: 'The Melancholic is analytical, detail-oriented, and deeply thoughtful.' },
-  alternates: { canonical: '/temperament/melancholic' },
+  twitter: { card: 'summary_large_image', title: 'Melancholic Temperament — Personality & Traits Guide | FourType', description: 'Melancholic personality explained: analytical mind, perfectionism, depth, and how to leverage your strengths.' },
+  alternates: { canonical: 'https://www.fourtype.com/temperament/melancholic' },
 };
 
 const faqSchema = {
