@@ -3,7 +3,10 @@ import Image from 'next/image'
 
 const footerLinks = {
   learn: [
+    { href: '/temperament-test', label: 'Temperament Test' },
+    { href: '/four-temperaments', label: 'Four Temperaments' },
     { href: '/what-is-temperament-test', label: 'What is a Temperament Test?' },
+    { href: '/methodology', label: 'Methodology' },
     { href: '/manifesto', label: 'The Manifesto' },
     { href: '/four-temperaments-guidebook.pdf', label: 'Temperament Guidebook' },
     { href: '/blog/history-of-temperaments', label: 'History' },

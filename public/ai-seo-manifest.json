@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-07-02T08:16:25.436Z",
+  "site": "https://www.fourtype.com",
+  "routes": [
+    {
+      "html": "https://www.fourtype.com/",
+      "markdown": "https://www.fourtype.com/index.md"
+    },
+    {
+      "html": "https://www.fourtype.com/quiz",
+      "markdown": "https://www.fourtype.com/quiz.md"
+    },
+    {
+      "html": "https://www.fourtype.com/what-is-temperament-test",
+      "markdown": "https://www.fourtype.com/what-is-temperament-test.md"
+    },
+    {
+      "html": "https://www.fourtype.com/temperament-test",
+      "markdown": "https://www.fourtype.com/temperament-test.md"
+    },
+    {
+      "html": "https://www.fourtype.com/free-temperament-test",
+      "markdown": "https://www.fourtype.com/free-temperament-test.md"
+    },
+    {
+      "html": "https://www.fourtype.com/4-temperament-test",
+      "markdown": "https://www.fourtype.com/4-temperament-test.md"
+    },
+    {
+      "html": "https://www.fourtype.com/temperament-test-for-couples",
+      "markdown": "https://www.fourtype.com/temperament-test-for-couples.md"
+    },
+    {
+      "html": "https://www.fourtype.com/four-temperaments",
+      "markdown": "https://www.fourtype.com/four-temperaments.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtypes",
+      "markdown": "https://www.fourtype.com/subtypes.md"
+    },
+    {
+      "html": "https://www.fourtype.com/methodology",
+      "markdown": "https://www.fourtype.com/methodology.md"
+    },
+    {
+      "html": "https://www.fourtype.com/temperaments-vs-mbti",
+      "markdown": "https://www.fourtype.com/temperaments-vs-mbti.md"
+    },
+    {
+      "html": "https://www.fourtype.com/premium",
+      "markdown": "https://www.fourtype.com/premium.md"
+    },
+    {
+      "html": "https://www.fourtype.com/blog/temperament-compatibility-chart",
+      "markdown": "https://www.fourtype.com/blog/temperament-compatibility-chart.md"
+    },
+    {
+      "html": "https://www.fourtype.com/blog/temperament-test-accuracy",
+      "markdown": "https://www.fourtype.com/blog/temperament-test-accuracy.md"
+    },
+    {
+      "html": "https://www.fourtype.com/blog/choleric-sanguine-melancholic-phlegmatic",
+      "markdown": "https://www.fourtype.com/blog/choleric-sanguine-melancholic-phlegmatic.md"
+    },
+    {
+      "html": "https://www.fourtype.com/llms.txt",
+      "markdown": null
+    }
+  ]
+}

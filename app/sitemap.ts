@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next'
 import { getAllSubtypes } from '@/lib/subtypes'
+import { allContentPages } from '@/lib/seo-content'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.fourtype.com'
@@ -10,6 +11,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly' as const,
     priority: 0.8,
   }))
+
+  const seoUrls = allContentPages.flatMap((page) => [
+    {
+      url: `${baseUrl}${page.href}`,
+      lastModified: new Date('2026-07-02'),
+      changeFrequency: page.changeFrequency,
+      priority: page.priority,
+    },
+    {
+      url: `${baseUrl}${page.href}.md`,
+      lastModified: new Date('2026-07-02'),
+      changeFrequency: 'monthly' as const,
+      priority: 0.5,
+    },
+  ])
 
   return [
     {
@@ -114,6 +130,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.8,
     },
+    {
+      url: `${baseUrl}/llms.txt`,
+      lastModified: new Date('2026-07-02'),
+      changeFrequency: 'weekly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/index.md`,
+      lastModified: new Date('2026-07-02'),
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/quiz.md`,
+      lastModified: new Date('2026-07-02'),
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
+      url: `${baseUrl}/what-is-temperament-test.md`,
+      lastModified: new Date('2026-07-02'),
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    ...seoUrls,
     ...subtypeUrls,
   ]
 }

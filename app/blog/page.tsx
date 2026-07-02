@@ -4,6 +4,7 @@ import { ChevronRight, Clock, Tag } from 'lucide-react'
 import type { Metadata } from 'next'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import { blogArticles } from '@/lib/seo-content'
 
 export const metadata: Metadata = {
   title: 'Blog | FourType - Temperament Education & Insights',
@@ -37,6 +38,16 @@ const blogListSchema = {
 }
 
 const blogPosts = [
+  ...blogArticles.map((article) => ({
+    slug: article.slug,
+    title: article.title,
+    excerpt: article.description,
+    category: article.category,
+    readTime: article.readTime,
+    featured: article.slug === 'temperament-compatibility-chart',
+    color: article.accent === 'pink' ? '#F472B6' : article.accent === 'purple' ? '#A78BFA' : '#FFD700',
+    image: article.image,
+  })),
   {
     slug: 'history-of-temperaments',
     title: 'History of the 4 Temperaments: From Hippocrates to Modern Psychology',
@@ -110,7 +121,7 @@ const blogPosts = [
   },
 ]
 
-const categories = ['All', 'Temperaments', 'History', 'Leadership', 'Comparison', 'Deep Dive']
+const categories = ['All', 'Temperaments', 'Relationships', 'Methodology', 'History', 'Leadership', 'Comparison', 'Deep Dive']
 
 export default function BlogPage() {
   const featuredPost = blogPosts.find(p => p.featured && p.slug === 'history-of-temperaments')
