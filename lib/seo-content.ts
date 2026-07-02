@@ -370,6 +370,162 @@ export const seoPages: SeoPage[] = [
 
 export const blogArticles: BlogArticle[] = [
   {
+    slug: 'ospp-four-temperaments-test',
+    title: 'OSPP Four Temperaments Test vs FourType: Which Temperament Quiz Should You Take?',
+    shortTitle: 'OSPP Four Temperaments Test vs FourType',
+    description: 'Compare the OSPP four temperaments test with FourType, including scoring style, result depth, subtype guidance, and how to choose the right temperament quiz.',
+    keywords: ['OSPP four temperaments test', 'OSPP temperament test', 'four temperaments test comparison', 'best four temperaments test', 'temperament quiz comparison'],
+    category: 'Comparison',
+    readTime: '8 min',
+    accent: 'blue',
+    icon: Scale,
+    image: '/images/blog/ospp-four-temperaments-test.png',
+    imageAlt: 'Four temperament archetypes comparing two glowing assessment scrolls',
+    published: '2026-07-02',
+    blocks: [
+      {
+        type: 'section',
+        title: 'Why people search for OSPP',
+        body: [
+          'The OSPP four temperaments test is often searched by people who want a simple, familiar temperament quiz. That intent is good: the user wants to understand Choleric, Sanguine, Melancholic, and Phlegmatic patterns without a complicated personality framework.',
+          'The better question is not which quiz has the oldest name recognition. It is which test helps you understand your pattern clearly enough to use it in work, stress, relationships, and growth.',
+        ],
+      },
+      {
+        type: 'grid',
+        title: 'How to compare temperament tests',
+        items: [
+          { title: 'Question design', body: 'Look for behavior-based questions rather than flattering identity labels.', accent: 'green' },
+          { title: 'Result depth', body: 'A useful result should explain your top scores and not only assign a single label.', accent: 'blue' },
+          { title: 'Subtype nuance', body: 'Many people are blends, so secondary temperament interpretation matters.', accent: 'gold' },
+          { title: 'Responsible limits', body: 'A trustworthy quiz avoids clinical claims and permanent labels.', accent: 'purple' },
+        ],
+      },
+      {
+        type: 'section',
+        title: 'Where FourType is different',
+        body: [
+          'FourType is built around a modern temperament journey: a free 40-question quiz, clear score interpretation, subtype guidance, and practical education pages for the major temperament search intents.',
+          'The goal is not to “beat” another quiz by sounding more certain. The goal is to make your result more useful. FourType treats temperament as a practical mirror rather than a diagnosis.',
+        ],
+      },
+      {
+        type: 'callout',
+        title: 'Which one should you take?',
+        body: 'If you want a fast temperament label, many tests can be interesting. If you want a result you can keep exploring through subtype pages, relationship guidance, and methodology notes, start with FourType.',
+        bullets: ['Take one quiz when you want a quick signal.', 'Compare your top two scores when results feel mixed.', 'Read methodology before treating any result as truth.', 'Use your result to improve behavior, not to label yourself forever.'],
+      },
+    ],
+    related: [
+      { href: '/methodology', title: 'FourType Methodology', description: 'How FourType scores and interprets results.' },
+      { href: '/blog/temperament-test-accuracy', title: 'Temperament Test Accuracy', description: 'How to judge reliability in temperament quizzes.' },
+    ],
+  },
+  {
+    slug: 'four-humors-test',
+    title: 'Four Humors Test vs Four Temperaments Test: What Is the Difference?',
+    shortTitle: 'Four Humors Test vs Temperament Test',
+    description: 'Learn how the ancient four humors connect to the modern four temperaments test, and why FourType uses the model responsibly today.',
+    keywords: ['four humors test', 'four humors personality test', 'four temperaments test', 'Hippocrates temperament test', 'humors temperament'],
+    category: 'History',
+    readTime: '9 min',
+    accent: 'gold',
+    icon: BookOpen,
+    image: '/images/blog/four-humors-test.png',
+    imageAlt: 'Ancient four humors symbols transforming into four modern temperament archetypes',
+    published: '2026-07-02',
+    blocks: [
+      {
+        type: 'section',
+        title: 'The four humors are the origin story, not the science',
+        body: [
+          'The ancient four humors theory connected personality and health to bodily fluids: blood, yellow bile, black bile, and phlegm. That medical explanation is outdated.',
+          'But the behavioral patterns that survived from that tradition became the four temperaments: Sanguine, Choleric, Melancholic, and Phlegmatic. FourType keeps the useful pattern language while avoiding outdated medical claims.',
+        ],
+      },
+      {
+        type: 'grid',
+        title: 'From humors to temperaments',
+        items: [
+          { title: 'Blood -> Sanguine', body: 'Social, lively, expressive, novelty-seeking, and connection-oriented.', accent: 'gold' },
+          { title: 'Yellow bile -> Choleric', body: 'Direct, forceful, decisive, ambitious, and action-oriented.', accent: 'red' },
+          { title: 'Black bile -> Melancholic', body: 'Reflective, analytical, standards-driven, sensitive, and depth-oriented.', accent: 'blue' },
+          { title: 'Phlegm -> Phlegmatic', body: 'Calm, loyal, steady, diplomatic, and peace-oriented.', accent: 'green' },
+        ],
+      },
+      {
+        type: 'section',
+        title: 'Why modern temperament tests should be careful',
+        body: [
+          'A modern four temperaments test should not claim that ancient medicine was literally correct. It should explain that the old framework is a historical ancestor of a practical personality language.',
+          'That is why FourType frames temperament as self-understanding, not diagnosis. The value is in pattern recognition: stress response, communication, work rhythm, relationship pace, and growth practices.',
+        ],
+      },
+      {
+        type: 'callout',
+        title: 'Should you search for a four humors test or a temperament test?',
+        body: 'If you are curious about history, “four humors” is the right phrase. If you want a practical result you can use today, “four temperaments test” or “temperament test” is usually the better search.',
+        bullets: ['Use Four Humors for history.', 'Use Four Temperaments for personality patterns.', 'Use FourType for a modern quiz and subtype interpretation.'],
+      },
+    ],
+    related: [
+      { href: '/blog/history-of-temperaments', title: 'History of the Four Temperaments', description: 'A longer historical guide from ancient medicine to modern psychology.' },
+      { href: '/four-temperaments', title: 'The Four Temperaments', description: 'A clear modern explanation of the four types.' },
+    ],
+  },
+  {
+    slug: 'best-free-four-temperaments-test',
+    title: 'Best Free Four Temperaments Test: What to Look For Before You Take One',
+    shortTitle: 'Best Free Four Temperaments Test',
+    description: 'Compare what makes a free four temperaments test useful, including question quality, score spread, subtype interpretation, and practical next steps.',
+    keywords: ['best free four temperaments test', '4 temperaments test free', 'free four temperaments test', 'free temperament test online', 'temperament test free'],
+    category: 'Guides',
+    readTime: '8 min',
+    accent: 'green',
+    icon: CheckCircle2,
+    image: '/images/blog/best-free-four-temperaments-test.png',
+    imageAlt: 'A seeker choosing a free temperament test path guided by four temperament archetypes',
+    published: '2026-07-02',
+    blocks: [
+      {
+        type: 'section',
+        title: 'Free does not have to mean shallow',
+        body: [
+          'A free four temperaments test can still be useful if it asks grounded questions, explains the result clearly, and gives you next steps beyond a label.',
+          'The problem with many free quizzes is not that they are free. It is that they stop at a fun result and never help you apply the insight to your real life.',
+        ],
+      },
+      {
+        type: 'grid',
+        title: 'What the best free tests include',
+        items: [
+          { title: 'Clear four-type scoring', body: 'You should see how Choleric, Sanguine, Melancholic, and Phlegmatic patterns are being weighed.', accent: 'gold' },
+          { title: 'Score spread', body: 'Close results need nuance. A dominant score and a tie should not be interpreted the same way.', accent: 'blue' },
+          { title: 'Subtype guidance', body: 'Blends explain why two people with the same primary temperament can feel very different.', accent: 'green' },
+          { title: 'Responsible wording', body: 'Avoid tests that make clinical, destiny, or employment-screening claims.', accent: 'purple' },
+        ],
+      },
+      {
+        type: 'section',
+        title: 'Why FourType is free',
+        body: [
+          'FourType keeps the core quiz free because temperament is most useful when people can compare results with friends, partners, teams, and family members.',
+          'The free result is designed to be enough to start: primary temperament, subtype direction, score spread, and pages that explain the pattern. Deeper reports can add nuance later, but the basic self-understanding should not be locked away.',
+        ],
+      },
+      {
+        type: 'callout',
+        title: 'Take the free test well',
+        body: 'Answer as your default self, especially under stress. Do not answer as your ideal self, your work persona, or the version of you that sounds most impressive.',
+        bullets: ['Move quickly through questions.', 'Think about repeated behavior, not one-off moments.', 'Compare the top two scores.', 'Read the subtype if your result feels mixed.'],
+      },
+    ],
+    related: [
+      { href: '/free-temperament-test', title: 'Free Temperament Test', description: 'Start the FourType quiz without signup or payment.' },
+      { href: '/blog/temperament-test-accuracy', title: 'Temperament Test Accuracy', description: 'Learn how to judge a test result responsibly.' },
+    ],
+  },
+  {
     slug: 'temperament-compatibility-chart',
     title: 'Four Temperaments Compatibility Chart: Which Types Get Along?',
     shortTitle: 'Four Temperaments Compatibility Chart',

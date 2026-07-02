@@ -45,7 +45,14 @@ const blogPosts = [
     category: article.category,
     readTime: article.readTime,
     featured: article.slug === 'temperament-compatibility-chart',
-    color: article.accent === 'pink' ? '#F472B6' : article.accent === 'purple' ? '#A78BFA' : '#FFD700',
+    color: {
+      pink: '#F472B6',
+      purple: '#A78BFA',
+      blue: '#4CC9F0',
+      green: '#52B788',
+      red: '#E63946',
+      gold: '#FFD700',
+    }[article.accent],
     image: article.image,
   })),
   {
@@ -121,7 +128,7 @@ const blogPosts = [
   },
 ]
 
-const categories = ['All', 'Temperaments', 'Relationships', 'Methodology', 'History', 'Leadership', 'Comparison', 'Deep Dive']
+const categories = ['All', 'Temperaments', 'Relationships', 'Methodology', 'History', 'Guides', 'Leadership', 'Comparison', 'Deep Dive']
 
 export default function BlogPage() {
   const featuredPost = blogPosts.find(p => p.featured && p.slug === 'history-of-temperaments')

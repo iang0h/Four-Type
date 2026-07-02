@@ -20,6 +20,9 @@ const routes = [
   '/blog/temperament-compatibility-chart',
   '/blog/temperament-test-accuracy',
   '/blog/choleric-sanguine-melancholic-phlegmatic',
+  '/blog/ospp-four-temperaments-test',
+  '/blog/four-humors-test',
+  '/blog/best-free-four-temperaments-test',
   '/llms.txt',
 ]
 
