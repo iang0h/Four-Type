@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { breadcrumbJsonLd, quizActionJsonLd } from '@/lib/seo-content'
 
 export const metadata: Metadata = {
   title: 'Free Temperament Test | 40-Question Personality Quiz',
@@ -38,5 +39,16 @@ export default function QuizLayout({
 }: {
   children: React.ReactNode
 }) {
-  return children
+  const breadcrumbSchema = breadcrumbJsonLd([
+    { href: '/', title: 'FourType', description: 'FourType home' },
+    { href: '/quiz', title: 'Free Temperament Test', description: 'Take the FourType temperament quiz' },
+  ])
+
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(quizActionJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {children}
+    </>
+  )
 }

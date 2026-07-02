@@ -1045,3 +1045,36 @@ export function faqJsonLd(faq?: FaqItem[]) {
     })),
   }
 }
+
+export function breadcrumbJsonLd(items: LinkCard[]) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.title,
+      item: `https://www.fourtype.com${item.href}`,
+    })),
+  }
+}
+
+export const quizActionJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'FourType Temperament Test',
+  applicationCategory: 'LifestyleApplication',
+  operatingSystem: 'Web',
+  url: 'https://www.fourtype.com/quiz',
+  description: 'A free 40-question temperament test for identifying Choleric, Sanguine, Melancholic, Phlegmatic, and blended subtype patterns.',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  potentialAction: {
+    '@type': 'TakeAction',
+    target: 'https://www.fourtype.com/quiz',
+    name: 'Take the free temperament test',
+  },
+}

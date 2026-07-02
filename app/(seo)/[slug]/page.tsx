@@ -7,7 +7,7 @@ import Footer from '@/components/Footer'
 import { ContentBlocks } from '@/components/ContentBlocks'
 import { FaqSection } from '@/components/FaqSection'
 import { InternalLinkHub } from '@/components/InternalLinkHub'
-import { accentStyles, faqJsonLd, getSeoPage, guideLinksForSeoPage, seoPages } from '@/lib/seo-content'
+import { accentStyles, breadcrumbJsonLd, faqJsonLd, getSeoPage, guideLinksForSeoPage, quizActionJsonLd, seoPages } from '@/lib/seo-content'
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -55,10 +55,17 @@ export default async function SeoLandingPage({ params }: Props) {
     mainEntityOfPage: `https://www.fourtype.com/${page.slug}`,
   }
   const faqSchema = faqJsonLd(page.faq)
+  const breadcrumbSchema = breadcrumbJsonLd([
+    { href: '/', title: 'FourType', description: 'FourType home' },
+    { href: '/temperament-test', title: 'Temperament Test', description: 'Main temperament test guide' },
+    { href: `/${page.slug}`, title: page.shortTitle, description: page.description },
+  ])
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(quizActionJsonLd) }} />
       {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
       <Navigation />
       <main className="min-h-screen bg-background">

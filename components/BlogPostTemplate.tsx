@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import RuneBackground from '@/components/RuneBackground';
 import { FaqSection } from '@/components/FaqSection';
 import { InternalLinkHub } from '@/components/InternalLinkHub';
-import { faqJsonLd, type FaqItem, type LinkCard } from '@/lib/seo-content';
+import { breadcrumbJsonLd, faqJsonLd, quizActionJsonLd, type FaqItem, type LinkCard } from '@/lib/seo-content';
 
 interface BlogPostProps {
   title: string;
@@ -58,10 +58,17 @@ export function BlogPostTemplate({
     mainEntityOfPage: canonicalUrl,
   } : null;
   const faqSchema = faqJsonLd(faq);
+  const breadcrumbSchema = canonicalPath ? breadcrumbJsonLd([
+    { href: '/', title: 'FourType', description: 'FourType home' },
+    { href: '/blog', title: 'Blog', description: 'FourType temperament articles' },
+    { href: canonicalPath, title, description: description ?? subtitle },
+  ]) : null;
 
   return (
     <>
       {articleSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />}
+      {breadcrumbSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(quizActionJsonLd) }} />
       {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
       <RuneBackground />
       <Navigation />
