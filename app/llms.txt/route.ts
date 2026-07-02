@@ -1,8 +1,10 @@
 import { allContentPages } from '@/lib/seo-content'
+import { getAllSubtypes } from '@/lib/subtypes'
 
 export const dynamic = 'force-static'
 
 export function GET() {
+  const subtypes = getAllSubtypes()
   const lines = [
     '# FourType',
     '',
@@ -16,11 +18,15 @@ export function GET() {
     '## High-intent temperament resources',
     ...allContentPages.map((page) => `- ${page.title}: https://www.fourtype.com${page.href} - ${page.description}`),
     '',
+    '## Temperament subtype profiles',
+    ...subtypes.map((subtype) => `- ${subtype.name}: https://www.fourtype.com/subtype/${subtype.slug} - ${subtype.tagline}`),
+    '',
     '## Markdown mirrors',
     '- FourType: https://www.fourtype.com/index.md',
     '- FourType Quiz: https://www.fourtype.com/quiz.md',
     '- What Is a Temperament Test: https://www.fourtype.com/what-is-temperament-test.md',
     ...allContentPages.map((page) => `- ${page.title}: https://www.fourtype.com${page.href}.md`),
+    ...subtypes.map((subtype) => `- ${subtype.name}: https://www.fourtype.com/subtype/${subtype.slug}.md`),
     '',
   ]
 

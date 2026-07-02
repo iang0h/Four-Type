@@ -3,6 +3,8 @@ import path from 'node:path'
 
 const root = process.cwd()
 const out = path.join(root, 'public', 'ai-seo-manifest.json')
+const subtypesSource = fs.readFileSync(path.join(root, 'lib', 'subtypes.ts'), 'utf8')
+const subtypeRoutes = Array.from(subtypesSource.matchAll(/slug: '([a-z-]+)'/g), (match) => `/subtype/${match[1]}`)
 
 const routes = [
   '/',
@@ -47,6 +49,7 @@ const routes = [
   '/blog/ospp-four-temperaments-test',
   '/blog/four-humors-test',
   '/blog/best-free-four-temperaments-test',
+  ...subtypeRoutes,
   '/llms.txt',
 ]
 

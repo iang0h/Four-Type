@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-02T09:45:16.152Z",
+  "generatedAt": "2026-07-02T10:09:16.697Z",
   "site": "https://www.fourtype.com",
   "routes": [
     {
@@ -169,6 +169,70 @@
     {
       "html": "https://www.fourtype.com/blog/best-free-four-temperaments-test",
       "markdown": "https://www.fourtype.com/blog/best-free-four-temperaments-test.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/pure-sanguine",
+      "markdown": "https://www.fourtype.com/subtype/pure-sanguine.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/pure-choleric",
+      "markdown": "https://www.fourtype.com/subtype/pure-choleric.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/pure-melancholic",
+      "markdown": "https://www.fourtype.com/subtype/pure-melancholic.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/pure-phlegmatic",
+      "markdown": "https://www.fourtype.com/subtype/pure-phlegmatic.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/sanguine-choleric",
+      "markdown": "https://www.fourtype.com/subtype/sanguine-choleric.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/sanguine-melancholic",
+      "markdown": "https://www.fourtype.com/subtype/sanguine-melancholic.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/sanguine-phlegmatic",
+      "markdown": "https://www.fourtype.com/subtype/sanguine-phlegmatic.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/choleric-sanguine",
+      "markdown": "https://www.fourtype.com/subtype/choleric-sanguine.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/choleric-melancholic",
+      "markdown": "https://www.fourtype.com/subtype/choleric-melancholic.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/choleric-phlegmatic",
+      "markdown": "https://www.fourtype.com/subtype/choleric-phlegmatic.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/melancholic-sanguine",
+      "markdown": "https://www.fourtype.com/subtype/melancholic-sanguine.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/melancholic-choleric",
+      "markdown": "https://www.fourtype.com/subtype/melancholic-choleric.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/melancholic-phlegmatic",
+      "markdown": "https://www.fourtype.com/subtype/melancholic-phlegmatic.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/phlegmatic-sanguine",
+      "markdown": "https://www.fourtype.com/subtype/phlegmatic-sanguine.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/phlegmatic-choleric",
+      "markdown": "https://www.fourtype.com/subtype/phlegmatic-choleric.md"
+    },
+    {
+      "html": "https://www.fourtype.com/subtype/phlegmatic-melancholic",
+      "markdown": "https://www.fourtype.com/subtype/phlegmatic-melancholic.md"
     },
     {
       "html": "https://www.fourtype.com/llms.txt",

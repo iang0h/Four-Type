@@ -5,12 +5,20 @@ import { allContentPages } from '@/lib/seo-content'
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.fourtype.com'
 
-  const subtypeUrls = getAllSubtypes().map(subtype => ({
-    url: `${baseUrl}/subtype/${subtype.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.8,
-  }))
+  const subtypeUrls = getAllSubtypes().flatMap(subtype => [
+    {
+      url: `${baseUrl}/subtype/${subtype.slug}`,
+      lastModified: new Date('2026-07-02'),
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/subtype/${subtype.slug}.md`,
+      lastModified: new Date('2026-07-02'),
+      changeFrequency: 'monthly' as const,
+      priority: 0.45,
+    },
+  ])
 
   const seoUrls = allContentPages.flatMap((page) => [
     {

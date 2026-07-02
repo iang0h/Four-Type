@@ -1,4 +1,5 @@
 import { blogArticles, contentToMarkdown, faqsToMarkdown, getBlogArticle, getSeoPage, guideLinksForSeoPage, linksToMarkdown, popularGuideLinks, seoPages, staticContentPages } from '@/lib/seo-content'
+import { getAllSubtypes, getSubtype } from '@/lib/subtypes'
 
 export const dynamic = 'force-static'
 
@@ -50,6 +51,7 @@ export function generateStaticParams() {
     ...seoPages.map((page) => ({ path: [page.slug] })),
     ...blogArticles.map((article) => ({ path: ['blog', article.slug] })),
     ...staticContentPages.map((page) => ({ path: page.href.replace(/^\//, '').split('/') })),
+    ...getAllSubtypes().map((subtype) => ({ path: ['subtype', subtype.slug] })),
   ]
 
   const seen = new Set<string>()
@@ -89,12 +91,71 @@ export async function GET(_request: Request, { params }: Props) {
   }
 
   const page = getSeoPage(joined)
-  if (!page) return notFound()
+  if (page) {
+    return markdownResponse(
+      `${contentToMarkdown(page.title, page.description, page.blocks)}\n${linksToMarkdown('Keep exploring temperament tests', guideLinksForSeoPage(page.slug))}\n${faqsToMarkdown(page.faq)}`,
+      `/${page.slug}`,
+    )
+  }
 
-  return markdownResponse(
-    `${contentToMarkdown(page.title, page.description, page.blocks)}\n${linksToMarkdown('Keep exploring temperament tests', guideLinksForSeoPage(page.slug))}\n${faqsToMarkdown(page.faq)}`,
-    `/${page.slug}`,
+  if (joined.startsWith('subtype/')) {
+    const subtype = getSubtype(joined.replace('subtype/', ''))
+    if (!subtype) return notFound()
+    return markdownResponse(subtypeToMarkdown(subtype), `/subtype/${subtype.slug}`)
+  }
+
+  return notFound()
+}
+
+type MarkdownSubtype = NonNullable<ReturnType<typeof getSubtype>>
+
+function subtypeToMarkdown(subtype: MarkdownSubtype) {
+  const lines = [
+    `# ${subtype.name}: ${subtype.title}`,
+    '',
+    subtype.tagline,
+    '',
+    '## Overview',
+    '',
+    subtype.overview,
+    '',
+    '## Strengths',
+    '',
+    ...subtype.strengths.map((item) => `- ${item}`),
+    '',
+    '## Challenges',
+    '',
+    ...subtype.weaknesses.map((item) => `- ${item}`),
+    '',
+    '## Communication Style',
+    '',
+    `- Pace: ${subtype.communicationStyle.pace}`,
+    `- Tone: ${subtype.communicationStyle.tone}`,
+    `- Preferred input: ${subtype.communicationStyle.preferredInput}`,
+    `- Pet peeve: ${subtype.communicationStyle.petPeeve}`,
+    '',
+    '## Stress and Recovery',
+    '',
+    `Stress response: ${subtype.stressResponse}`,
+    '',
+    `Recovery strategy: ${subtype.recoveryStrategy}`,
+    '',
+  ]
+
+  if (subtype.relationshipPatterns) {
+    lines.push('## Relationship Pattern', '', subtype.relationshipPatterns, '')
+  }
+
+  lines.push(
+    '## Keep exploring temperament tests',
+    '',
+    '- Take the FourType quiz: https://www.fourtype.com/quiz',
+    '- Read the subtype guide: https://www.fourtype.com/subtypes',
+    '- Compare all four temperaments: https://www.fourtype.com/four-temperaments-test',
+    '',
   )
+
+  return lines.join('\n')
 }
 
 function markdownResponse(markdown: string, canonicalPath: string) {
