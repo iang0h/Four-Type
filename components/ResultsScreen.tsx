@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ScoreMap, TemperamentKey, getDominantAndSecondary, getMaskingWarning, resolveBlend } from '@/lib/scoringKey'
 import { TEMPERAMENTS } from '@/lib/temperaments'
 import { BLENDS, getBlendColors } from '@/lib/blends'
+import { getSubtypeByBlendKey } from '@/lib/subtypes'
 import ScoreChart from './ScoreChart'
 import CinematicBackground from './CinematicBackground'
 import ShareableCard from './ShareableCard'
@@ -28,8 +29,16 @@ function getReadingResources(primaryKey: TemperamentKey, blendKey: string) {
   }
   
   const temp = temperamentMap[primaryKey]
+  const subtype = getSubtypeByBlendKey(blendKey)
   
-  return [
+  const resources = [
+    ...(subtype ? [
+      {
+        title: `${subtype.name}: Your Exact Subtype`,
+        description: subtype.tagline,
+        href: `/subtype/${subtype.slug}`,
+      },
+    ] : []),
     {
       title: `${temp.name} Temperament: Complete Guide`,
       description: `Strengths, challenges, careers & relationships`,
@@ -51,6 +60,8 @@ function getReadingResources(primaryKey: TemperamentKey, blendKey: string) {
       href: '/blog/history-of-temperaments',
     },
   ]
+
+  return resources.slice(0, 5)
 }
 
 interface ResultsScreenProps {

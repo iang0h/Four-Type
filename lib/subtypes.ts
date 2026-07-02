@@ -1195,6 +1195,20 @@ export function getSubtype(slug: string): Subtype | undefined {
   return SUBTYPES[slug as SubtypeSlug]
 }
 
+export function getSubtypeByBlendKey(blendKey: string): Subtype | undefined {
+  const pureSubtypeByBlendKey: Record<string, SubtypeSlug> = {
+    Spark: 'pure-sanguine',
+    Commander: 'pure-choleric',
+  }
+
+  const pureSubtypeSlug = pureSubtypeByBlendKey[blendKey]
+  if (pureSubtypeSlug) {
+    return getSubtype(pureSubtypeSlug)
+  }
+
+  return getAllSubtypes().find((subtype) => subtype.blendKey === blendKey)
+}
+
 // Get all subtypes as an array
 export function getAllSubtypes(): Subtype[] {
   return Object.values(SUBTYPES)
