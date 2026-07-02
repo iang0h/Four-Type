@@ -2,8 +2,14 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 const footerLinks = {
-  learn: [
+  testGuides: [
     { href: '/temperament-test', label: 'Temperament Test' },
+    { href: '/quiz', label: 'Take the Quiz' },
+    { href: '/blog/choleric-sanguine-melancholic-phlegmatic-test', label: 'Four Type Test Guide' },
+    { href: '/blog/temperament-test-questions', label: 'Test Questions' },
+    { href: '/blog/4-temperaments-test-free', label: 'Free 4 Temperaments Test' },
+  ],
+  learn: [
     { href: '/temperament-quiz', label: 'Temperament Quiz' },
     { href: '/what-is-my-temperament', label: 'What Is My Temperament?' },
     { href: '/personality-temperament-test', label: 'Personality Temperament Test' },
@@ -33,7 +39,7 @@ export default function Footer() {
   return (
     <footer className="bg-card border-t border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-flex mb-4">
@@ -48,6 +54,23 @@ export default function Footer() {
             <p className="text-sm text-muted-foreground leading-relaxed">
               Discover your true nature through the ancient wisdom of the four temperaments, reimagined for modern understanding.
             </p>
+          </div>
+
+          {/* Test Guides */}
+          <div>
+            <h3 className="font-serif text-sm font-semibold text-foreground mb-4">Test Guides</h3>
+            <ul className="space-y-3">
+              {footerLinks.testGuides.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
           {/* Learn */}

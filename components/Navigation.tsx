@@ -24,6 +24,9 @@ const navLinks = [
     children: [
       { href: '/temperament-test', label: 'Temperament Test' },
       { href: '/temperament-quiz', label: 'Temperament Quiz' },
+      { href: '/blog/choleric-sanguine-melancholic-phlegmatic-test', label: 'Four Type Test Guide' },
+      { href: '/blog/temperament-test-questions', label: 'Test Questions' },
+      { href: '/blog/4-temperaments-test-free', label: 'Free 4 Temperaments Test' },
       { href: '/what-is-my-temperament', label: 'What Is My Temperament?' },
       { href: '/personality-temperament-test', label: 'Personality Temperament Test' },
       { href: '/four-temperaments', label: 'Four Temperaments' },

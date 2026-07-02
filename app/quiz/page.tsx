@@ -117,10 +117,19 @@ function QuizSeoSection() {
           ))}
         </div>
 
+        <div className="mb-6">
+          <h2 className="font-serif text-2xl md:text-3xl font-bold mb-3">Temperament Test Guides</h2>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Use these guides before or after the quiz to understand your score spread, question design, and blended subtype result.
+          </p>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-4 mb-12">
           {[
             { title: 'How the temperament test works', body: 'Read the main temperament test guide before or after taking the quiz.', href: '/temperament-test' },
+            { title: 'Compare the four temperament types', body: 'See how Choleric, Sanguine, Melancholic, and Phlegmatic test patterns differ.', href: '/blog/choleric-sanguine-melancholic-phlegmatic-test' },
             { title: 'What the questions measure', body: 'See why behavior-based temperament test questions make results more useful.', href: '/blog/temperament-test-questions' },
+            { title: 'Take a free 4 temperaments test', body: 'Learn how to read your score spread without forcing a flat label.', href: '/blog/4-temperaments-test-free' },
             { title: 'How FourType scores answers', body: 'Understand score spread, primary type, secondary type, and responsible limits.', href: '/methodology' },
             { title: 'What mixed results mean', body: 'Use your top two scores to explore blended temperament subtypes.', href: '/subtypes' },
           ].map((item) => (
