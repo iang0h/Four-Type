@@ -59,6 +59,7 @@ export default function QuizLayout({
   ])
   const quizGuideSchema = itemListJsonLd('FourType quiz support guides', [
     { href: '/temperament-test', title: 'Temperament Test Guide', description: 'Learn what the FourType temperament test measures and how to read your result.' },
+    { href: '/four-temperaments-test', title: 'Four Temperaments Test', description: 'Take the free Choleric, Sanguine, Melancholic, and Phlegmatic quiz path.' },
     { href: '/blog/choleric-sanguine-melancholic-phlegmatic-test', title: 'Four Temperament Types Test', description: 'Compare Choleric, Sanguine, Melancholic, and Phlegmatic together.' },
     { href: '/blog/temperament-test-questions', title: 'Temperament Test Questions', description: 'See what useful quiz questions should ask.' },
     { href: '/blog/4-temperaments-test-free', title: 'Free 4 Temperaments Test', description: 'Learn how to take a free 4 temperaments test and read your score spread.' },

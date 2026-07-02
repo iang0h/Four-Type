@@ -526,27 +526,27 @@ export const seoPages: SeoPage[] = [
   {
     slug: 'four-temperaments-test',
     shortTitle: 'Four Temperaments Test',
-    title: 'Four Temperaments Test: Find Your Choleric, Sanguine, Melancholic, or Phlegmatic Pattern',
-    description: 'Take a Four Temperaments test to compare Choleric, Sanguine, Melancholic, and Phlegmatic patterns with clear subtype guidance.',
-    keywords: ['four temperaments test', 'four temperament test', 'four temperaments quiz', 'choleric sanguine melancholic phlegmatic test', 'temperament test four types'],
-    eyebrow: 'Classic Four-Type Quiz',
+    title: 'Four Temperaments Test: Free Choleric, Sanguine, Melancholic, Phlegmatic Quiz',
+    description: 'Take a free Four Temperaments test to compare Choleric, Sanguine, Melancholic, and Phlegmatic patterns with subtype guidance.',
+    keywords: ['four temperaments test', 'four temperament test', 'free four temperaments test', 'four temperaments quiz', 'choleric sanguine melancholic phlegmatic test', 'temperament test four types'],
+    eyebrow: 'Free Four Temperaments Quiz',
     icon: BarChart3,
     accent: 'gold',
     priority: 0.91,
     changeFrequency: 'weekly',
-    ctaLabel: 'Take the Four Temperaments Test',
+    ctaLabel: 'Take the Free Four Temperaments Test',
     blocks: [
       {
         type: 'section',
-        title: 'What the Four Temperaments test measures',
+        title: 'Take the free Four Temperaments test',
         body: [
-          'A Four Temperaments test compares the four classic personality patterns: Choleric, Sanguine, Melancholic, and Phlegmatic. Each pattern describes a different default way of moving through pressure, relationships, decisions, and motivation.',
-          'FourType keeps the old model practical by focusing on behavior you can recognize: whether you tend to lead, connect, analyze, or stabilize first.',
+          'A Four Temperaments test compares the four classic personality patterns: Choleric, Sanguine, Melancholic, and Phlegmatic. The free FourType quiz uses 40 behavior-based questions to show your strongest pattern and possible subtype.',
+          'Instead of asking which label sounds flattering, FourType looks at repeated behavior: whether you tend to lead, connect, analyze, or stabilize first under ordinary pressure.',
         ],
       },
       {
         type: 'grid',
-        title: 'The four results at a glance',
+        title: 'Choleric, Sanguine, Melancholic, and Phlegmatic results',
         intro: 'Use these short cues before taking the quiz, then let your full score show the strongest pattern and possible subtype.',
         items: [
           { title: 'Choleric', body: 'Direct, decisive, goal-driven, and energized by challenge or responsibility.', accent: 'red' },
@@ -557,9 +557,9 @@ export const seoPages: SeoPage[] = [
       },
       {
         type: 'callout',
-        title: 'Why FourType includes subtype guidance',
-        body: 'Most people are not a pure single temperament. A good Four Temperaments test should show your leading pattern and explain what happens when a second temperament is also strong.',
-        bullets: ['Primary temperament shows your default drive.', 'Secondary temperament changes your style.', 'Close scores need careful interpretation.', 'The best result should feel useful, not flattering.'],
+        title: 'What makes this Four Temperaments quiz useful',
+        body: 'The best Four Temperaments test should be free to start, behavior-based, clear about its limits, and useful after the result page. FourType is built around score spread and subtype guidance because many people are not a pure single temperament.',
+        bullets: ['Primary temperament shows your default drive.', 'Secondary temperament changes your style.', 'Close scores need careful interpretation.', 'Results should explain real behavior, not just flatter you.'],
       },
       {
         type: 'section',
@@ -571,8 +571,10 @@ export const seoPages: SeoPage[] = [
       },
     ],
     faq: [
-      { question: 'What is the Four Temperaments test?', answer: 'The Four Temperaments test is a personality quiz that compares Choleric, Sanguine, Melancholic, and Phlegmatic patterns to identify your strongest temperament style.' },
-      { question: 'Is Four Temperaments the same as the 4 temperament test?', answer: 'Yes. People use both terms for the same basic model: four classic temperament patterns that describe drive, sociability, depth, steadiness, and stress response.' },
+      { question: 'Is this Four Temperaments test free?', answer: 'Yes. The core FourType Four Temperaments test is free and gives you a primary pattern, score spread, and subtype direction without requiring a signup.' },
+      { question: 'What are the four temperaments?', answer: 'The four temperaments are Choleric, Sanguine, Melancholic, and Phlegmatic. They describe broad patterns of drive, sociability, depth, steadiness, communication, and stress response.' },
+      { question: 'How long does the Four Temperaments quiz take?', answer: 'The FourType quiz has 40 questions and usually takes under 10 minutes. Answer from your repeated behavior, especially under ordinary pressure, for the clearest result.' },
+      { question: 'Is Four Temperaments the same as the 4 temperament test?', answer: 'Yes. People use both terms for the same basic model: four classic temperament patterns that describe motivation, relationships, decisions, and stress response.' },
       { question: 'Can I have two Four Temperaments?', answer: 'Yes. Many people have a clear primary temperament and a strong secondary temperament, which creates a more specific subtype pattern.' },
     ],
   },
@@ -1613,12 +1615,12 @@ export const allContentPages = [
 
 export const coreGuideLinks: LinkCard[] = [
   { href: '/temperament-test', title: 'Temperament Test', description: 'Start with the main free four temperaments quiz guide.' },
+  { href: '/four-temperaments-test', title: 'Four Temperaments Test', description: 'Take the free Choleric, Sanguine, Melancholic, and Phlegmatic quiz.' },
   { href: '/temperament-quiz', title: 'Temperament Quiz', description: 'Use the quiz-focused path to identify your four temperaments pattern.' },
   { href: '/what-is-my-temperament', title: 'What Is My Temperament?', description: 'Compare the signs of each temperament before taking the quiz.' },
   { href: '/personality-temperament-test', title: 'Personality Temperament Test', description: 'Understand temperament as a practical layer of personality.' },
   { href: '/free-temperament-test', title: 'Free Temperament Test', description: 'See what the free FourType result includes.' },
   { href: '/4-temperament-test', title: '4 Temperament Test', description: 'Compare Choleric, Sanguine, Melancholic, and Phlegmatic.' },
-  { href: '/four-temperaments-test', title: 'Four Temperaments Test', description: 'Find your classic Choleric, Sanguine, Melancholic, or Phlegmatic pattern.' },
   { href: '/blog/4-temperaments-test-free', title: '4 Temperaments Test Free', description: 'Take the free quiz and learn how to read your score spread.' },
   { href: '/blog/temperament-test-questions', title: 'Temperament Test Questions', description: 'See what useful quiz questions should ask.' },
   { href: '/blog/choleric-sanguine-melancholic-phlegmatic-test', title: 'Choleric Sanguine Melancholic Phlegmatic Test', description: 'Compare the four classic temperament test patterns.' },

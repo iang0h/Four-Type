@@ -23,6 +23,7 @@ const navLinks = [
     label: 'Learn',
     children: [
       { href: '/temperament-test', label: 'Temperament Test' },
+      { href: '/four-temperaments-test', label: 'Four Temperaments Test' },
       { href: '/temperament-quiz', label: 'Temperament Quiz' },
       { href: '/blog/choleric-sanguine-melancholic-phlegmatic-test', label: 'Four Type Test Guide' },
       { href: '/blog/temperament-test-questions', label: 'Test Questions' },

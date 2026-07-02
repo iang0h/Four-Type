@@ -127,6 +127,7 @@ function QuizSeoSection() {
         <div className="grid md:grid-cols-2 gap-4 mb-12">
           {[
             { title: 'How the temperament test works', body: 'Read the main temperament test guide before or after taking the quiz.', href: '/temperament-test' },
+            { title: 'Take the four temperaments test', body: 'Use the free Choleric, Sanguine, Melancholic, and Phlegmatic quiz path.', href: '/four-temperaments-test' },
             { title: 'Compare the four temperament types', body: 'See how Choleric, Sanguine, Melancholic, and Phlegmatic test patterns differ.', href: '/blog/choleric-sanguine-melancholic-phlegmatic-test' },
             { title: 'What the questions measure', body: 'See why behavior-based temperament test questions make results more useful.', href: '/blog/temperament-test-questions' },
             { title: 'Take a free 4 temperaments test', body: 'Learn how to read your score spread without forcing a flat label.', href: '/blog/4-temperaments-test-free' },
