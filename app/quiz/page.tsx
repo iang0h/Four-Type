@@ -117,6 +117,20 @@ function QuizSeoSection() {
           ))}
         </div>
 
+        <div className="grid md:grid-cols-2 gap-4 mb-12">
+          {[
+            { title: 'How the temperament test works', body: 'Read the main temperament test guide before or after taking the quiz.', href: '/temperament-test' },
+            { title: 'What the questions measure', body: 'See why behavior-based temperament test questions make results more useful.', href: '/blog/temperament-test-questions' },
+            { title: 'How FourType scores answers', body: 'Understand score spread, primary type, secondary type, and responsible limits.', href: '/methodology' },
+            { title: 'What mixed results mean', body: 'Use your top two scores to explore blended temperament subtypes.', href: '/subtypes' },
+          ].map((item) => (
+            <Link key={item.href} href={item.href} className="rounded-xl border border-border bg-secondary/20 p-5 transition-colors hover:border-primary/50">
+              <h2 className="font-serif text-lg font-bold mb-2">{item.title}</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">{item.body}</p>
+            </Link>
+          ))}
+        </div>
+
         <div className="border-t border-border pt-10">
           <h2 className="font-serif text-2xl md:text-3xl font-bold mb-6">Temperament Test Questions</h2>
           <div className="space-y-4">

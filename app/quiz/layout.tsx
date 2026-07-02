@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { breadcrumbJsonLd, faqJsonLd, quizActionJsonLd } from '@/lib/seo-content'
+import { breadcrumbJsonLd, faqJsonLd, itemListJsonLd, quizActionJsonLd } from '@/lib/seo-content'
 
 export const metadata: Metadata = {
   title: 'Free Temperament Test | 40-Question Personality Quiz',
@@ -57,11 +57,40 @@ export default function QuizLayout({
       answer: 'Answer as your default self, especially under ordinary stress. Avoid choosing the answer that sounds most impressive or ideal.',
     },
   ])
+  const quizGuideSchema = itemListJsonLd('FourType quiz support guides', [
+    { href: '/temperament-test', title: 'Temperament Test Guide', description: 'Learn what the FourType temperament test measures and how to read your result.' },
+    { href: '/blog/temperament-test-questions', title: 'Temperament Test Questions', description: 'See what useful quiz questions should ask.' },
+    { href: '/methodology', title: 'FourType Methodology', description: 'How the 40-question quiz is scored and interpreted.' },
+    { href: '/subtypes', title: 'Temperament Subtypes', description: 'Use your top two scores to understand blended temperament results.' },
+  ])
+  const quizSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Quiz',
+    name: 'FourType Temperament Test',
+    url: 'https://www.fourtype.com/quiz',
+    description: 'A free 40-question temperament quiz for comparing Choleric, Sanguine, Melancholic, Phlegmatic, and blended subtype patterns.',
+    educationalUse: 'Self assessment',
+    assesses: 'Four temperaments pattern: Choleric, Sanguine, Melancholic, Phlegmatic, and blended subtypes',
+    isAccessibleForFree: true,
+    provider: {
+      '@type': 'Organization',
+      name: 'FourType',
+      url: 'https://www.fourtype.com',
+    },
+    about: [
+      { '@type': 'DefinedTerm', name: 'Choleric temperament', url: 'https://www.fourtype.com/choleric-test' },
+      { '@type': 'DefinedTerm', name: 'Sanguine temperament', url: 'https://www.fourtype.com/sanguine-test' },
+      { '@type': 'DefinedTerm', name: 'Melancholic temperament', url: 'https://www.fourtype.com/melancholic-test' },
+      { '@type': 'DefinedTerm', name: 'Phlegmatic temperament', url: 'https://www.fourtype.com/phlegmatic-test' },
+    ],
+  }
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(quizActionJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(quizSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {quizGuideSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(quizGuideSchema) }} />}
       {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
       {children}
     </>
