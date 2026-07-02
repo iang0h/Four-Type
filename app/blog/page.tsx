@@ -1,22 +1,32 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronRight, Clock, Tag } from 'lucide-react'
+import { ArrowRight, ChevronRight, Clock, Tag } from 'lucide-react'
 import type { Metadata } from 'next'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
-import { blogArticles } from '@/lib/seo-content'
+import { blogArticles, itemListJsonLd } from '@/lib/seo-content'
 
 export const metadata: Metadata = {
-  title: 'Blog | FourType - Temperament Education & Insights',
-  description: 'Explore articles about the four temperaments, personality psychology, leadership, relationships, and self-development. Learn how to apply temperament theory in daily life.',
-  keywords: ['temperament blog', 'personality psychology articles', 'four temperaments guide', 'sanguine choleric melancholic phlegmatic', 'personality types', 'temperament theory'],
+  title: 'Temperament Test Guides | FourType Blog',
+  description: 'Read FourType temperament test guides, four temperaments comparisons, quiz questions, free test advice, compatibility charts, and Choleric, Sanguine, Melancholic, Phlegmatic explainers.',
+  keywords: ['temperament test guides', 'temperament blog', 'four temperaments test articles', 'four temperaments guide', 'sanguine choleric melancholic phlegmatic', 'personality types', 'temperament theory'],
   openGraph: {
-    title: 'Temperament Blog | FourType',
-    description: 'In-depth articles exploring the 4 temperaments, their history, applications, and relationships.',
+    title: 'Temperament Test Guides | FourType Blog',
+    description: 'In-depth guides for taking and understanding the free FourType temperament test.',
     type: 'website',
   },
   alternates: { canonical: '/blog' },
 }
+
+const featuredSlug = 'choleric-sanguine-melancholic-phlegmatic-test'
+const testGuideSlugs = [
+  'choleric-sanguine-melancholic-phlegmatic-test',
+  'temperament-test-questions',
+  '4-temperaments-test-free',
+  'best-free-four-temperaments-test',
+  'ospp-four-temperaments-test',
+  'four-humors-test',
+]
 
 const dynamicBlogPosts = blogArticles.map((article) => ({
     slug: article.slug,
@@ -160,6 +170,14 @@ const staticBlogPosts = [
 ]
 
 const blogPosts = [...dynamicBlogPosts, ...staticBlogPosts]
+const temperamentTestGuideLinks = testGuideSlugs
+  .map((slug) => blogPosts.find((post) => post.slug === slug))
+  .filter((post): post is (typeof blogPosts)[number] => Boolean(post))
+  .map((post) => ({
+    href: `/blog/${post.slug}`,
+    title: post.title,
+    description: post.excerpt,
+  }))
 
 const blogListSchema = {
   '@context': 'https://schema.org',
@@ -178,16 +196,18 @@ const blogListSchema = {
     dateModified: post.published,
   })),
 }
+const temperamentTestGuidesSchema = itemListJsonLd('FourType temperament test guides', temperamentTestGuideLinks)
 
 const categories = ['All', 'Temperaments', 'Relationships', 'Methodology', 'History', 'Guides', 'Leadership', 'Comparison', 'Deep Dive', 'Wellbeing', 'Work', 'Science']
 
 export default function BlogPage() {
-  const featuredPost = blogPosts.find(p => p.featured && p.slug === 'history-of-temperaments')
+  const featuredPost = blogPosts.find(p => p.slug === featuredSlug)
   const regularPosts = blogPosts.filter(p => p.slug !== featuredPost?.slug)
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(blogListSchema) }} />
+      {temperamentTestGuidesSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(temperamentTestGuidesSchema) }} />}
       <Navigation />
       <main className="min-h-screen bg-background pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -197,9 +217,18 @@ export default function BlogPage() {
             Temperament Insights
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Explore the science, history, and practical applications of temperament theory. 
-            Learn how to understand yourself and connect better with others.
+            Start with the free FourType quiz, then use these guides to understand Choleric, Sanguine, Melancholic, Phlegmatic, score spread, subtypes, and practical next steps.
           </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link href="/quiz" className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90">
+              Take the Free Temperament Test
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/temperament-test" className="inline-flex items-center gap-2 rounded-lg border border-border px-6 py-3 font-semibold text-foreground transition-colors hover:border-primary/50">
+              Read the Test Guide
+              <ChevronRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
 
         {/* Categories */}
@@ -227,13 +256,13 @@ export default function BlogPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-transparent to-[#4CC9F0]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="relative p-8 md:p-12 flex flex-col md:flex-row gap-8 items-center">
                 {featuredPost.image && (
-                  <div className="relative w-48 h-48 flex-shrink-0">
-                    <div className="absolute inset-0 bg-primary/20 rounded-full blur-3xl" />
+                  <div className="relative h-56 w-full max-w-sm flex-shrink-0 overflow-hidden rounded-xl border border-border md:h-48 md:w-80">
+                    <div className="absolute inset-0 bg-primary/20 blur-3xl" />
                     <Image
                       src={featuredPost.image}
-                      alt="Temperament Icon"
+                      alt={featuredPost.title}
                       fill
-                      className="object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                 )}

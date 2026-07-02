@@ -73,6 +73,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     },
     {
+      url: `${baseUrl}/blog.md`,
+      lastModified: new Date('2026-07-02'),
+      changeFrequency: 'monthly',
+      priority: 0.5,
+    },
+    {
       url: `${baseUrl}/llms.txt`,
       lastModified: new Date('2026-07-02'),
       changeFrequency: 'weekly',

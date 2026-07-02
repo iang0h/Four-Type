@@ -13,6 +13,7 @@ export function GET() {
   const routes = [
     '/',
     '/quiz',
+    '/blog',
     '/what-is-temperament-test',
     ...allContentPages.map((page) => page.href),
     ...getAllSubtypes().map((subtype) => `/subtype/${subtype.slug}`),

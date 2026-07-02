@@ -18,6 +18,11 @@ const coreMarkdown: Record<string, { canonical: string; title: string; body: str
     title: 'FourType Quiz',
     body: 'Take the free 40-question FourType quiz to discover your temperament pattern and subtype.',
   },
+  blog: {
+    canonical: '/blog',
+    title: 'FourType Temperament Test Guides',
+    body: 'Read FourType guides for taking and understanding the free temperament test, including Choleric, Sanguine, Melancholic, Phlegmatic comparisons, quiz questions, free test advice, compatibility, subtypes, and methodology.',
+  },
   'what-is-temperament-test': {
     canonical: '/what-is-temperament-test',
     title: 'What Is a Temperament Test?',
