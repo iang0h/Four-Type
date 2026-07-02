@@ -1110,6 +1110,94 @@ export const blogArticles: BlogArticle[] = [
     ],
   },
   {
+    slug: 'temperament-test-questions',
+    title: 'Temperament Test Questions: What a Good Four Temperaments Quiz Should Ask',
+    shortTitle: 'Temperament Test Questions',
+    description: 'See what useful temperament test questions look like, why behavior-based prompts matter, and how FourType compares Choleric, Sanguine, Melancholic, and Phlegmatic patterns.',
+    keywords: ['temperament test questions', 'four temperaments test questions', '4 temperament test questions', 'personality temperament test questions', 'choleric sanguine melancholic phlegmatic questions', 'temperament quiz questions', 'free temperament test questions'],
+    category: 'Methodology',
+    readTime: '9 min',
+    accent: 'blue',
+    icon: HelpCircle,
+    image: '/images/blog/temperament-test-questions.jpg',
+    imageAlt: 'Four temperament archetypes studying a luminous questionnaire for temperament test questions',
+    published: '2026-07-02',
+    blocks: [
+      {
+        type: 'section',
+        title: 'Good questions ask about behavior, not labels',
+        body: [
+          'The best temperament test questions do not ask whether you are “a leader,” “creative,” “deep,” or “peaceful” in a way that makes every answer sound flattering. They ask how you usually behave when decisions, conflict, pressure, boredom, and relationships reveal your default pattern.',
+          'That is important because Choleric, Sanguine, Melancholic, and Phlegmatic temperaments are easier to see through repeated behavior than through identity words. A useful quiz should make you recognize your habits, not simply choose the type you wish you were.',
+        ],
+      },
+      {
+        type: 'grid',
+        title: 'What each temperament question is trying to reveal',
+        intro: 'A balanced four temperaments quiz needs prompts that give every pattern a fair chance to show up.',
+        items: [
+          { title: 'Choleric questions', body: 'Look for decisiveness, challenge response, impatience with delay, direct communication, and action under pressure.', accent: 'red' },
+          { title: 'Sanguine questions', body: 'Look for expressiveness, social energy, novelty seeking, optimism, enthusiasm, and attention to connection.', accent: 'gold' },
+          { title: 'Melancholic questions', body: 'Look for analysis, carefulness, standards, emotional depth, private processing, and sensitivity to quality.', accent: 'blue' },
+          { title: 'Phlegmatic questions', body: 'Look for calm, loyalty, mediation, steadiness, conflict avoidance, and preference for low-friction harmony.', accent: 'green' },
+        ],
+      },
+      {
+        type: 'section',
+        title: 'Why obvious questions can distort the result',
+        body: [
+          'Some quiz questions make the “right” answer too obvious. If a prompt says, “Do you like being the boss?” many people answer based on confidence, culture, role, or aspiration rather than temperament. The result can become a self-image test instead of a behavior test.',
+          'FourType questions are meant to compare tendencies across situations. The pattern is stronger when several answers point in the same direction: how you initiate, how you respond to friction, what drains you, what energizes you, and what you naturally protect.',
+        ],
+      },
+      {
+        type: 'grid',
+        title: 'Signals of a better temperament quiz',
+        intro: 'Use this checklist when judging any four temperaments test or set of temperament questions.',
+        items: [
+          { title: 'It balances all four types', body: 'The test should not over-favor loud leadership, social charm, intellectual depth, or calm agreeableness.', accent: 'purple' },
+          { title: 'It asks across contexts', body: 'Work, stress, conflict, friendship, routines, and decision-making should all contribute clues.', accent: 'blue' },
+          { title: 'It allows mixed results', body: 'Close scores should lead to subtype interpretation rather than forcing a pure label.', accent: 'green' },
+          { title: 'It avoids clinical claims', body: 'Temperament questions are for reflection and personality education, not diagnosis or treatment.', accent: 'gold' },
+        ],
+      },
+      {
+        type: 'section',
+        title: 'Example topics a temperament test should cover',
+        body: [
+          'Useful temperament questions usually cover decision speed, social appetite, planning style, emotional processing, conflict behavior, work rhythm, stress response, and recovery needs. These topics help separate what you enjoy from what you reliably do.',
+          'For example, a Sanguine and a Choleric may both look energetic, but the Sanguine pattern often seeks connection and variety while the Choleric pattern pushes toward action and control. A good question set notices that difference.',
+        ],
+      },
+      {
+        type: 'section',
+        title: 'How to answer temperament test questions accurately',
+        body: [
+          'Answer from your repeated default, especially when you are tired, rushed, or emotionally pressed. Do not answer from your job title, your ideal self, or one unusual season of life.',
+          'If two answers feel true, choose the one that describes you more often. After the quiz, compare your top two scores. The secondary score may explain why you do not feel like a textbook version of your primary temperament.',
+        ],
+      },
+      {
+        type: 'callout',
+        title: 'Before you take a temperament quiz',
+        body: 'The strongest results come from honest pattern recognition. Think about what people close to you would recognize as your normal behavior, not only what you admire.',
+        bullets: ['Answer quickly but honestly.', 'Use repeated behavior, not rare moments.', 'Think about stress and conflict.', 'Compare your top two scores after the result.', 'Read the subtype when the result feels mixed.'],
+      },
+    ],
+    related: [
+      { href: '/methodology', title: 'FourType Methodology', description: 'See how FourType scores and interprets the quiz.' },
+      { href: '/temperament-test', title: 'Temperament Test', description: 'Take the main free four temperaments quiz path.' },
+      { href: '/blog/temperament-test-accuracy', title: 'Temperament Test Accuracy', description: 'Learn how to judge quiz reliability responsibly.' },
+      { href: '/blog/4-temperaments-test-free', title: '4 Temperaments Test Free', description: 'Use the free quiz and learn how to read your score spread.' },
+    ],
+    faq: [
+      { question: 'What questions are on a temperament test?', answer: 'Temperament test questions usually ask about repeated behavior in stress, conflict, relationships, decision-making, social energy, planning, and emotional processing. FourType uses questions that compare Choleric, Sanguine, Melancholic, and Phlegmatic patterns.' },
+      { question: 'How many questions should a temperament test have?', answer: 'There is no single required number, but a useful quiz needs enough questions to compare all four patterns across several contexts. FourType uses 40 questions to balance depth with a quick quiz experience.' },
+      { question: 'What makes a temperament question accurate?', answer: 'A more accurate temperament question asks about observable behavior instead of flattering labels. It should help reveal what you repeatedly do, especially under pressure.' },
+      { question: 'Should I answer as my work self or personal self?', answer: 'Answer as your repeated default self across life. If work changes your behavior, consider how you act when you are not performing a role or trying to meet a specific expectation.' },
+    ],
+  },
+  {
     slug: 'temperament-compatibility-chart',
     title: 'Four Temperaments Compatibility Chart: Which Types Get Along?',
     shortTitle: 'Four Temperaments Compatibility Chart',
@@ -1444,6 +1532,7 @@ export const coreGuideLinks: LinkCard[] = [
   { href: '/4-temperament-test', title: '4 Temperament Test', description: 'Compare Choleric, Sanguine, Melancholic, and Phlegmatic.' },
   { href: '/four-temperaments-test', title: 'Four Temperaments Test', description: 'Find your classic Choleric, Sanguine, Melancholic, or Phlegmatic pattern.' },
   { href: '/blog/4-temperaments-test-free', title: '4 Temperaments Test Free', description: 'Take the free quiz and learn how to read your score spread.' },
+  { href: '/blog/temperament-test-questions', title: 'Temperament Test Questions', description: 'See what useful quiz questions should ask.' },
   { href: '/blog/best-free-four-temperaments-test', title: 'Best Free Four Temperaments Test', description: 'Learn what makes a free quiz worth taking.' },
   { href: '/blog/ospp-four-temperaments-test', title: 'OSPP Four Temperaments Test', description: 'Compare OSPP-style temperament tests with FourType.' },
   { href: '/blog/four-humors-test', title: 'Four Humors Test', description: 'Understand the historical roots of the four temperaments.' },
@@ -1466,6 +1555,7 @@ export const typeTestLinks: LinkCard[] = [
 export const methodologyGuideLinks: LinkCard[] = [
   { href: '/methodology', title: 'FourType Methodology', description: 'How the temperament test is scored and interpreted.' },
   { href: '/blog/temperament-test-accuracy', title: 'Temperament Test Accuracy', description: 'How to judge quiz reliability without overclaiming.' },
+  { href: '/blog/temperament-test-questions', title: 'Temperament Test Questions', description: 'What a useful four temperaments quiz should ask.' },
   { href: '/temperaments-vs-mbti', title: 'Temperaments vs MBTI', description: 'Compare temperament with other personality frameworks.' },
   { href: '/four-temperaments', title: 'The Four Temperaments', description: 'A clear guide to the classical four-type model.' },
 ]
