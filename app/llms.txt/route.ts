@@ -13,6 +13,8 @@ export function GET() {
     '## Core routes',
     '- Home: https://www.fourtype.com',
     '- Quiz: https://www.fourtype.com/quiz',
+    '- Four Temperaments Test: https://www.fourtype.com/four-temperaments-test',
+    '- Temperament Test Guide: https://www.fourtype.com/temperament-test',
     '- Blog: https://www.fourtype.com/blog',
     '- What is a temperament test: https://www.fourtype.com/what-is-temperament-test',
     '',
