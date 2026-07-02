@@ -102,17 +102,19 @@ const articleSchema = {
   author: {
     '@type': 'Organization',
     name: 'FourType',
+    url: 'https://www.fourtype.com',
   },
   publisher: {
     '@type': 'Organization',
     name: 'FourType',
     logo: {
       '@type': 'ImageObject',
-      url: '/fourtype-logo.png',
+      url: 'https://www.fourtype.com/fourtype-logo.png',
     },
   },
-  datePublished: '2024-01-01',
-  dateModified: new Date().toISOString().split('T')[0],
+  datePublished: '2024-03-21',
+  dateModified: '2024-03-21',
+  mainEntityOfPage: 'https://www.fourtype.com/temperament/sanguine',
 };
 
 export default function SanguinePage() {

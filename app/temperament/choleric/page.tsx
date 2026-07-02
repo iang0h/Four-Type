@@ -97,10 +97,11 @@ const articleSchema = {
   headline: 'Choleric Temperament: The Complete Guide to the Commander Personality',
   description: 'A comprehensive guide to understanding the Choleric temperament, including leadership strengths, challenges, career paths, and relationship dynamics.',
   image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Commander-rEIrJwEHYOzxNaP1ngaLZqm7A6GdrY.png',
-  author: { '@type': 'Organization', name: 'FourType' },
-  publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: '/fourtype-logo.png' } },
-  datePublished: '2024-01-01',
-  dateModified: new Date().toISOString().split('T')[0],
+  author: { '@type': 'Organization', name: 'FourType', url: 'https://www.fourtype.com' },
+  publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: 'https://www.fourtype.com/fourtype-logo.png' } },
+  datePublished: '2024-03-21',
+  dateModified: '2024-03-21',
+  mainEntityOfPage: 'https://www.fourtype.com/temperament/choleric',
 };
 
 export default function CholericPage() {

@@ -29,7 +29,7 @@ const faqSchema = {
   ],
 };
 
-const articleSchema = { '@context': 'https://schema.org', '@type': 'Article', headline: 'Melancholic Temperament: The Complete Guide to the Strategist Personality', description: 'A comprehensive guide to understanding the Melancholic temperament, including analytical strengths, perfectionist challenges, career paths, and relationship dynamics.', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/The%20Strategist-11A2ki2xYEb1yOkVrQ2xjaZ1etfh3Z.png', author: { '@type': 'Organization', name: 'FourType' }, publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: '/fourtype-logo.png' } }, datePublished: '2024-01-01', dateModified: new Date().toISOString().split('T')[0] };
+const articleSchema = { '@context': 'https://schema.org', '@type': 'Article', headline: 'Melancholic Temperament: The Complete Guide to the Strategist Personality', description: 'A comprehensive guide to understanding the Melancholic temperament, including analytical strengths, perfectionist challenges, career paths, and relationship dynamics.', image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/The%20Strategist-11A2ki2xYEb1yOkVrQ2xjaZ1etfh3Z.png', author: { '@type': 'Organization', name: 'FourType', url: 'https://www.fourtype.com' }, publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: 'https://www.fourtype.com/fourtype-logo.png' } }, datePublished: '2024-03-21', dateModified: '2024-03-21', mainEntityOfPage: 'https://www.fourtype.com/temperament/melancholic' };
 
 export default function MelancholicPage() {
   return (
