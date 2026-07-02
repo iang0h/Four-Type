@@ -238,7 +238,7 @@ export default function SharePageClient({
               What&apos;s your temperament?
             </p>
             <Link
-              href="/"
+              href="/quiz"
               className="block w-full font-serif text-sm font-bold tracking-widest uppercase py-4 rounded-xl border-2 text-center transition-all duration-200"
               style={{
                 borderColor: primaryColor,
