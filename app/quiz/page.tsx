@@ -1,6 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import type { ReactNode } from 'react'
+import Link from 'next/link'
 import { AnswerLetter } from '@/lib/questions'
 import { calculateScores, ScoreMap } from '@/lib/scoringKey'
 import NameInputScreen from '@/components/NameInputScreen'
@@ -42,21 +44,104 @@ export default function QuizPage() {
     setStage('name')
   }
 
-  // Render the appropriate stage
+  let screen: ReactNode
   switch (stage) {
     case 'name':
-      return <NameInputScreen onStart={handleNameSubmit} />
+      screen = <NameInputScreen onStart={handleNameSubmit} />
+      break
 
     case 'quiz':
-      return <QuestionScreen heroName={heroName} onComplete={handleQuizComplete} />
+      screen = <QuestionScreen heroName={heroName} onComplete={handleQuizComplete} />
+      break
 
     case 'loading':
-      return <LoadingScreen heroName={heroName} onComplete={handleLoadingComplete} />
+      screen = <LoadingScreen heroName={heroName} onComplete={handleLoadingComplete} />
+      break
 
     case 'results':
-      return <ResultsScreen heroName={heroName} scores={scores} onRetake={handleRetake} />
+      screen = <ResultsScreen heroName={heroName} scores={scores} onRetake={handleRetake} />
+      break
 
     default:
-      return null
+      screen = null
   }
+
+  return (
+    <>
+      {screen}
+      {stage === 'name' && <QuizSeoSection />}
+    </>
+  )
+}
+
+function QuizSeoSection() {
+  return (
+    <section className="bg-background border-t border-border px-4 py-16">
+      <div className="max-w-4xl mx-auto">
+        <div className="mb-10">
+          <p className="text-xs font-semibold tracking-widest uppercase text-primary mb-3">Free Temperament Test</p>
+          <h1 className="font-serif text-3xl md:text-4xl font-bold mb-4">
+            Take the FourType Temperament Test
+          </h1>
+          <p className="text-muted-foreground leading-relaxed text-lg">
+            FourType is a free 40-question temperament test for discovering whether your strongest pattern is
+            Choleric, Sanguine, Melancholic, Phlegmatic, or a blended subtype. Answer based on your repeated
+            behavior under ordinary pressure, then compare your score spread across all four temperaments.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4 mb-12">
+          {[
+            { title: 'Choleric', body: 'Direct, decisive, goal-focused, and energized by challenge.', href: '/choleric-test' },
+            { title: 'Sanguine', body: 'Expressive, social, optimistic, and energized by connection.', href: '/sanguine-test' },
+            { title: 'Melancholic', body: 'Analytical, careful, meaning-focused, and energized by quality.', href: '/melancholic-test' },
+            { title: 'Phlegmatic', body: 'Calm, loyal, steady, and energized by peace and trust.', href: '/phlegmatic-test' },
+          ].map((item) => (
+            <Link key={item.href} href={item.href} className="rounded-xl border border-border bg-secondary/20 p-5 transition-colors hover:border-primary/50">
+              <h2 className="font-serif text-xl font-bold mb-2">{item.title}</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">{item.body}</p>
+            </Link>
+          ))}
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-4 mb-12">
+          {[
+            { title: '40 questions', body: 'A focused quiz built around behavior, motivation, stress response, and communication style.' },
+            { title: 'Score spread', body: 'See how your answers distribute across all four temperaments instead of forcing a single flat label.' },
+            { title: 'Subtype direction', body: 'Use your top two scores to understand blended patterns when more than one type fits.' },
+          ].map((item) => (
+            <div key={item.title} className="rounded-xl border border-border bg-card p-5">
+              <h2 className="font-serif text-lg font-bold mb-2">{item.title}</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed">{item.body}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="border-t border-border pt-10">
+          <h2 className="font-serif text-2xl md:text-3xl font-bold mb-6">Temperament Test Questions</h2>
+          <div className="space-y-4">
+            {[
+              {
+                question: 'What does the FourType temperament test measure?',
+                answer: 'It measures repeated behavioral patterns across the four temperaments: how you respond to pressure, make decisions, relate to people, and recover energy.',
+              },
+              {
+                question: 'Is this temperament test free?',
+                answer: 'Yes. The core FourType temperament test is free and gives you a primary pattern, score spread, and subtype direction.',
+              },
+              {
+                question: 'How should I answer the quiz?',
+                answer: 'Answer as your default self, especially under ordinary stress. Avoid choosing the answer that sounds most impressive or ideal.',
+              },
+            ].map((item) => (
+              <div key={item.question} className="rounded-xl border border-border bg-secondary/20 p-5">
+                <h3 className="font-serif text-lg font-bold mb-2">{item.question}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
 }

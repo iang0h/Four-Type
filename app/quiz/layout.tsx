@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { breadcrumbJsonLd, quizActionJsonLd } from '@/lib/seo-content'
+import { breadcrumbJsonLd, faqJsonLd, quizActionJsonLd } from '@/lib/seo-content'
 
 export const metadata: Metadata = {
   title: 'Free Temperament Test | 40-Question Personality Quiz',
@@ -43,11 +43,26 @@ export default function QuizLayout({
     { href: '/', title: 'FourType', description: 'FourType home' },
     { href: '/quiz', title: 'Free Temperament Test', description: 'Take the FourType temperament quiz' },
   ])
+  const faqSchema = faqJsonLd([
+    {
+      question: 'What does the FourType temperament test measure?',
+      answer: 'It measures repeated behavioral patterns across the four temperaments: how you respond to pressure, make decisions, relate to people, and recover energy.',
+    },
+    {
+      question: 'Is this temperament test free?',
+      answer: 'Yes. The core FourType temperament test is free and gives you a primary pattern, score spread, and subtype direction.',
+    },
+    {
+      question: 'How should I answer the quiz?',
+      answer: 'Answer as your default self, especially under ordinary stress. Avoid choosing the answer that sounds most impressive or ideal.',
+    },
+  ])
 
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(quizActionJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {faqSchema && <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />}
       {children}
     </>
   )
