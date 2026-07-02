@@ -17,7 +17,7 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   title: {
     default: 'Free Temperament Test | FourType',
-    template: '%s | FourType',
+    template: '%s',
   },
   description: 'Take the free FourType temperament test to discover whether you are Choleric, Sanguine, Melancholic, Phlegmatic, or a blended subtype.',
   metadataBase: new URL('https://www.fourtype.com'),
