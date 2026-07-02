@@ -84,26 +84,69 @@ export default function RootLayout({
 }>) {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'FourType',
-    alternateName: 'FourType — The Temperament Quest',
-    url: 'https://www.fourtype.com',
-    description: 'Understanding your temperament unlocks the key to why you think, feel, and act the way you do. Take the free 40-question temperament test to discover your type: The Commander (Choleric), The Bard (Sanguine), The Strategist (Melancholic), or The Guardian (Phlegmatic). Based on 2,500 years of temperament science. Free forever.',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: 'https://www.fourtype.com/search?q={search_term_string}',
-      'query-input': 'required name=search_term_string',
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'FourType',
-      url: 'https://www.fourtype.com',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://www.fourtype.com/fourtype-logo.png',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': 'https://www.fourtype.com/#organization',
+        name: 'FourType',
+        alternateName: 'FourType — The Temperament Quest',
+        url: 'https://www.fourtype.com',
+        logo: {
+          '@type': 'ImageObject',
+          '@id': 'https://www.fourtype.com/#logo',
+          url: 'https://www.fourtype.com/fourtype-logo.png',
+          width: 512,
+          height: 512,
+        },
+        sameAs: ['https://www.fourtype.com'],
       },
-    },
-    sameAs: ['https://www.fourtype.com'],
+      {
+        '@type': 'WebSite',
+        '@id': 'https://www.fourtype.com/#website',
+        name: 'FourType',
+        alternateName: 'FourType — The Temperament Quest',
+        url: 'https://www.fourtype.com',
+        description: 'FourType is a free four temperaments test and quiz for discovering Choleric, Sanguine, Melancholic, Phlegmatic, and blended subtype patterns.',
+        publisher: { '@id': 'https://www.fourtype.com/#organization' },
+        inLanguage: 'en-US',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: 'https://www.fourtype.com/search?q={search_term_string}',
+          'query-input': 'required name=search_term_string',
+        },
+        about: [
+          { '@type': 'DefinedTerm', name: 'Temperament test', url: 'https://www.fourtype.com/temperament-test' },
+          { '@type': 'DefinedTerm', name: 'Four temperaments test', url: 'https://www.fourtype.com/four-temperaments-test' },
+          { '@type': 'DefinedTerm', name: 'Choleric temperament', url: 'https://www.fourtype.com/choleric-test' },
+          { '@type': 'DefinedTerm', name: 'Sanguine temperament', url: 'https://www.fourtype.com/sanguine-test' },
+          { '@type': 'DefinedTerm', name: 'Melancholic temperament', url: 'https://www.fourtype.com/melancholic-test' },
+          { '@type': 'DefinedTerm', name: 'Phlegmatic temperament', url: 'https://www.fourtype.com/phlegmatic-test' },
+        ],
+      },
+      {
+        '@type': 'WebApplication',
+        '@id': 'https://www.fourtype.com/quiz#app',
+        name: 'FourType Temperament Test',
+        alternateName: 'Free Four Temperaments Test',
+        url: 'https://www.fourtype.com/quiz',
+        applicationCategory: 'LifestyleApplication',
+        operatingSystem: 'Web',
+        browserRequirements: 'Requires JavaScript',
+        isAccessibleForFree: true,
+        description: 'A free 40-question temperament test for identifying Choleric, Sanguine, Melancholic, Phlegmatic, and blended subtype patterns.',
+        publisher: { '@id': 'https://www.fourtype.com/#organization' },
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+        },
+        potentialAction: {
+          '@type': 'TakeAction',
+          target: 'https://www.fourtype.com/quiz',
+          name: 'Take the free temperament test',
+        },
+      },
+    ],
   }
 
   return (
