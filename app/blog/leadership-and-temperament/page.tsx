@@ -20,14 +20,15 @@ export const metadata: Metadata = {
 
 const articleSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Article',
+  '@type': 'BlogPosting',
   headline: 'How to Use Temperament for Better Leadership',
   description: 'Discover how each of the 4 temperaments approaches leadership and build a balanced team.',
   image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/blog%20images-YOx5j8T93i2oKsjJGl1c4WSMhtlLA5.jpg',
-  author: { '@type': 'Organization', name: 'FourType' },
-  publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: '/fourtype-logo.png' } },
-  datePublished: '2024-01-01',
-  dateModified: new Date().toISOString().split('T')[0],
+  author: { '@type': 'Organization', name: 'FourType', url: 'https://www.fourtype.com' },
+  publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: 'https://www.fourtype.com/fourtype-logo.png' } },
+  datePublished: '2024-03-22',
+  dateModified: '2024-03-22',
+  mainEntityOfPage: 'https://www.fourtype.com/blog/leadership-and-temperament',
 }
 
 const leadershipStyles = [

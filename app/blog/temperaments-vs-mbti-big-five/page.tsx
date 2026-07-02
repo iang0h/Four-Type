@@ -18,13 +18,15 @@ export const metadata: Metadata = {
 
 const articleSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Article',
+  '@type': 'BlogPosting',
   headline: '4 Temperaments vs MBTI vs Big Five — How They Compare',
   description: 'A clear comparison of the 4 temperaments, Myers-Briggs (MBTI), Big Five, and DISC personality systems.',
-  author: { '@type': 'Organization', name: 'FourType' },
-  publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: '/fourtype-logo.png' } },
-  datePublished: '2024-01-01',
-  dateModified: new Date().toISOString().split('T')[0],
+  image: 'https://www.fourtype.com/icon.png',
+  author: { '@type': 'Organization', name: 'FourType', url: 'https://www.fourtype.com' },
+  publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: 'https://www.fourtype.com/fourtype-logo.png' } },
+  datePublished: '2024-03-23',
+  dateModified: '2024-03-23',
+  mainEntityOfPage: 'https://www.fourtype.com/blog/temperaments-vs-mbti-big-five',
 }
 
 const systems = [

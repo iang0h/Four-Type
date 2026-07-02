@@ -19,14 +19,15 @@ export const metadata: Metadata = {
 
 const articleSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Article',
+  '@type': 'BlogPosting',
   headline: 'The 15 Temperament Subtypes You Never Knew Existed',
   description: 'Go beyond the 4 temperaments and discover the 15 subtypes that make each person unique.',
   image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/make_better_202603241223-1XkEeb3BizSaXrANQ3lL5DNCWuTuNB.jpeg',
-  author: { '@type': 'Organization', name: 'FourType' },
-  publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: '/fourtype-logo.png' } },
-  datePublished: '2024-01-01',
-  dateModified: new Date().toISOString().split('T')[0],
+  author: { '@type': 'Organization', name: 'FourType', url: 'https://www.fourtype.com' },
+  publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: 'https://www.fourtype.com/fourtype-logo.png' } },
+  datePublished: '2024-03-24',
+  dateModified: '2024-03-24',
+  mainEntityOfPage: 'https://www.fourtype.com/blog/subtypes',
 }
 
 const subtypes = {

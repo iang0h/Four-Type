@@ -19,15 +19,15 @@ export const metadata: Metadata = {
 
 const articleSchema = {
   '@context': 'https://schema.org',
-  '@type': 'Article',
+  '@type': 'BlogPosting',
   headline: 'History of the 4 Temperaments: From Hippocrates to Modern Psychology',
   description: 'The complete history of the four temperaments from ancient Greek medicine through Galen, Kant, Wundt, and modern psychology.',
-  image: '/icon.png',
-  author: { '@type': 'Organization', name: 'FourType' },
-  publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: '/fourtype-logo.png' } },
-  datePublished: '2024-01-01',
-  dateModified: new Date().toISOString().split('T')[0],
-  mainEntityOfPage: { '@type': 'WebPage', '@id': '/blog/history-of-temperaments' },
+  image: 'https://www.fourtype.com/icon.png',
+  author: { '@type': 'Organization', name: 'FourType', url: 'https://www.fourtype.com' },
+  publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: 'https://www.fourtype.com/fourtype-logo.png' } },
+  datePublished: '2024-03-20',
+  dateModified: '2024-03-20',
+  mainEntityOfPage: 'https://www.fourtype.com/blog/history-of-temperaments',
 }
 
 const timeline = [
