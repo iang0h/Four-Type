@@ -99,9 +99,9 @@ export const seoPages: SeoPage[] = [
   {
     slug: 'temperament-test',
     shortTitle: 'Temperament Test',
-    title: 'Temperament Test: Find Your Choleric, Sanguine, Melancholic, or Phlegmatic Type',
-    description: 'Take a free temperament test and learn how choleric, sanguine, melancholic, and phlegmatic patterns shape your work, stress, relationships, and growth.',
-    keywords: ['temperament test', 'four temperament test', '4 temperament test', 'choleric sanguine melancholic phlegmatic test', 'temperament quiz'],
+    title: 'Free Temperament Test: Find Your Choleric, Sanguine, Melancholic, or Phlegmatic Type',
+    description: 'Take a free 40-question temperament test to compare Choleric, Sanguine, Melancholic, and Phlegmatic patterns with subtype guidance.',
+    keywords: ['temperament test', 'free temperament test', 'four temperament test', '4 temperament test', 'choleric sanguine melancholic phlegmatic test', 'temperament quiz'],
     eyebrow: 'Free Four Temperaments Quiz',
     icon: Target,
     accent: 'gold',
@@ -111,10 +111,10 @@ export const seoPages: SeoPage[] = [
     blocks: [
       {
         type: 'section',
-        title: 'What a temperament test actually measures',
+        title: 'Take a free temperament test with useful results',
         body: [
-          'A temperament test looks for your default behavioral pattern: how you respond to pressure, how you move toward goals, how you process emotion, and how you relate to other people.',
-          'FourType scores your answers across the four classical temperaments: Choleric, Sanguine, Melancholic, and Phlegmatic. Your result is not a diagnosis or a life sentence. It is a practical language for noticing your patterns with more honesty.',
+          'A temperament test looks for your default behavioral pattern: how you respond to pressure, how you move toward goals, how you process emotion, and how you relate to other people. FourType uses 40 behavior-based questions so the result is grounded in repeated patterns rather than flattering labels.',
+          'FourType scores your answers across the four classical temperaments: Choleric, Sanguine, Melancholic, and Phlegmatic. You get a primary pattern, score spread, and subtype direction without a signup or paywall.',
         ],
       },
       {
@@ -133,11 +133,21 @@ export const seoPages: SeoPage[] = [
         body: 'Use your temperament result as a mirror, not a box. The most useful question is not “What label am I?” but “What pattern keeps showing up, and how can I work with it wisely?”',
         bullets: ['Notice your stress triggers.', 'Improve communication with opposite types.', 'Choose work rhythms that fit your natural energy.', 'Read your subtype for more nuance.'],
       },
+      {
+        type: 'section',
+        title: 'How to answer the temperament test accurately',
+        body: [
+          'Answer as your ordinary self, especially under everyday pressure. If you answer as your ideal self, your job role, or the person you become in one unusual season, the result will be less useful.',
+          'The clearest result usually comes from moving through the questions without overthinking, then reading the top two scores together. Close scores often point toward a blended subtype rather than a pure temperament.',
+        ],
+      },
     ],
     faq: [
       { question: 'What is a temperament test?', answer: 'A temperament test is a personality quiz that identifies your default behavioral pattern across the four classical temperaments: Choleric, Sanguine, Melancholic, and Phlegmatic.' },
       { question: 'Is FourType a free temperament test?', answer: 'Yes. FourType offers a free 40-question temperament test that gives you a primary temperament, score spread, and subtype direction.' },
       { question: 'What are the four temperament types?', answer: 'The four temperament types are Choleric, Sanguine, Melancholic, and Phlegmatic. They describe patterns in energy, stress response, communication, motivation, and relationship style.' },
+      { question: 'How long does the temperament test take?', answer: 'The FourType temperament test has 40 questions and usually takes under 10 minutes to complete.' },
+      { question: 'How accurate is a temperament test?', answer: 'A temperament test is most useful when it asks behavior-based questions and explains score spread. It should guide self-reflection rather than make clinical claims or permanent labels.' },
       { question: 'Is a temperament test the same as a diagnosis?', answer: 'No. A temperament test is a self-reflection tool, not a clinical or medical diagnosis. It should be used as practical pattern language, not a permanent label.' },
     ],
   },
