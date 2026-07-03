@@ -45,7 +45,7 @@ const timeline = [
 
 const relatedPosts = [
   { slug: 'temperaments-vs-mbti-big-five', title: '4 Temperaments vs MBTI vs Big Five', category: 'Comparison' },
-  { slug: 'subtypes', title: 'The 15 Temperament Subtypes', category: 'Deep Dive' },
+  { slug: 'subtypes', title: 'The 16 FourTypes', category: 'Deep Dive' },
   { slug: 'leadership-and-temperament', title: 'Temperament and Leadership', category: 'Leadership' },
 ]
 

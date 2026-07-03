@@ -6,12 +6,12 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
-  title: 'The 15 Temperament Subtypes You Never Knew Existed | FourType',
-  description: 'Go beyond the 4 temperaments and discover the 15 subtypes that make each person unique. Learn your blend\'s traits, strengths, risks, and growth path.',
-  keywords: ['temperament blends', 'temperament subtypes', 'sanguine choleric blend', 'melancholic phlegmatic', 'personality combinations', '15 temperament types'],
+  title: 'The 16 FourTypes You Never Knew Existed | FourType',
+  description: 'Go beyond the 4 temperaments and discover the 16 FourTypes that make each person unique. Learn your blend\'s traits, strengths, risks, and growth path.',
+  keywords: ['temperament blends', 'temperament subtypes', 'sanguine choleric blend', 'melancholic phlegmatic', 'personality combinations', '16 temperament patterns'],
   openGraph: {
-    title: '15 Temperament Subtypes | FourType',
-    description: 'Discover the 15 temperament blends that make each person unique.',
+    title: '16 FourTypes | FourType',
+    description: 'Discover the 16 temperament patterns that make each person unique.',
     type: 'article',
   },
   alternates: { canonical: '/blog/subtypes' },
@@ -20,8 +20,8 @@ export const metadata: Metadata = {
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
-  headline: 'The 15 Temperament Subtypes You Never Knew Existed',
-  description: 'Go beyond the 4 temperaments and discover the 15 subtypes that make each person unique.',
+  headline: 'The 16 FourTypes You Never Knew Existed',
+  description: 'Go beyond the 4 temperaments and discover the 16 FourTypes that make each person unique.',
   image: 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/make_better_202603241223-1XkEeb3BizSaXrANQ3lL5DNCWuTuNB.jpeg',
   author: { '@type': 'Organization', name: 'FourType', url: 'https://www.fourtype.com' },
   publisher: { '@type': 'Organization', name: 'FourType', logo: { '@type': 'ImageObject', url: 'https://www.fourtype.com/fourtype-logo.png' } },
@@ -94,7 +94,7 @@ export default function SubtypesBlogPage() {
           </div>
           
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6 leading-tight">
-            The 15 Temperament Subtypes You Never Knew Existed
+            The 16 FourTypes You Never Knew Existed
           </h1>
           
           <p className="text-xl text-muted-foreground leading-relaxed">

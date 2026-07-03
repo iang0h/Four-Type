@@ -297,7 +297,7 @@ export default function LandingScreen({ onBegin }: LandingScreenProps) {
           </p>
           <p className="font-sans text-[#64748B] text-sm mt-3">
             <span className="text-[#E2E8F0]">40 questions</span> &bull; 
-            <span className="text-[#E2E8F0]"> 15 unique blends</span> &bull; 
+            <span className="text-[#E2E8F0]"> 16 personality patterns</span> &bull; 
             <span className="text-[#E2E8F0]"> No paywall</span>
           </p>
         </div>

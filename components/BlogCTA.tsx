@@ -33,7 +33,7 @@ export default function BlogCTA({ variant = 'callout' }: BlogCTAProps) {
         <div className="flex-1">
           <p className="font-semibold text-foreground mb-1">Ready to discover your temperament?</p>
           <p className="text-sm text-muted-foreground">
-            Take our free 40-question temperament test to identify your type and 15 unique blends.
+            Take our free 40-question temperament test to identify your type and 16 personality patterns.
           </p>
         </div>
         <Link

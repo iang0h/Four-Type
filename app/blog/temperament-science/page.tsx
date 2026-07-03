@@ -156,9 +156,9 @@ export default function TemperamentSciencePage() {
               </div>
             </section>
 
-            {/* The 15-Subtype Advantage */}
+            {/* The 16-Pattern Advantage */}
             <section className="border-l-4 border-purple-400 pl-6 py-4">
-              <h2 className="text-2xl font-serif font-bold mb-3">The FourType Innovation: Why 15 Subtypes Matter</h2>
+              <h2 className="text-2xl font-serif font-bold mb-3">The FourType Innovation: Why 16 FourTypes Matter</h2>
               <div className="space-y-4 text-muted-foreground">
                 <p>
                   While classical temperament theory recognized four pure types, it largely ignored blends. FourType recognizes that most people are blends—combinations of two temperament types in different orders.
@@ -167,7 +167,7 @@ export default function TemperamentSciencePage() {
                   <strong className="text-foreground">Scientific Basis:</strong> This aligns with modern temperament research showing that personality exists on continuous dimensions, not discrete categories. A Sanguine-Choleric is quantitatively different from a Choleric-Sanguine, just as a 65% extrovert is different from a 35% extrovert.
                 </p>
                 <p>
-                  The 15-subtype system provides granular accuracy without losing the predictive power of classical temperament theory. You get both the biological validity of four temperaments AND the individual specificity needed for practical applications (coaching, hiring, relationship advice).
+                  The 16-pattern system provides granular accuracy without losing the predictive power of classical temperament theory. You get both the biological validity of four temperaments AND the individual specificity needed for practical applications (coaching, hiring, relationship advice).
                 </p>
               </div>
             </section>

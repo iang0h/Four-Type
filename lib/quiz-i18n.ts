@@ -79,7 +79,6 @@ export interface QuizCopy {
     }
     interpretation: {
       pure: (name: string) => string
-      triple: string
       bilingual: (primary: string, secondary: string) => string
       diagonal: string
     }
@@ -214,7 +213,6 @@ const enCopy: QuizCopy = {
     },
     interpretation: {
       pure: (name) => `Pure ${name} — rare and singular`,
-      triple: 'Triple blend — the rarest type in the system',
       bilingual: (primary, secondary) => `Bilingual in two temperaments — ${primary} and ${secondary}`,
       diagonal: 'This rare diagonal combination may indicate masking — learned behavior vs. true wiring',
     },
@@ -334,7 +332,6 @@ const zhCopy: QuizCopy = {
     },
     interpretation: {
       pure: (name) => `纯 ${name}：少见而鲜明`,
-      triple: '三重混合：系统中最少见的结果',
       bilingual: (primary, secondary) => `你像会说两种气质语言：${primary} 与 ${secondary}`,
       diagonal: '这种少见的对角组合可能表示人格遮蔽：学会的行为与真实倾向不完全一致',
     },
@@ -454,7 +451,6 @@ const esCopy: QuizCopy = {
     },
     interpretation: {
       pure: (name) => `${name} puro: raro y singular`,
-      triple: 'Mezcla triple: el resultado más raro del sistema',
       bilingual: (primary, secondary) => `Bilingüe en dos temperamentos: ${primary} y ${secondary}`,
       diagonal: 'Esta combinación diagonal poco común puede indicar enmascaramiento: conducta aprendida frente a tu tendencia real',
     },
@@ -580,9 +576,10 @@ const zhBlendSummaries: Record<BlendKey, LocalizedBlendSummary> = {
   Achiever: { name: '成就者', blend: '抑郁质-胆汁质', rpgClass: '精密建筑师', tagline: '高标准，也要真正完成。', drive: '做到完美 + 取得结果', lore: '你把深度思考和行动决心结合起来。你对质量认真，也希望事情真正落地。', strengths: ['认真且有执行力', '能发现问题并修正', '标准高', '适合复杂目标'], shadows: ['容易过度紧绷', '对自己和别人都苛刻', '难以放下控制'], underStress: '会批判、加速、试图亲自修复一切。', speakTo: '给证据、清晰标准和可执行路径。', neverDo: '不要草率承诺或模糊责任。' },
   Diplomat: { name: '外交者', blend: '抑郁质-多血质', rpgClass: '敏感使者', tagline: '既有深度，也希望被理解。', drive: '做到有意义 + 被接纳', lore: '你既有情感色彩，也有思考深度。你希望表达被看见，也希望内容有分量。', strengths: ['有同理心且有洞察', '表达细腻', '能理解复杂情绪', '适合创作和沟通'], shadows: ['容易过度解读', '被批评后受伤很深', '会在表现与退缩之间摇摆'], underStress: '会敏感、退缩，然后寻求确认。', speakTo: '温柔具体地反馈，先理解再建议。', neverDo: '不要轻率评价他们的感受或动机。' },
   Analyst: { name: '分析师', blend: '抑郁质-粘液质', rpgClass: '静默学者', tagline: '深思熟虑，稳定而精准。', drive: '做到完美 + 维持稳定', lore: '你安静、谨慎、可靠。你不追求喧闹的舞台，而追求正确、清晰和稳定。', strengths: ['深度分析', '稳定耐心', '细节可靠', '适合长期专注'], shadows: ['容易拖延决定', '担心风险', '不愿主动表达需求'], underStress: '会退回内心、反复分析，行动变慢。', speakTo: '给事实、时间和清楚结构。', neverDo: '不要催促他们在信息不足时承诺。' },
-  Idealist: { name: '理想主义者', blend: '三重混合', rpgClass: '寻道者', tagline: '多种气质拉扯，也带来独特视角。', drive: '寻找意义、平衡与真实', lore: '你的结果显示多种力量同时存在。你可能在不同情境中展现不同面向。', strengths: ['适应力强', '能理解不同人格语言', '视角丰富', '自我觉察潜力高'], shadows: ['容易感觉矛盾', '决策时拉扯', '身份感需要时间沉淀'], underStress: '会在几种反应之间摇摆，难以立刻判断真实需求。', speakTo: '帮助他们命名当下最重要的需求。', neverDo: '不要强迫他们用一个标签解释全部自己。' },
+  Strategist: { name: '纯战略家', blend: '纯抑郁质', rpgClass: '深度学者', tagline: '先有深度，永远重视标准。', drive: '追求意义与质量', lore: '你的抑郁质非常突出。你能看见别人忽略的模式、风险和质量问题，也容易把高标准背在自己身上。', strengths: ['分析深刻', '标准清晰', '能提前发现风险', '忠于意义和质量'], shadows: ['容易完美主义', '内在批评很强', '压力下会退回思考而迟迟不行动'], underStress: '会反复思考、更加挑剔，并等待足够确定才行动。', speakTo: '具体、真诚、有准备，尊重他们对质量的重视。', neverDo: '不要催促、敷衍或把他们的顾虑说成负面。' },
   Commander: { name: '纯指挥官', blend: '纯胆汁质', rpgClass: '统帅', tagline: '目标清晰，行动直接。', drive: '掌控局面并取得结果', lore: '你的胆汁质非常突出。你天然朝向领导、效率和成果。', strengths: ['果断', '目标感强', '危机中行动快', '能够推动团队'], shadows: ['容易强势', '耐心不足', '忽略他人感受'], underStress: '会更想控制一切，并加快节奏。', speakTo: '简洁、具体、带方案。', neverDo: '不要绕圈子或只抱怨不解决。' },
   Spark: { name: '纯火花', blend: '纯多血质', rpgClass: '吟游火花', tagline: '热情、表达、连接。', drive: '被喜欢并创造快乐', lore: '你的多血质非常突出。你自然把人聚在一起，让场面变亮。', strengths: ['外向有感染力', '乐观', '擅长讲故事', '容易建立连接'], shadows: ['容易分心', '难以坚持', '害怕无聊'], underStress: '会寻找热闹和分散注意力。', speakTo: '温暖、鼓励、带一点趣味。', neverDo: '不要用冷漠和过度细节压住他们。' },
+  Guardian: { name: '纯守护者', blend: '纯粘液质', rpgClass: '静水守护者', tagline: '守住和平，吸收压力，不被催促。', drive: '维持稳定与和平', lore: '你的粘液质非常突出。你平静、耐心、包容，是让别人感到安全的人，但也可能把自己的方向藏得太深。', strengths: ['情绪稳定', '耐心可靠', '擅长倾听', '让关系更安全'], shadows: ['容易逃避主动性', '冲突中会沉默', '舒适区可能困住成长'], underStress: '会退回被动和沉默，等待压力过去，而不是说出自己的需要。', speakTo: '温和、清楚，先给安全感，再邀请一个明确的下一步。', neverDo: '不要施压、羞辱或逼他们突然对抗。' },
 }
 
 const esBlendSummaries: Record<BlendKey, LocalizedBlendSummary> = {
@@ -598,9 +595,10 @@ const esBlendSummaries: Record<BlendKey, LocalizedBlendSummary> = {
   Achiever: { name: 'El Logrador', blend: 'Melancólico-Colérico', rpgClass: 'Arquitecto Preciso', tagline: 'Alto estándar y acción real.', drive: 'Hacerlo perfecto + lograr resultados', lore: 'Unes pensamiento profundo con determinación. Te importa la calidad y también terminar.', strengths: ['Serio y ejecutivo', 'Detecta problemas y los corrige', 'Altos estándares', 'Ideal para objetivos complejos'], shadows: ['Se tensa demasiado', 'Duro consigo mismo y con otros', 'Le cuesta soltar control'], underStress: 'Critica, acelera e intenta arreglar todo personalmente.', speakTo: 'Da evidencia, estándares claros y una ruta ejecutable.', neverDo: 'No prometas a la ligera ni dejes responsabilidades ambiguas.' },
   Diplomat: { name: 'El Diplomático', blend: 'Melancólico-Sanguíneo', rpgClass: 'Mensajero Sensible', tagline: 'Profundidad que quiere ser comprendida.', drive: 'Crear significado + ser aceptado', lore: 'Tienes color emocional y profundidad mental. Quieres ser visto, pero también tener sustancia.', strengths: ['Empático e intuitivo', 'Expresión matizada', 'Comprende emociones complejas', 'Bueno para creación y comunicación'], shadows: ['Sobreinterpreta', 'La crítica duele mucho', 'Oscila entre mostrarse y retirarse'], underStress: 'Se vuelve sensible, se retira y busca confirmación.', speakTo: 'Da feedback amable y específico; comprende antes de aconsejar.', neverDo: 'No juzgues rápido sus emociones o motivos.' },
   Analyst: { name: 'El Analista', blend: 'Melancólico-Flemático', rpgClass: 'Erudito Silencioso', tagline: 'Reflexivo, estable y preciso.', drive: 'Hacerlo perfecto + mantener estabilidad', lore: 'Eres tranquilo, cuidadoso y fiable. No buscas ruido, buscas claridad, corrección y estabilidad.', strengths: ['Análisis profundo', 'Paciencia estable', 'Detalle confiable', 'Enfoque prolongado'], shadows: ['Retrasa decisiones', 'Ve muchos riesgos', 'No expresa necesidades fácilmente'], underStress: 'Se encierra, analiza demasiado y actúa más lento.', speakTo: 'Da hechos, tiempo y estructura clara.', neverDo: 'No lo apures a comprometerse sin información suficiente.' },
-  Idealist: { name: 'El Idealista', blend: 'Mezcla triple', rpgClass: 'Buscador', tagline: 'Varias fuerzas internas, una mirada única.', drive: 'Encontrar significado, equilibrio y autenticidad', lore: 'Tu resultado muestra varias fuerzas activas. Puedes mostrar lados distintos según el contexto.', strengths: ['Adaptable', 'Comprende varios lenguajes de personalidad', 'Perspectiva rica', 'Alta autoconciencia potencial'], shadows: ['Puede sentirse contradictorio', 'Decidir toma más energía', 'La identidad necesita tiempo'], underStress: 'Oscila entre varias respuestas y tarda en ubicar su necesidad real.', speakTo: 'Ayúdale a nombrar la necesidad más importante del momento.', neverDo: 'No lo fuerces a explicarse con una sola etiqueta.' },
+  Strategist: { name: 'El Estratega Puro', blend: 'Melancólico puro', rpgClass: 'Erudito Profundo', tagline: 'Profundidad primero. Estándares siempre.', drive: 'Buscar significado y calidad', lore: 'Tu melancólico es muy fuerte. Ves patrones, riesgos y problemas de calidad que otros pasan por alto, aunque tus estándares también pueden pesar mucho sobre ti.', strengths: ['Análisis profundo', 'Estándares claros', 'Detecta riesgos temprano', 'Leal al significado y a la calidad'], shadows: ['Perfeccionismo', 'Crítica interna fuerte', 'Puede pensar demasiado antes de actuar'], underStress: 'Rumía, se vuelve más crítico y espera certeza antes de moverse.', speakTo: 'Sé específico, sincero y preparado. Respeta su necesidad de calidad.', neverDo: 'No lo apures ni trates sus preocupaciones como simple negatividad.' },
   Commander: { name: 'El Comandante Puro', blend: 'Colérico puro', rpgClass: 'Comandante', tagline: 'Meta clara, acción directa.', drive: 'Tomar control y lograr resultados', lore: 'Tu colérico es muy fuerte. Te orientas naturalmente a liderazgo, eficiencia y resultados.', strengths: ['Decidido', 'Orientado a metas', 'Rápido en crisis', 'Puede mover equipos'], shadows: ['Puede ser dominante', 'Impaciente', 'Ignora emociones ajenas'], underStress: 'Quiere controlarlo todo y acelera el ritmo.', speakTo: 'Sé breve, concreto y trae soluciones.', neverDo: 'No des vueltas ni te quejes sin resolver.' },
   Spark: { name: 'La Chispa Pura', blend: 'Sanguíneo puro', rpgClass: 'Chispa Bardica', tagline: 'Entusiasmo, expresión y conexión.', drive: 'Ser querido y crear alegría', lore: 'Tu sanguíneo es muy fuerte. Unes personas y haces que el ambiente se ilumine.', strengths: ['Extrovertido y contagioso', 'Optimista', 'Buen narrador', 'Conecta fácilmente'], shadows: ['Se distrae', 'Le cuesta terminar', 'Teme el aburrimiento'], underStress: 'Busca ruido social y distracción.', speakTo: 'Sé cálido, alentador y con un toque de diversión.', neverDo: 'No lo aplastes con frialdad o detalles excesivos.' },
+  Guardian: { name: 'El Guardián Puro', blend: 'Flemático puro', rpgClass: 'Agua Serena', tagline: 'Paz preservada. Presión absorbida. Nada apresurado.', drive: 'Mantener estabilidad y paz', lore: 'Tu flemático es muy fuerte. Eres tranquilo, paciente y aceptante; das seguridad a otros, aunque puedes esconder demasiado tu propia dirección.', strengths: ['Estabilidad emocional', 'Paciencia profunda', 'Escucha excelente', 'Crea seguridad'], shadows: ['Evita iniciativa', 'Se calla en conflicto', 'La comodidad puede frenar crecimiento'], underStress: 'Se vuelve pasivo, calla y espera que la presión pase en vez de nombrar lo que necesita.', speakTo: 'Sé calmado, amable y concreto. Da seguridad y un siguiente paso claro.', neverDo: 'No lo presiones, avergüences ni encierres en confrontación repentina.' },
 }
 
 export function getLocalizedBlendSummary(locale: QuizLocale, blendKey: BlendKey): LocalizedBlendSummary | null {

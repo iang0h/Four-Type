@@ -42,14 +42,14 @@ export type HomeCopy = {
 export const homeCopy: Record<HomeLocale, HomeCopy> = {
   en: {
     heroAlt: 'FourType — Know Your True Nature — The Temperament Quest',
-    heroStatement: 'Understanding your temperament unlocks the key to why you think, feel, and act the way you do.',
-    heroCta: 'Begin Your Quest',
-    heroMeta: '40 questions • 15 unique blends • Free forever',
+    heroStatement: 'Know your nature under pressure. Take the free 40-question test to reveal your core type, secondary blend, stress response, communication style, and growth edge.',
+    heroCta: 'Take the 6-minute test',
+    heroMeta: '40 questions • Instant result • No email required • 16 patterns',
     choosePath: 'Choose Your Path',
     introSrTitle: 'Free Four Temperaments Test — Discover Your Personality Type Online',
     introParagraphs: [
       'The four temperaments is an ancient framework for understanding personality that has influenced psychology for over 2,500 years. Originating with Hippocrates, this timeless model identifies four core personality types: Sanguine, Choleric, Melancholic, and Phlegmatic.',
-      'Unlike personality frameworks like the Myers-Briggs Type Indicator (MBTI) or Big Five personality traits, the four temperaments focus on your core motivations, stress responses, and natural strengths. Our free temperament test goes deeper — it identifies not just your primary type, but your unique blend of all four temperaments, revealing 15 distinct personality subtypes for a complete picture of who you are.',
+      'Unlike personality frameworks like the Myers-Briggs Type Indicator (MBTI) or Big Five personality traits, the four temperaments focus on your core motivations, stress responses, and natural strengths. Our free temperament test goes deeper — it identifies not just your primary type, but your unique blend of all four temperaments, revealing 16 distinct personality patterns for a complete picture of who you are.',
       'Take our 40-question online personality test to discover your temperament profile, understand how you naturally think and feel, learn practical strategies for growth, and improve your relationships with others.',
     ],
     guideEyebrow: 'Temperament Test Guides',
@@ -57,12 +57,12 @@ export const homeCopy: Record<HomeLocale, HomeCopy> = {
     guideDescription: 'Use these core FourType guides to understand the free temperament test, compare the four classic patterns, review the question design, and judge your result with the right amount of confidence.',
     readGuide: 'Read guide',
     stats: {
-      peopleTested: 'People Tested',
+      peopleTested: 'Questions',
       blends: 'Unique Temperament Blends',
       wisdom: 'Years of Wisdom',
     },
     whyTitle: 'Why Study Temperaments?',
-    whyDescription: 'Understanding your temperament is the first step to understanding yourself and connecting with others.',
+    whyDescription: 'FourType helps you understand your default nature under pressure, in relationships, work, leadership, and growth.',
     videoTitle: 'Why Study Temperaments - FourType',
     temperaments: {
       sanguine: {
@@ -94,7 +94,7 @@ export const homeCopy: Record<HomeLocale, HomeCopy> = {
       { title: '2,500 Years of Wisdom', description: 'From Hippocrates to modern psychology, the temperaments have stood the test of time.' },
       { title: 'Understand Yourself & Others', description: 'Learn why you react the way you do, and how to connect better with every type.' },
       { title: 'Actionable Insights', description: 'Practical strategies for growth, relationships, leadership, and daily life.' },
-      { title: '15 Unique Subtypes', description: 'Go beyond the basics with detailed blend profiles for deeper self-discovery.' },
+      { title: '16 Personality Patterns', description: 'Go beyond the basics with detailed blend profiles for deeper self-discovery.' },
     ],
     guides: [
       { href: '/temperament-test', title: 'Temperament Test', description: 'Start with the main free temperament test guide and learn how FourType reads your score spread.' },
@@ -105,7 +105,7 @@ export const homeCopy: Record<HomeLocale, HomeCopy> = {
   },
   'zh-CN': {
     heroAlt: 'FourType — 认识你的真实本性 — 气质探索任务',
-    heroStatement: '了解你的气质，会帮助你看清自己为什么这样思考、感受和行动。',
+    heroStatement: '认识你在压力下的真实本性。通过 40 题免费测试了解你的核心类型、副气质、压力反应、沟通方式和成长边界。',
     heroCta: '开始你的任务',
     heroMeta: '40 个问题 • 15 种混合型 • 永久免费',
     choosePath: '选择你的路径',
@@ -120,7 +120,7 @@ export const homeCopy: Record<HomeLocale, HomeCopy> = {
     guideDescription: '这些 FourType 指南帮助你理解测试、比较四种经典气质、了解题目设计，并更负责任地解读结果。',
     readGuide: '阅读指南',
     stats: {
-      peopleTested: '已测试用户',
+      peopleTested: '测试题目',
       blends: '独特气质混合型',
       wisdom: '智慧传承年数',
     },
@@ -168,7 +168,7 @@ export const homeCopy: Record<HomeLocale, HomeCopy> = {
   },
   es: {
     heroAlt: 'FourType — Conoce tu verdadera naturaleza — La búsqueda del temperamento',
-    heroStatement: 'Comprender tu temperamento te ayuda a ver por qué piensas, sientes y actúas como lo haces.',
+    heroStatement: 'Conoce tu naturaleza bajo presión. Haz el test gratis de 40 preguntas para descubrir tu tipo central, mezcla secundaria, respuesta al estrés, estilo de comunicación y punto de crecimiento.',
     heroCta: 'Comenzar la misión',
     heroMeta: '40 preguntas • 15 mezclas únicas • Gratis para siempre',
     choosePath: 'Elige tu camino',
@@ -183,7 +183,7 @@ export const homeCopy: Record<HomeLocale, HomeCopy> = {
     guideDescription: 'Estas guías de FourType te ayudan a entender el test, comparar los cuatro temperamentos clásicos, revisar el diseño de preguntas e interpretar tu resultado con equilibrio.',
     readGuide: 'Leer guía',
     stats: {
-      peopleTested: 'Personas evaluadas',
+      peopleTested: 'Preguntas',
       blends: 'Mezclas de temperamento',
       wisdom: 'Años de sabiduría',
     },

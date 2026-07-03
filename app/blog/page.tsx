@@ -119,8 +119,8 @@ const staticBlogPosts = [
   },
   {
     slug: 'subtypes',
-    title: 'The 15 Temperament Subtypes You Never Knew Existed',
-    excerpt: 'Go beyond the 4 temperaments and discover the 15 subtypes that make each person unique. Learn your blend\'s traits, strengths, risks, and growth path.',
+    title: 'The 16 FourTypes You Never Knew Existed',
+    excerpt: 'Go beyond the 4 temperaments and discover the 16 FourTypes that make each person unique. Learn your blend\'s traits, strengths, risks, and growth path.',
     category: 'Deep Dive',
     readTime: '10 min',
     featured: true,

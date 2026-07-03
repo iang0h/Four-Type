@@ -1199,6 +1199,8 @@ export function getSubtypeByBlendKey(blendKey: string): Subtype | undefined {
   const pureSubtypeByBlendKey: Record<string, SubtypeSlug> = {
     Spark: 'pure-sanguine',
     Commander: 'pure-choleric',
+    Strategist: 'pure-melancholic',
+    Guardian: 'pure-phlegmatic',
   }
 
   const pureSubtypeSlug = pureSubtypeByBlendKey[blendKey]

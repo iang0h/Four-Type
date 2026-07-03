@@ -366,7 +366,7 @@ export default function CholericPageClient() {
                 <p className="text-gray-400 text-sm">Extended article exploring leadership psychology and Choleric excellence.</p>
               </Link>
               <Link href="/blog/subtypes" className="p-6 bg-gray-900 border border-gray-700 rounded-lg hover:border-red-500 transition-all duration-300">
-                <h3 className="text-lg font-bold text-white mb-2">15 Temperament Blends</h3>
+                <h3 className="text-lg font-bold text-white mb-2">16 Temperament Patterns</h3>
                 <p className="text-gray-400 text-sm">Discover Choleric-Sanguine, Choleric-Melancholic, and other blend profiles.</p>
               </Link>
               <Link href="/quiz" className="p-6 bg-gray-900 border border-gray-700 rounded-lg hover:border-red-500 transition-all duration-300">

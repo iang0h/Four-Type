@@ -38,7 +38,7 @@ const navLinks = [
       { href: '/four-temperaments-guidebook.pdf', label: 'Temperament Guidebook' },
       { href: '/blog/history-of-temperaments', label: 'History' },
       { href: '/blog/temperaments-vs-mbti-big-five', label: 'Comparisons' },
-      { href: '/blog/subtypes', label: '15 Subtypes' },
+      { href: '/blog/subtypes', label: '16 FourTypes' },
     ],
   },
   { href: '/blog', label: 'Blog' },

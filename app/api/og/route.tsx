@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
   const secondaryColor = blendColors.secondary
   const characterImage = CHARACTER_IMAGES[blend.primary]
   const bgColor = BG_COLORS[blend.primary]
-  const hasSecondary = blend.secondary !== 'Pure' && blend.secondary !== 'Triple'
+  const hasSecondary = blend.secondary !== 'Pure'
 
   // Truncate tagline so it never overflows
   const tagline = blend.tagline.length > 60

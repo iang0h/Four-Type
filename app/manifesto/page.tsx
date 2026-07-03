@@ -93,15 +93,19 @@ const temperaments = [
 ]
 
 const subtypesTable = [
+  { subtype: 'Pure San', primary: 'Sanguine', secondary: 'Pure', traits: 'Undiluted social energy, warmth, spontaneity, and contagious enthusiasm', color1: '#FFD700', color2: '#FFD700' },
   { subtype: 'San-Chol', primary: 'Sanguine', secondary: 'Choleric', traits: 'Super-extroverted, always on the go, explosive but brief emotions', color1: '#FFD700', color2: '#E63946' },
   { subtype: 'San-Mel', primary: 'Sanguine', secondary: 'Melancholic', traits: 'Highly emotional, rapid mood swings from highs to lows', color1: '#FFD700', color2: '#4CC9F0' },
   { subtype: 'San-Phleg', primary: 'Sanguine', secondary: 'Phlegmatic', traits: 'Outgoing nature tempered by grace, warm and easygoing', color1: '#FFD700', color2: '#52B788' },
+  { subtype: 'Pure Chol', primary: 'Choleric', secondary: 'Pure', traits: 'Undiluted drive, decisiveness, control, and results focus', color1: '#E63946', color2: '#E63946' },
   { subtype: 'Chol-San', primary: 'Choleric', secondary: 'Sanguine', traits: 'Driven by results with social charm, practical and forceful', color1: '#E63946', color2: '#FFD700' },
   { subtype: 'Chol-Mel', primary: 'Choleric', secondary: 'Melancholic', traits: 'Analytical and decisive, visionary with attention to detail', color1: '#E63946', color2: '#4CC9F0' },
   { subtype: 'Chol-Phleg', primary: 'Choleric', secondary: 'Phlegmatic', traits: 'Decisive yet calm, diplomatic, goal-driven but measured', color1: '#E63946', color2: '#52B788' },
+  { subtype: 'Pure Mel', primary: 'Melancholic', secondary: 'Pure', traits: 'Undiluted depth, standards, analysis, and meaning focus', color1: '#4CC9F0', color2: '#4CC9F0' },
   { subtype: 'Mel-San', primary: 'Melancholic', secondary: 'Sanguine', traits: 'Emotional depth with outward expressiveness, idealistic', color1: '#4CC9F0', color2: '#FFD700' },
   { subtype: 'Mel-Chol', primary: 'Melancholic', secondary: 'Choleric', traits: 'Detail-oriented with drive, analytical and determined', color1: '#4CC9F0', color2: '#E63946' },
   { subtype: 'Mel-Phleg', primary: 'Melancholic', secondary: 'Phlegmatic', traits: 'Most introverted blend, deeply appreciates art and music', color1: '#4CC9F0', color2: '#52B788' },
+  { subtype: 'Pure Phleg', primary: 'Phlegmatic', secondary: 'Pure', traits: 'Undiluted calm, patience, stability, and peacekeeping', color1: '#52B788', color2: '#52B788' },
   { subtype: 'Phleg-San', primary: 'Phlegmatic', secondary: 'Sanguine', traits: 'Easy-going with social warmth, relaxed and friendly', color1: '#52B788', color2: '#FFD700' },
   { subtype: 'Phleg-Chol', primary: 'Phlegmatic', secondary: 'Choleric', traits: 'Steady with hidden determination, diplomatic but firm', color1: '#52B788', color2: '#E63946' },
   { subtype: 'Phleg-Mel', primary: 'Phlegmatic', secondary: 'Melancholic', traits: 'Quiet and thoughtful, gentle, people-focused introvert', color1: '#52B788', color2: '#4CC9F0' },
@@ -397,13 +401,13 @@ export default function ManifestoPage() {
         </div>
       </section>
 
-      {/* Part II: The 15 Subtypes */}
+      {/* Part II: The 16 FourTypes */}
       <section id="subtypes" className="relative py-24 lg:py-32 bg-card/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="text-sm text-primary font-semibold tracking-wider uppercase mb-4 block">Part II</span>
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-              The 15 Subtypes
+              The 16 FourTypes
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Most people are a blend of two temperaments. The subtype is written as Primary-Secondary.

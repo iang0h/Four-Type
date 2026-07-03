@@ -97,12 +97,12 @@ export function getMaskingWarning(scores: ScoreMap): 'diagonal' | 'triple' | nul
 }
 
 // ═══════════════════════════════════════════════════════════
-// BLEND RESOLUTION LOGIC — 15 Types
+// BLEND RESOLUTION LOGIC — 16 FourTypes
 // ═══════════════════════════════════════════════════════════
 
 import { BlendKey, BLEND_MAP } from './blends'
 
-export type BlendFlag = 'bilingual' | 'triple' | 'pure' | null
+export type BlendFlag = 'bilingual' | 'pure' | null
 
 export interface BlendResult {
   blendKey: BlendKey
@@ -115,38 +115,22 @@ export function resolveBlend(scores: ScoreMap): BlendResult {
   const sorted = (Object.entries(scores) as [TemperamentKey, number][]).sort((a, b) => b[1] - a[1])
   const [primary, pScore] = sorted[0]
   const [secondary, sScore] = sorted[1]
-  const [third, tScore] = sorted[2]
-  
-  // Special case: Idealist (Triple blend)
-  // Blue (Mel) primary + Green (Phleg) secondary + Red (Chol) third, all within 4 points
-  if (primary === 'Blue' && secondary === 'Green' && third === 'Red' && (pScore - tScore) <= 4) {
-    return {
-      blendKey: 'Idealist',
-      primary: 'Blue',
-      secondary: 'Green',
-      flag: 'triple',
-    }
-  }
-  
+
   // Pure dominant: dominant score >= 22 AND secondary <= 6
   if (pScore >= 22 && sScore <= 6) {
-    if (primary === 'Red') {
-      return {
-        blendKey: 'Commander',
-        primary: 'Red',
-        secondary: 'Red',
-        flag: 'pure',
-      }
+    const pureBlendByPrimary: Record<TemperamentKey, BlendKey> = {
+      Yellow: 'Spark',
+      Red: 'Commander',
+      Blue: 'Strategist',
+      Green: 'Guardian',
     }
-    if (primary === 'Yellow') {
-      return {
-        blendKey: 'Spark',
-        primary: 'Yellow',
-        secondary: 'Yellow',
-        flag: 'pure',
-      }
+
+    return {
+      blendKey: pureBlendByPrimary[primary],
+      primary,
+      secondary: primary,
+      flag: 'pure',
     }
-    // For Blue/Green pure dominants, fall through to normal blend
   }
   
   // Check for bilingual flag: top 2 scores within 2 points

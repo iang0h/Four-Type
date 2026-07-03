@@ -51,7 +51,7 @@ function getReadingResources(primaryKey: TemperamentKey, blendKey: string) {
       href: `/blog/${temp.slug}`,
     },
     {
-      title: 'The 15 Temperament Subtypes',
+      title: 'The 16 FourTypes',
       description: 'Understand all the blends including yours',
       href: '/blog/subtypes',
     },
@@ -161,9 +161,6 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
   function getInterpretation(): string {
     if (blendResult.flag === 'pure') {
       return copy.interpretation.pure(dominantName)
-    }
-    if (blendResult.flag === 'triple') {
-      return copy.interpretation.triple
     }
     if (blendResult.flag === 'bilingual') {
       return copy.interpretation.bilingual(dominantName, secondaryName)
@@ -283,7 +280,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
                 className="h-1.5 rounded-full" 
                 style={{ backgroundColor: primaryColor, width: '40px' }}
               />
-              {blend.secondary !== 'Pure' && blend.secondary !== 'Triple' && (
+              {blend.secondary !== 'Pure' && (
                 <div 
                   className="h-1.5 rounded-full" 
                   style={{ backgroundColor: secondaryColor, width: '30px' }}

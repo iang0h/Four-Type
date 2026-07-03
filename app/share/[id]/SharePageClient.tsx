@@ -146,7 +146,7 @@ export default function SharePageClient({
                 className="h-2 rounded-full" 
                 style={{ backgroundColor: primaryColor, width: '50px' }}
               />
-              {blend.secondary !== 'Pure' && blend.secondary !== 'Triple' && (
+              {blend.secondary !== 'Pure' && (
                 <div 
                   className="h-2 rounded-full" 
                   style={{ backgroundColor: blendColors.secondary, width: '35px' }}
@@ -431,7 +431,7 @@ function getReadingResources(primaryKey: TemperamentKey, blendKey: string) {
       href: `/blog/${temp.slug}`,
     },
     {
-      title: 'The 15 Temperament Subtypes Explained',
+      title: 'The 16 FourTypes Explained',
       description: 'Understand all the blends including yours',
       href: '/blog/subtypes',
     },

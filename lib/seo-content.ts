@@ -797,10 +797,10 @@ export const seoPages: SeoPage[] = [
   {
     slug: 'premium',
     shortTitle: 'Premium Report',
-    title: 'FourType Premium Report: Deeper Temperament Guidance',
-    description: 'Preview what a premium FourType temperament report can include: subtype patterns, communication guidance, stress response, and growth prompts.',
-    keywords: ['temperament report', 'premium temperament test', 'personality report', 'FourType premium'],
-    eyebrow: 'Deeper Guidance',
+    title: 'FourType Premium Report: Your Full Temperament Growth Map',
+    description: 'Get the FourType Premium Report for RM19 / USD5 launch price: subtype interpretation, stress response, relationship pattern, work style, blind spot, growth plan, and shareable PDF.',
+    keywords: ['temperament report', 'premium temperament test', 'personality report', 'FourType premium', 'FourType premium report'],
+    eyebrow: 'Launch Offer',
     icon: BookOpen,
     accent: 'gold',
     priority: 0.76,
@@ -809,21 +809,22 @@ export const seoPages: SeoPage[] = [
     blocks: [
       {
         type: 'section',
-        title: 'What a deeper report should give you',
+        title: 'FourType Premium Report',
         body: [
-          'A good temperament report should not simply repeat your label. It should help you see your patterns in real situations: communication, work, pressure, relationships, growth, and blind spots.',
-          'FourType premium is shaped around practical guidance: what to watch for, what to practice, and how your subtype changes the story.',
+          'Launch price: RM19 / USD5. Start with the free FourType quiz, then unlock a fuller report built around your exact FourType pattern.',
+          'The premium report is designed to be practical, not mystical: how you respond under pressure, how you communicate, what creates friction, and the one growth move that would make your week better.',
         ],
       },
       {
         type: 'callout',
-        title: 'Responsible premium guidance',
-        body: 'The best use of a paid report is not certainty. It is a more detailed mirror that helps you make better choices.',
-        bullets: ['Subtype interpretation', 'Stress and recovery patterns', 'Communication guidance', 'Relationship dynamics', 'Growth prompts'],
+        title: 'What is included',
+        body: 'A clearer report for people who want more than a label.',
+        bullets: ['Full subtype report', 'Stress response', 'Relationship pattern', 'Work and leadership style', 'Blind spot and growth plan', 'Shareable PDF'],
       },
     ],
     faq: [
-      { question: 'What is in a premium temperament report?', answer: 'A premium temperament report can add deeper subtype interpretation, communication guidance, stress patterns, relationship notes, and growth prompts beyond the basic quiz result.' },
+      { question: 'What is in the FourType Premium Report?', answer: 'The launch report includes your full subtype interpretation, stress response, relationship pattern, work and leadership style, blind spot, growth plan, and shareable PDF.' },
+      { question: 'How much does the premium report cost?', answer: 'The planned launch price is RM19 / USD5.' },
       { question: 'Should I take the free quiz before getting a report?', answer: 'Yes. The free quiz gives you the primary pattern and score spread needed before deeper report guidance is useful.' },
       { question: 'Is a premium report a diagnosis?', answer: 'No. A premium FourType report is still self-reflection guidance, not a medical, psychiatric, or employment diagnosis.' },
     ],
@@ -1563,11 +1564,11 @@ export const staticContentPages: DiscoverablePage[] = [
   },
   {
     href: '/blog/subtypes',
-    title: '15 Temperament Subtypes',
+    title: '16 FourType Patterns',
     description: 'Explore the blended temperament subtypes that appear when primary and secondary patterns combine.',
     priority: 0.85,
     changeFrequency: 'monthly',
-    markdownBody: 'Temperament subtypes explain why two people with the same primary type can still feel different. This guide introduces the 15 blended patterns across Choleric, Sanguine, Melancholic, and Phlegmatic combinations.',
+    markdownBody: 'Temperament subtypes explain why two people with the same primary type can still feel different. This guide introduces the 16 FourType patterns across Choleric, Sanguine, Melancholic, and Phlegmatic combinations.',
   },
   {
     href: '/blog/temperament-anxiety',

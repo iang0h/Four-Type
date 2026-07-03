@@ -76,7 +76,7 @@ const faqCategories = [
     faqs: [
       {
         q: 'What are temperament subtypes?',
-        a: 'Subtypes are the 15 unique combinations created when you have both a primary and secondary temperament. For example, a Sanguine-Choleric (San-Chol) is primarily social and fun-loving (Sanguine) but with a drive for results and action (Choleric). The subtype captures the nuance that makes each person unique.',
+        a: 'FourType uses 16 personality patterns: 4 pure temperament patterns and 12 ordered blends. For example, a Sanguine-Choleric (San-Chol) is primarily social and fun-loving (Sanguine) but with a drive for results and action (Choleric). The subtype captures the nuance that makes each person unique.',
       },
       {
         q: 'How do I find my subtype?',
@@ -88,7 +88,7 @@ const faqCategories = [
       },
       {
         q: 'Is there a Pure Phlegmatic subtype?',
-        a: 'This is debated! Most temperament lists include 15 subtypes (12 blends + 3 pure types: Pure Sanguine, Pure Choleric, Pure Melancholic). Some argue Pure Phlegmatic is omitted because a person with no secondary drive would lack the motivation to be observable as a distinct type. Others include it as a 16th subtype.',
+        a: 'Yes. FourType uses the clean 16-pattern system: 4 core pure temperaments plus 12 ordered blends. Pure Phlegmatic is included as the fully steady Guardian pattern.',
       },
       {
         q: 'Can opposite temperaments blend?',

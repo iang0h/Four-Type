@@ -389,7 +389,7 @@ export function HomeExperience({ locale = 'en' }: { locale?: HomeLocale }) {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
               <div>
                 <p className="font-serif text-4xl sm:text-5xl font-bold text-[#FFD700] mb-2">
-                  50,000+
+                  40
                 </p>
                 <p className="text-sm sm:text-base text-muted-foreground">
                   {copy.stats.peopleTested}
@@ -397,7 +397,7 @@ export function HomeExperience({ locale = 'en' }: { locale?: HomeLocale }) {
               </div>
               <div>
                 <p className="font-serif text-4xl sm:text-5xl font-bold text-[#4CC9F0] mb-2">
-                  15
+                  16
                 </p>
                 <p className="text-sm sm:text-base text-muted-foreground">
                   {copy.stats.blends}

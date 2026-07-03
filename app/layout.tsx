@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     'know your temperament', 'temperament types explained', 'four humors personality',
     'choleric personality', 'sanguine personality', 'melancholic personality', 'phlegmatic personality',
     'temperament vs personality', 'ancient personality types', 'Hippocrates temperaments',
-    'character archetypes', '15 temperament subtypes', 'temperament blend', 'FourType',
+    'character archetypes', '16 temperament patterns', 'temperament blend', 'FourType',
     'fourtype.com', 'temperament education', 'personality psychology', 'self discovery quiz',
   ],
   icons: {

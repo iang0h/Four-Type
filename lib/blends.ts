@@ -5,14 +5,14 @@ export type BlendKey =
   | 'Marketer' | 'Relater' | 'Performer'
   | 'Inspector' | 'Harmonizer' | 'Helper'
   | 'Achiever' | 'Diplomat' | 'Analyst'
-  | 'Idealist' | 'Commander' | 'Spark'
+  | 'Commander' | 'Spark' | 'Strategist' | 'Guardian'
 
 export interface Blend {
   key: BlendKey
   name: string
   blend: string
   primary: TemperamentKey
-  secondary: TemperamentKey | 'Pure' | 'Triple'
+  secondary: TemperamentKey | 'Pure'
   rpgClass: string
   tagline: string
   drive: string
@@ -454,39 +454,39 @@ export const BLENDS: Record<BlendKey, Blend> = {
   },
 
   // ═══════════════════════════════════════════════════════════
-  // SPECIAL BLENDS
+  // PURE TYPES
   // ═══════════════════════════════════════════════════════════
 
-  Idealist: {
-    key: 'Idealist',
-    name: 'The Idealist',
-    blend: 'Melancholy-Phlegmatic-Choleric',
+  Strategist: {
+    key: 'Strategist',
+    name: 'The Strategist',
+    blend: 'Pure Melancholic',
     primary: 'Blue',
-    secondary: 'Triple',
-    rpgClass: 'The High Mage',
-    tagline: 'The ideal standard. Enforced diplomatically. Until it breaks down.',
-    drive: 'Precision + Patience + Results force',
-    lore: "You are unique. You are the only triple-blend in the system. The Choleric pushes your Melancholy-Phlegmatic base toward enforcement of standards. You are systematic, precise, and diplomatic — until someone deviates from what you've accepted as correct. Then you become very forceful indeed. You are the rarest of the 15 types.",
-    mbti: ['INTJ', 'ISTJ'],
-    enneagram: ['Type 1 with Type 5 wing'],
+    secondary: 'Pure',
+    rpgClass: 'The Deep Scholar',
+    tagline: 'Depth first. Standards always. Nothing shallow survives.',
+    drive: 'Pure meaning and quality drive — no softening influence',
+    lore: "You are undiluted depth: analytical, exacting, private, and intensely aware of what could be better. You see patterns others miss and carry standards that can create great work — or a heavy inner burden.",
+    mbti: ['INTJ', 'INFJ', 'ISTJ'],
+    enneagram: ['Type 1 — The Perfectionist', 'Type 5 — The Investigator'],
     strengths: [
-      'Systematic, precise thinker — follows procedures exactly',
-      'Can be diplomatically persuasive when needed',
-      'Attentive to detail AND capable of pushing for results',
-      'Maintains the highest standards in any environment',
-      'Conscientious and thorough in all things',
+      'Extraordinary analytical depth',
+      'Uncompromising standards for quality',
+      'Notices flaws, patterns, and hidden risks early',
+      'Loyal to truth, craft, and meaning',
+      'Capable of profound creative or intellectual work',
     ],
     shadows: [
-      'Rigid — own standards become the only standards',
-      'Difficulty in relationships due to inflexibility',
-      'Very slow decision-making (collects data until certain)',
-      'Not socially active; prefers privacy and order',
-      'Can become forceful and blunt when standards are challenged',
+      'Perfectionism can become paralysis',
+      'Inner criticism rarely switches off',
+      'Can withdraw instead of asking for support',
+      'May see what is wrong before what is working',
+      'High standards can make relationships feel evaluated',
     ],
-    underStress: 'Becomes rigid and judgmental. Withdraws or becomes surprisingly forceful.',
-    speakTo: 'Show you meet their standard first. Then earn input rights.',
-    neverDo: 'Improvise, cut corners, or challenge their system without a better one ready.',
-    famous: ['Immanuel Kant', 'Marie Curie'],
+    underStress: 'Withdraws into rumination, becomes more critical, and may delay action until certainty feels possible.',
+    speakTo: 'Be precise, sincere, and prepared. Give them time to process and show respect for quality.',
+    neverDo: 'Rush them, dismiss their concerns, or treat standards as needless negativity.',
+    famous: ['Emily Dickinson', 'Nikola Tesla'],
   },
 
   Commander: {
@@ -552,6 +552,38 @@ export const BLENDS: Record<BlendKey, Blend> = {
     neverDo: 'Assign detailed, long-term projects or demand emotional depth.',
     famous: ['Peter Pan (fictional)', 'Ferris Bueller (fictional)'],
   },
+
+  Guardian: {
+    key: 'Guardian',
+    name: 'The Guardian',
+    blend: 'Pure Phlegmatic',
+    primary: 'Green',
+    secondary: 'Pure',
+    rpgClass: 'The Still Water',
+    tagline: 'Peace preserved. Pressure absorbed. Nothing rushed.',
+    drive: 'Pure stability drive — no activating influence',
+    lore: "You are undiluted calm: steady, patient, accepting, and deeply resistant to unnecessary pressure. Your gift is peace. Your risk is disappearing so completely into comfort that your own direction goes quiet.",
+    mbti: ['ISFP', 'ISFJ'],
+    enneagram: ['Type 9 — The Peacemaker'],
+    strengths: [
+      'Deep patience and emotional steadiness',
+      'Naturally calming presence',
+      'Excellent listener and stabilizer',
+      'Low-drama, loyal, and accepting',
+      'Creates safety for other people',
+    ],
+    shadows: [
+      'Can avoid initiative until life decides for them',
+      'Conflict avoidance may become self-erasure',
+      'May hide disagreement behind silence',
+      'Can drift, delay, or disappear under pressure',
+      'Comfort can become a cage',
+    ],
+    underStress: 'Withdraws into passivity, goes quiet, and waits for pressure to pass instead of naming what they need.',
+    speakTo: 'Be calm, kind, and concrete. Give them safety, then invite one clear next step.',
+    neverDo: 'Pressure, shame, or corner them into sudden confrontation.',
+    famous: ['The Quiet Neighbor', 'Keanu Reeves (partial)'],
+  },
 }
 
 // Get temperament color for a blend
@@ -565,7 +597,7 @@ export function getBlendColors(blend: Blend): { primary: string; secondary: stri
   
   return {
     primary: colorMap[blend.primary],
-    secondary: blend.secondary === 'Pure' || blend.secondary === 'Triple' 
+    secondary: blend.secondary === 'Pure'
       ? colorMap[blend.primary] 
       : colorMap[blend.secondary],
   }
