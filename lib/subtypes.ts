@@ -73,6 +73,25 @@ export interface KnowThyselfInsight {
   thisIsYouIf: string[]
 }
 
+export interface MaturityExpression {
+  label: string
+  body: string
+}
+
+export interface SubtypeLearningGuide {
+  dailyPractice: string
+  relationshipPractice: string
+  workPractice: string
+  stressReset: string
+  journalPrompt: string
+  weeklyWatch: string
+  maturity: {
+    immature: MaturityExpression
+    balanced: MaturityExpression
+    mature: MaturityExpression
+  }
+}
+
 type Temperament = Subtype['primary']
 
 type TemperamentInsight = {
@@ -87,6 +106,18 @@ type TemperamentInsight = {
   howToLove: string
   selfSabotage: string
   thisIsYouIf: string[]
+}
+
+type TemperamentLearning = {
+  dailyPractice: string
+  relationshipPractice: string
+  workPractice: string
+  stressReset: string
+  journalPrompt: string
+  weeklyWatch: string
+  immature: string
+  balanced: string
+  mature: string
 }
 
 const TEMPERAMENT_INSIGHTS: Record<Temperament, TemperamentInsight> = {
@@ -141,6 +172,53 @@ const TEMPERAMENT_INSIGHTS: Record<Temperament, TemperamentInsight> = {
     howToLove: 'Create safety, give them time, notice their quiet effort, and invite honesty without punishing it.',
     selfSabotage: 'You avoid the small hard conversation until the relationship or project has to carry the weight of everything unsaid.',
     thisIsYouIf: ['You say “I’m fine” while quietly updating the whole emotional ledger.', 'You need calm before clarity.', 'People rely on you more than they realize.'],
+  },
+}
+
+const TEMPERAMENT_LEARNING: Record<Temperament, TemperamentLearning> = {
+  choleric: {
+    dailyPractice: 'Before you push, name the outcome and the person. Ask: what result matters, and who needs to stay intact while we get there?',
+    relationshipPractice: 'Let one person finish their full thought before you solve it. Your restraint will feel like love to them.',
+    workPractice: 'Choose one decision that can be delegated at 80 percent quality. Practice building capacity, not just winning the moment.',
+    stressReset: 'Move your body hard for ten minutes, then write the actual problem in one sentence. Choleric stress gets clearer after force has somewhere clean to go.',
+    journalPrompt: 'Where did I call something inefficient when it was actually vulnerable, slow, or human?',
+    weeklyWatch: 'Notice the moment you start carrying everything alone. That is usually the point where leadership turns into control.',
+    immature: 'Uses intensity to dominate, confuses speed with superiority, and treats emotional needs as obstacles.',
+    balanced: 'Moves quickly while still listening, takes ownership without taking over, and uses power to protect rather than pressure.',
+    mature: 'Becomes a courageous builder of people and systems: decisive, humble, protective, and strong enough to slow down.',
+  },
+  sanguine: {
+    dailyPractice: 'Pick one promise before noon and finish it before chasing the next spark. Let completion become part of your charisma.',
+    relationshipPractice: 'Ask one follow-up question and stay with the answer. Your warmth becomes trust when people feel remembered.',
+    workPractice: 'Turn the exciting idea into a visible next step with a time and owner. Momentum needs a landing strip.',
+    stressReset: 'Step away from noise for five minutes, breathe slowly, and name what you are avoiding beneath the performance.',
+    journalPrompt: 'Where did I use energy to escape discomfort instead of telling the truth?',
+    weeklyWatch: 'Notice when you start overpromising because the room loves your enthusiasm. That is the moment to under-promise and deliver.',
+    immature: 'Performs for attention, avoids boredom at any cost, and leaves other people to clean up unfinished enthusiasm.',
+    balanced: 'Brings life and connection while keeping enough structure for people to rely on them.',
+    mature: 'Becomes a source of hope with substance: joyful, present, emotionally honest, and capable of finishing what they begin.',
+  },
+  melancholic: {
+    dailyPractice: 'Share one imperfect draft, sentence, or decision before it feels complete. Let reality teach you faster than private analysis.',
+    relationshipPractice: 'Offer one specific appreciation before offering one correction. Depth lands better when it is wrapped in reassurance.',
+    workPractice: 'Define what "good enough for this stage" means before you begin. Excellence needs thresholds, not endless refinement.',
+    stressReset: 'List the facts, then list the fears. Do not let the fears borrow the authority of facts.',
+    journalPrompt: 'Where did I protect quality, and where did I hide behind standards because I was afraid to be seen?',
+    weeklyWatch: 'Notice when your inner critic starts calling itself wisdom. That is the moment to ask for outside perspective.',
+    immature: 'Withdraws into criticism, perfectionism, and private disappointment while hoping others will understand without being told.',
+    balanced: 'Uses discernment without becoming harsh, protects quality without freezing, and lets trusted people into the process.',
+    mature: 'Becomes a faithful craftsperson of meaning: wise, honest, precise, compassionate, and brave enough to create publicly.',
+  },
+  phlegmatic: {
+    dailyPractice: 'State one real preference early, while it is still small. Peace is healthier when truth arrives before resentment.',
+    relationshipPractice: 'Say what you want without cushioning it three times. The people who love you need access to your real yes and no.',
+    workPractice: 'Choose one avoided conversation or task and move it forward for fifteen minutes. Steadiness becomes strength when it acts.',
+    stressReset: 'Unclench your body, take a slow walk, and name the conflict you are trying not to disturb.',
+    journalPrompt: 'Where did I keep the peace externally while creating distance internally?',
+    weeklyWatch: 'Notice when "it is fine" means "I do not want to deal with this." That is the door to honest maturity.',
+    immature: 'Disappears into passivity, quiet resistance, and comfort-seeking while calling avoidance peace.',
+    balanced: 'Keeps calm without disappearing, supports others without self-erasure, and handles tension before it hardens.',
+    mature: 'Becomes a steady center of trust: peaceful, honest, loyal, quietly brave, and able to move without being pushed.',
   },
 }
 
@@ -1337,6 +1415,55 @@ export function getKnowThyselfInsight(subtype: Subtype): KnowThyselfInsight {
         ? `You want ${primary.protection}, but you also quietly need ${secondary.protection}.`
         : primary.thisIsYouIf[2],
     ],
+  }
+}
+
+export function getSubtypeLearningGuide(subtype: Subtype): SubtypeLearningGuide {
+  const primary = TEMPERAMENT_LEARNING[subtype.primary]
+  const secondary = subtype.secondary === 'pure' ? null : TEMPERAMENT_LEARNING[subtype.secondary]
+  const secondaryLabel = subtype.secondary === 'pure' ? null : subtype.secondary
+  const subtypeName = subtype.name.replace(/^Pure\s+/, '')
+  const secondaryPractice = secondary && secondaryLabel
+    ? ` Your ${secondaryLabel} side adds this extra lesson: ${secondary.dailyPractice}`
+    : ' Because this is a pure pattern, the lesson is not variety. It is learning when to use less of your strongest gift.'
+
+  return {
+    dailyPractice: `${primary.dailyPractice}${secondaryPractice}`,
+    relationshipPractice: secondary && secondaryLabel
+      ? `${primary.relationshipPractice} Let your ${secondaryLabel} side support the relationship without letting it hide the main pattern.`
+      : primary.relationshipPractice,
+    workPractice: secondary && secondaryLabel
+      ? `${primary.workPractice} Your best work rhythm needs both your ${subtype.primary} drive and your ${secondaryLabel} need.`
+      : primary.workPractice,
+    stressReset: secondary && secondaryLabel
+      ? `${primary.stressReset} Then ask whether your ${secondaryLabel} side is calming the stress or giving it a more convincing costume.`
+      : primary.stressReset,
+    journalPrompt: secondary && secondaryLabel
+      ? `${primary.journalPrompt} How did my ${secondaryLabel} side change the story I told myself?`
+      : primary.journalPrompt,
+    weeklyWatch: secondary && secondaryLabel
+      ? `${primary.weeklyWatch} For ${subtypeName}s, also watch when the secondary pattern makes the habit look reasonable.`
+      : primary.weeklyWatch,
+    maturity: {
+      immature: {
+        label: 'Immature',
+        body: secondary && secondaryLabel
+          ? `${primary.immature} The ${secondaryLabel} influence can make this look more socially acceptable, but the core pattern is still running the room.`
+          : primary.immature,
+      },
+      balanced: {
+        label: 'Balanced',
+        body: secondary && secondaryLabel
+          ? `${primary.balanced} The ${secondaryLabel} side adds range, so the type becomes less predictable and more adaptable.`
+          : primary.balanced,
+      },
+      mature: {
+        label: 'Mature',
+        body: secondary && secondaryLabel
+          ? `${primary.mature} At its best, the secondary temperament becomes a servant of the main gift instead of a disguise for the same old fear.`
+          : primary.mature,
+      },
+    },
   }
 }
 

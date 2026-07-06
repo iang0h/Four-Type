@@ -3,11 +3,11 @@
 import type { ReactNode } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowLeft, Flame, Wind, Mountain, Droplets, Target, Heart, Sparkles, Eye, Briefcase, AlertTriangle, Shield, Zap } from 'lucide-react'
+import { ArrowLeft, Flame, Wind, Mountain, Droplets, Target, Heart, Sparkles, Eye, Briefcase, AlertTriangle, Shield, Zap, CalendarCheck, MessageCircle, RefreshCw, PenLine, CheckCircle2, Gauge } from 'lucide-react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import RuneBackground from '@/components/RuneBackground'
-import { Subtype, getKnowThyselfInsight, getSubtypeColor } from '@/lib/subtypes'
+import { Subtype, getKnowThyselfInsight, getSubtypeLearningGuide, getSubtypeColor } from '@/lib/subtypes'
 
 interface SubtypePageClientProps {
   subtype: Subtype
@@ -17,6 +17,7 @@ export default function SubtypePageClient({ subtype }: SubtypePageClientProps) {
   const color = getSubtypeColor(subtype.primary)
   const secondaryColor = subtype.secondary && subtype.secondary !== 'pure' ? getSubtypeColor(subtype.secondary as 'sanguine' | 'choleric' | 'melancholic' | 'phlegmatic') : null
   const knowThyself = getKnowThyselfInsight(subtype)
+  const learningGuide = getSubtypeLearningGuide(subtype)
   
   // Determine element icon based on primary temperament
   const elementMap: Record<string, string> = {
@@ -273,6 +274,49 @@ export default function SubtypePageClient({ subtype }: SubtypePageClientProps) {
             </div>
           </div>
 
+          {/* Practice This Type */}
+          <div className="mb-16 rounded-2xl border p-6 md:p-8 relative overflow-hidden" style={{ backgroundColor: 'rgba(13, 13, 15, 0.72)', borderColor: `${color}30` }}>
+            <div className="absolute -bottom-24 -left-24 h-64 w-64 rounded-full blur-3xl opacity-15" style={{ backgroundColor: secondaryColor || color }} />
+            <div className="relative">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="h-11 w-11 rounded-xl flex items-center justify-center border" style={{ borderColor: `${color}50`, backgroundColor: `${color}18` }}>
+                  <CalendarCheck className="w-5 h-5" style={{ color }} />
+                </div>
+                <div>
+                  <p className="text-xs font-semibold tracking-[0.28em] uppercase text-muted-foreground">Practice This Type</p>
+                  <h2 className="font-serif text-3xl md:text-4xl font-bold" style={{ color }}>Turn Insight Into Growth</h2>
+                </div>
+              </div>
+              <p className="text-muted-foreground leading-relaxed max-w-3xl mb-8">
+                A temperament result becomes useful when it changes what you notice this week. Start with one practice, not a personality overhaul.
+              </p>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                <PracticeCard color={color} icon={<CalendarCheck className="w-5 h-5" />} title="Daily Practice" body={learningGuide.dailyPractice} />
+                <PracticeCard color={color} icon={<MessageCircle className="w-5 h-5" />} title="Relationship Practice" body={learningGuide.relationshipPractice} />
+                <PracticeCard color={color} icon={<Briefcase className="w-5 h-5" />} title="Work Practice" body={learningGuide.workPractice} />
+                <PracticeCard color={color} icon={<RefreshCw className="w-5 h-5" />} title="Stress Reset" body={learningGuide.stressReset} />
+                <PracticeCard color={color} icon={<PenLine className="w-5 h-5" />} title="Journal Prompt" body={learningGuide.journalPrompt} />
+                <PracticeCard color={color} icon={<Gauge className="w-5 h-5" />} title="Watch This Week" body={learningGuide.weeklyWatch} />
+              </div>
+
+              <div className="rounded-xl border p-5" style={{ borderColor: `${color}30`, backgroundColor: `${color}08` }}>
+                <div className="flex items-center gap-2 mb-5">
+                  <CheckCircle2 className="w-5 h-5" style={{ color }} />
+                  <div>
+                    <p className="font-serif text-xs tracking-[0.28em] uppercase text-muted-foreground">How This Type Matures</p>
+                    <h3 className="font-serif text-2xl font-bold">Same Nature, Better Stewardship</h3>
+                  </div>
+                </div>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <MaturityCard color={color} expression={learningGuide.maturity.immature} />
+                  <MaturityCard color={color} expression={learningGuide.maturity.balanced} />
+                  <MaturityCard color={color} expression={learningGuide.maturity.mature} />
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Famous Examples */}
           {subtype.famousExamples && subtype.famousExamples.length > 0 && (
             <div className="rounded-xl border p-8 mb-16" style={{ backgroundColor: `${color}05`, borderColor: `${color}20` }}>
@@ -316,6 +360,43 @@ export default function SubtypePageClient({ subtype }: SubtypePageClientProps) {
       </section>
       
       <Footer />
+    </div>
+  )
+}
+
+function PracticeCard({
+  color,
+  icon,
+  title,
+  body,
+}: {
+  color: string
+  icon: ReactNode
+  title: string
+  body: string
+}) {
+  return (
+    <div className="rounded-xl border p-5" style={{ borderColor: `${color}25`, backgroundColor: 'rgba(13, 13, 15, 0.46)' }}>
+      <div className="flex items-center gap-2 mb-3">
+        <span style={{ color }}>{icon}</span>
+        <h3 className="font-serif text-lg font-bold">{title}</h3>
+      </div>
+      <p className="text-sm text-muted-foreground leading-relaxed">{body}</p>
+    </div>
+  )
+}
+
+function MaturityCard({
+  color,
+  expression,
+}: {
+  color: string
+  expression: { label: string; body: string }
+}) {
+  return (
+    <div className="rounded-lg border px-4 py-4" style={{ borderColor: `${color}22`, backgroundColor: 'rgba(13, 13, 15, 0.48)' }}>
+      <p className="font-serif text-sm font-bold mb-2" style={{ color }}>{expression.label}</p>
+      <p className="text-sm text-muted-foreground leading-relaxed">{expression.body}</p>
     </div>
   )
 }
