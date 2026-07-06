@@ -4,6 +4,7 @@ import React, { useRef, useCallback, useState } from 'react'
 import { Temperament, TEMPERAMENTS } from '@/lib/temperaments'
 import { TemperamentKey, getDominantAndSecondary, resolveBlend } from '@/lib/scoringKey'
 import { BLENDS, getBlendColors } from '@/lib/blends'
+import { getShareText } from '@/lib/share-copy'
 
 interface ShareableCardProps {
   heroName: string
@@ -30,7 +31,7 @@ export default function ShareableCard({ heroName, temperament, scores }: Shareab
   })
 
   const handleCopyText = useCallback(async () => {
-    const text = `I am ${blend.name} (${blend.blend}). What's yours?\n\n"${blend.tagline}"\n\nDiscover your character class free at fourtype.com`
+    const text = getShareText(blend, 'https://www.fourtype.com/quiz')
     try {
       await navigator.clipboard.writeText(text)
       return true

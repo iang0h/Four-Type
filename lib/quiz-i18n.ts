@@ -64,6 +64,10 @@ export interface QuizCopy {
     shareButton: string
     copyButton: string
     copiedButton: string
+    friendPrompt: {
+      title: string
+      body: string
+    }
     retakeButton: string
     footer: string
     leadCapture: {
@@ -195,6 +199,10 @@ const enCopy: QuizCopy = {
     shareButton: 'Share My Class',
     copyButton: 'Copy Shareable Link',
     copiedButton: 'Link Copied!',
+    friendPrompt: {
+      title: 'Ask one friend: "Is this me?"',
+      body: 'The fun part is not just getting the result. It is sending it to someone who knows you and seeing how fast they say, "That is painfully accurate."',
+    },
     retakeButton: 'Retake Quest',
     footer: 'FourType • Free forever • Know Thyself.',
     leadCapture: {
@@ -326,6 +334,10 @@ const zhCopy: QuizCopy = {
     shareButton: '分享我的职业',
     copyButton: '复制分享链接',
     copiedButton: '链接已复制！',
+    friendPrompt: {
+      title: '问一个朋友：“这像我吗？”',
+      body: '有趣的地方不只是看到结果，而是发给真正了解你的人，看他们会不会立刻说：“这也太准了吧。”',
+    },
     retakeButton: '重新测试',
     footer: 'FourType • 永久免费 • 认识你自己。',
     leadCapture: {
@@ -457,6 +469,10 @@ const esCopy: QuizCopy = {
     shareButton: 'Compartir mi clase',
     copyButton: 'Copiar enlace',
     copiedButton: '¡Enlace copiado!',
+    friendPrompt: {
+      title: 'Pregúntale a un amigo: "¿Soy así?"',
+      body: 'Lo divertido no es solo ver el resultado. Es enviárselo a alguien que te conoce y ver qué tan rápido dice: "Eso es demasiado preciso."',
+    },
     retakeButton: 'Repetir misión',
     footer: 'FourType • Gratis para siempre • Conócete a ti mismo.',
     leadCapture: {

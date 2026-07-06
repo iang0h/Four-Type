@@ -7,6 +7,7 @@ import { Blend, getBlendColors } from '@/lib/blends'
 import { Temperament, TEMPERAMENTS } from '@/lib/temperaments'
 import { TemperamentKey } from '@/lib/scoringKey'
 import { getSubtypeByBlendKey } from '@/lib/subtypes'
+import { getShareText } from '@/lib/share-copy'
 import CinematicBackground from '@/components/CinematicBackground'
 import { YouTubeEmbed } from '@/components/YouTubeEmbed'
 
@@ -54,7 +55,7 @@ export default function SharePageClient({
   const handleShare = async () => {
     const shareData = {
       title: `I am ${blend.name}!`,
-      text: `I discovered I'm ${blend.name} (${blend.blend}). "${blend.tagline}" — What's your temperament?`,
+      text: getShareText(blend),
       url: shareUrl,
     }
     

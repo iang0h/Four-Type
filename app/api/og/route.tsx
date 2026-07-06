@@ -2,6 +2,7 @@ import { ImageResponse } from 'next/og'
 import { NextRequest } from 'next/server'
 import { BLENDS, BlendKey, getBlendColors } from '@/lib/blends'
 import { TemperamentKey } from '@/lib/scoringKey'
+import { getShareMetadata } from '@/lib/share-copy'
 
 export const runtime = 'edge'
 
@@ -52,11 +53,8 @@ export async function GET(request: NextRequest) {
   const characterImage = CHARACTER_IMAGES[blend.primary]
   const bgColor = BG_COLORS[blend.primary]
   const hasSecondary = blend.secondary !== 'Pure'
-
-  // Truncate tagline so it never overflows
-  const tagline = blend.tagline.length > 60
-    ? blend.tagline.slice(0, 57) + '...'
-    : blend.tagline
+  const shareMetadata = getShareMetadata(heroName, blend)
+  const displayName = blend.name.replace(/^The\s+/i, '').toUpperCase()
 
   return new ImageResponse(
     (
@@ -65,182 +63,274 @@ export async function GET(request: NextRequest) {
           display: 'flex',
           width: 1200,
           height: 630,
-          backgroundColor: bgColor,
+          backgroundColor: '#08080B',
           fontFamily: 'Georgia, serif',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
-        {/* Coloured left-edge accent bar */}
+        {/* Background layers */}
         <div
           style={{
             position: 'absolute',
-            top: 0,
-            left: 0,
-            width: 8,
-            height: '100%',
+            inset: 0,
+            background: `radial-gradient(circle at 24% 48%, ${primaryColor}55 0, ${bgColor} 31%, #08080B 70%)`,
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: -120,
+            right: -120,
+            width: 520,
+            height: 520,
+            borderRadius: 520,
+            backgroundColor: `${secondaryColor}25`,
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            bottom: -180,
+            left: 380,
+            width: 540,
+            height: 300,
+            borderRadius: 540,
+            backgroundColor: `${primaryColor}20`,
+          }}
+        />
+
+        {/* Accent frame */}
+        <div
+          style={{
+            position: 'absolute',
+            top: 34,
+            left: 34,
+            right: 34,
+            bottom: 34,
+            border: `2px solid ${primaryColor}55`,
+            borderRadius: 28,
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            top: 58,
+            left: 58,
+            width: 120,
+            height: 5,
             backgroundColor: primaryColor,
           }}
         />
 
-        {/* ── Left panel: character ─────────────────────────── */}
+        {/* Character panel */}
         <div
           style={{
+            position: 'absolute',
+            left: 54,
+            top: 78,
             display: 'flex',
             alignItems: 'flex-end',
             justifyContent: 'center',
-            width: 420,
-            height: '100%',
-            paddingLeft: 24,
-            paddingBottom: 0,
-            flexShrink: 0,
+            width: 430,
+            height: 500,
           }}
         >
-          {/* Character card box */}
           <div
             style={{
+              position: 'absolute',
+              bottom: 20,
               display: 'flex',
               alignItems: 'flex-end',
               justifyContent: 'center',
-              width: 340,
-              height: 520,
-              borderRadius: 20,
-              border: `2px solid ${primaryColor}`,
-              backgroundColor: '#00000060',
+              width: 370,
+              height: 456,
+              borderRadius: 28,
+              border: `2px solid ${primaryColor}99`,
+              backgroundColor: '#00000088',
               overflow: 'hidden',
             }}
           >
             <img
               src={characterImage}
-              width={320}
-              height={500}
-              style={{ width: 320, height: 500 }}
+              width={350}
+              height={520}
+              style={{ width: 350, height: 520 }}
             />
+          </div>
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              display: 'flex',
+              padding: '12px 24px',
+              borderRadius: 999,
+              backgroundColor: primaryColor,
+              color: '#08080B',
+              fontSize: 22,
+              fontWeight: 900,
+              letterSpacing: 2,
+            }}
+          >
+            {blend.rpgClass}
           </div>
         </div>
 
-        {/* ── Right panel: text ─────────────────────────────── */}
+        {/* Text panel */}
         <div
           style={{
+            position: 'absolute',
+            left: 525,
+            top: 82,
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            flex: 1,
-            paddingLeft: 52,
-            paddingRight: 60,
-            height: '100%',
+            width: 595,
+            height: 480,
           }}
         >
-          {/* Branding row */}
-          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 28 }}>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: 26 }}>
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 36,
-                height: 36,
-                borderRadius: 8,
+                width: 42,
+                height: 42,
+                borderRadius: 12,
                 backgroundColor: primaryColor,
-                marginRight: 10,
+                marginRight: 12,
               }}
             >
-              <span style={{ color: '#0D0D0F', fontSize: 20, fontWeight: 'bold' }}>F</span>
+              <span style={{ color: '#08080B', fontSize: 23, fontWeight: 900 }}>F</span>
             </div>
-            <span style={{ color: '#888', fontSize: 15, letterSpacing: 4 }}>FOURTYPE</span>
+            <span style={{ color: '#94A3B8', fontSize: 16, letterSpacing: 5 }}>FOURTYPE</span>
           </div>
 
-          {/* "name is" */}
-          <div style={{ display: 'flex', color: '#94A3B8', fontSize: 24, marginBottom: 6 }}>
-            {heroName} is
+          <div
+            style={{
+              display: 'flex',
+              color: '#F8FAFC',
+              fontSize: 42,
+              fontWeight: 900,
+              lineHeight: 1.05,
+              marginBottom: 18,
+            }}
+          >
+            {shareMetadata.hook}
           </div>
 
-          {/* Blend name — large */}
+          <div
+            style={{
+              display: 'flex',
+              color: '#94A3B8',
+              fontSize: 24,
+              marginBottom: 7,
+            }}
+          >
+            {heroName} got
+          </div>
+
           <div
             style={{
               display: 'flex',
               color: primaryColor,
-              fontSize: blend.name.length > 14 ? 62 : 74,
+              fontSize: displayName.length > 12 ? 58 : 70,
               fontWeight: 900,
               lineHeight: 1,
               marginBottom: 14,
             }}
           >
-            {blend.name.toUpperCase()}
+            {displayName}
           </div>
 
-          {/* Blend subtitle */}
-          <div style={{ display: 'flex', color: '#D1D5DB', fontSize: 26, marginBottom: 22 }}>
+          <div style={{ display: 'flex', color: '#E2E8F0', fontSize: 25, marginBottom: 24 }}>
             {blend.blend}
           </div>
 
-          {/* Colour dots + RPG class */}
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: 28 }}>
             <div
               style={{
-                width: 54,
-                height: 7,
-                borderRadius: 4,
+                width: 72,
+                height: 8,
+                borderRadius: 999,
                 backgroundColor: primaryColor,
-                marginRight: hasSecondary ? 6 : 0,
+                marginRight: hasSecondary ? 8 : 0,
               }}
             />
             {hasSecondary && (
               <div
                 style={{
-                  width: 36,
-                  height: 7,
-                  borderRadius: 4,
+                  width: 48,
+                  height: 8,
+                  borderRadius: 999,
                   backgroundColor: secondaryColor,
-                  marginRight: 20,
                 }}
               />
             )}
-            {!hasSecondary && <div style={{ marginRight: 20, display: 'flex' }} />}
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                paddingTop: 8,
-                paddingBottom: 8,
-                paddingLeft: 20,
-                paddingRight: 20,
-                borderRadius: 30,
-                border: `1.5px solid ${primaryColor}`,
-                backgroundColor: '#00000040',
-              }}
-            >
-              <span style={{ color: primaryColor, fontSize: 17, fontWeight: 'bold' }}>
-                {blend.rpgClass}
-              </span>
-            </div>
           </div>
 
-          {/* Tagline */}
-          <div style={{ display: 'flex', color: '#CBD5E1', fontSize: 22, fontStyle: 'italic', marginBottom: 36 }}>
-            {'"'}{tagline}{'"'}
+          <div style={{ display: 'flex', gap: 12, marginBottom: 28 }}>
+            {shareMetadata.chips.map((chip) => (
+              <div
+                key={chip}
+                style={{
+                  display: 'flex',
+                  padding: '10px 14px',
+                  borderRadius: 999,
+                  border: `1.5px solid ${primaryColor}66`,
+                  backgroundColor: '#FFFFFF12',
+                  color: '#CBD5E1',
+                  fontSize: 18,
+                  textTransform: 'capitalize',
+                }}
+              >
+                {chip}
+              </div>
+            ))}
           </div>
 
-          {/* CTA strip */}
+          <div
+            style={{
+              display: 'flex',
+              color: '#CBD5E1',
+              fontSize: 25,
+              lineHeight: 1.28,
+              marginBottom: 34,
+            }}
+          >
+            It caught the pattern behind how I decide, stress, and show up around people.
+          </div>
+
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
-              paddingTop: 12,
-              paddingBottom: 12,
-              paddingLeft: 22,
-              paddingRight: 22,
-              borderRadius: 10,
-              backgroundColor: '#ffffff0d',
-              border: '1px solid #ffffff20',
+              justifyContent: 'space-between',
+              padding: '16px 22px',
+              borderRadius: 16,
+              backgroundColor: '#FFFFFF12',
+              border: '1.5px solid #FFFFFF24',
             }}
           >
-            <span style={{ color: '#9CA3AF', fontSize: 17, marginRight: 10 }}>
-              What is your type?
+            <span style={{ color: '#E2E8F0', fontSize: 22, fontWeight: 700 }}>
+              {shareMetadata.cta}
             </span>
-            <span style={{ color: primaryColor, fontSize: 17, fontWeight: 'bold' }}>
-              fourtype.com
-            </span>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 38,
+                height: 38,
+                borderRadius: 999,
+                backgroundColor: primaryColor,
+                color: '#08080B',
+                fontSize: 24,
+                fontWeight: 900,
+              }}
+            >
+              →
+            </div>
           </div>
         </div>
       </div>

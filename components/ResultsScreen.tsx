@@ -9,6 +9,7 @@ import { TEMPERAMENTS } from '@/lib/temperaments'
 import { BLENDS, getBlendColors } from '@/lib/blends'
 import { getSubtypeByBlendKey } from '@/lib/subtypes'
 import { getLocalizedBlendSummary, type QuizCopy, type QuizLocale } from '@/lib/quiz-i18n'
+import { getShareText } from '@/lib/share-copy'
 import ScoreChart from './ScoreChart'
 import CinematicBackground from './CinematicBackground'
 import ShareableCard from './ShareableCard'
@@ -146,7 +147,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
       try {
         await navigator.share({
           title: `I am ${resultName}!`,
-          text: `I discovered I'm ${resultName} (${resultBlend}). "${resultTagline}" — What's your temperament?`,
+          text: getShareText(blend),
           url: shareUrl,
         })
       } catch {
@@ -836,6 +837,31 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
                 </svg>
               </Link>
             ))}
+          </div>
+        </div>
+
+        {/* FRIEND PROMPT */}
+        <div
+          className="rounded-2xl border p-5 flex flex-col gap-2"
+          style={{ backgroundColor: 'rgba(26, 26, 46, 0.72)', borderColor: `${primaryColor}30` }}
+        >
+          <div className="flex items-start gap-3">
+            <div
+              className="mt-0.5 h-8 w-8 shrink-0 rounded-full flex items-center justify-center border"
+              style={{ borderColor: `${primaryColor}45`, backgroundColor: `${primaryColor}12` }}
+            >
+              <svg className="h-4 w-4" style={{ color: primaryColor }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h6m-6 8l-4-4V5a2 2 0 012-2h14a2 2 0 012 2v11a2 2 0 01-2 2H7z" />
+              </svg>
+            </div>
+            <div className="flex flex-col gap-1">
+              <p className="font-serif text-sm font-bold text-[#E2E8F0]">
+                {copy.friendPrompt.title}
+              </p>
+              <p className="font-sans text-xs text-[#64748B] leading-relaxed">
+                {copy.friendPrompt.body}
+              </p>
+            </div>
           </div>
         </div>
 

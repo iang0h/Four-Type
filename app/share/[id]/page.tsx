@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import SharePageClient from './SharePageClient'
 import { BLENDS, BlendKey } from '@/lib/blends'
 import { TEMPERAMENTS } from '@/lib/temperaments'
+import { getShareMetadata } from '@/lib/share-copy'
 
 // Decode a shareable ID back into result data
 function decodeShareId(id: string): { 
@@ -54,9 +55,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
   
   const blend = BLENDS[data.blendKey]
+  const shareMetadata = getShareMetadata(data.heroName, blend)
   
-  const title = `I am ${blend.name} | FourType`
-  const description = `${data.heroName} discovered they are ${blend.name} (${blend.blend}). "${blend.tagline}" — Take the free temperament test at FourType.com`
+  const title = `${shareMetadata.title} | FourType`
+  const description = shareMetadata.description
   
   return {
     title,
@@ -69,8 +71,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       canonical: 'https://www.fourtype.com/quiz',
     },
     openGraph: {
-      title: `${data.heroName} is ${blend.name}!`,
-      description: `"${blend.tagline}" — ${blend.lore.slice(0, 150)}...`,
+      title: shareMetadata.ogTitle,
+      description: shareMetadata.ogDescription,
       url: `https://www.fourtype.com/share/${id}`,
       siteName: 'FourType',
       images: [
@@ -86,8 +88,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${data.heroName} is ${blend.name}!`,
-      description: `"${blend.tagline}" — Discover your temperament free at FourType.com`,
+      title: shareMetadata.ogTitle,
+      description: shareMetadata.ogDescription,
       images: [`https://www.fourtype.com/api/og?blend=${data.blendKey}&name=${encodeURIComponent(data.heroName)}`],
     },
   }
