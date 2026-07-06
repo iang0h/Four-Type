@@ -13,6 +13,7 @@ interface ShareableCardProps {
 }
 
 export default function ShareableCard({ heroName, temperament, scores }: ShareableCardProps) {
+  const [cardMode, setCardMode] = useState<'square' | 'story'>('story')
   const [dominant, secondary] = getDominantAndSecondary(scores)
   const secTemperament = TEMPERAMENTS[secondary]
   const total = Object.values(scores).reduce((a, b) => a + b, 0)
@@ -24,6 +25,7 @@ export default function ShareableCard({ heroName, temperament, scores }: Shareab
   const blendResult = resolveBlend(scores)
   const blend = BLENDS[blendResult.blendKey]
   const blendColors = getBlendColors(blend)
+  const storyBullets = getStoryBullets(blend.primary)
 
   const traits = blend.strengths.slice(0, 3).map((s) => {
     const match = s.match(/^([^—;]+)/)
@@ -55,18 +57,161 @@ export default function ShareableCard({ heroName, temperament, scores }: Shareab
     }
   }, [blend])
 
+  const handleDownloadCard = useCallback(async () => {
+    if (!cardRef.current) return false
+
+    try {
+      const html2canvas = (await import('html2canvas')).default
+      const canvas = await html2canvas(cardRef.current, {
+        backgroundColor: null,
+        scale: 3,
+        useCORS: true,
+        logging: false,
+      })
+      const link = document.createElement('a')
+      const safeName = blend.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
+      link.download = `fourtype-${safeName}-${cardMode}.png`
+      link.href = canvas.toDataURL('image/png')
+      link.click()
+      return true
+    } catch {
+      alert('Could not download the card. Please take a screenshot instead.')
+      return false
+    }
+  }, [blend.name, cardMode])
+
   return (
     <div className="flex flex-col gap-4 w-full">
-      {/* The shareable card */}
+      {/* Format switch */}
       <div
-        ref={cardRef}
-        className="relative overflow-hidden rounded-2xl p-4 w-full"
+        className="grid grid-cols-2 gap-1 rounded-xl border p-1"
         style={{
-          backgroundColor: '#0D0D0F',
-          border: `2px solid ${blendColors.primary}`,
+          borderColor: `${blendColors.primary}30`,
+          backgroundColor: 'rgba(13, 13, 15, 0.72)',
         }}
       >
-        {/* Glow background */}
+        {(['story', 'square'] as const).map((mode) => (
+          <button
+            key={mode}
+            onClick={() => setCardMode(mode)}
+            className="rounded-lg px-3 py-2 font-serif text-xs font-bold uppercase tracking-widest transition-all cursor-pointer"
+            style={{
+              backgroundColor: cardMode === mode ? blendColors.primary : 'transparent',
+              color: cardMode === mode ? '#0D0D0F' : '#94A3B8',
+            }}
+          >
+            {mode === 'story' ? 'Story Card' : 'Square Card'}
+          </button>
+        ))}
+      </div>
+
+      {cardMode === 'story' ? (
+        <div className="flex justify-center">
+          <div
+            ref={cardRef}
+            className="relative w-full max-w-[360px] aspect-[9/16] overflow-hidden rounded-[28px] border p-5"
+            style={{
+              backgroundColor: '#08080B',
+              borderColor: blendColors.primary,
+              boxShadow: `0 0 46px ${blendColors.primary}24`,
+            }}
+          >
+            {/* Story background */}
+            <div
+              className="absolute inset-0 opacity-80 pointer-events-none"
+              style={{
+                background: `radial-gradient(circle at 50% 18%, ${blendColors.primary}40 0%, transparent 38%), radial-gradient(circle at 20% 84%, ${blendColors.secondary}28 0%, transparent 42%)`,
+              }}
+            />
+            <div
+              className="absolute inset-3 rounded-[22px] pointer-events-none"
+              style={{ border: `1px solid ${blendColors.primary}42` }}
+            />
+            <div
+              className="absolute left-1/2 top-[19%] h-[240px] w-[240px] -translate-x-1/2 rounded-full opacity-25 blur-2xl pointer-events-none"
+              style={{ backgroundColor: blendColors.primary }}
+            />
+
+            <div className="relative z-10 flex h-full flex-col">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="flex h-8 w-8 items-center justify-center rounded-lg font-serif text-lg font-black"
+                    style={{ backgroundColor: blendColors.primary, color: '#08080B' }}
+                  >
+                    F
+                  </div>
+                  <p className="font-serif text-[11px] tracking-[0.34em] uppercase text-[#CBD5E1]">FourType</p>
+                </div>
+                <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-[#64748B]">Story</p>
+              </div>
+
+              <div className="mt-5 flex flex-1 flex-col items-center text-center">
+                <p className="font-sans text-[11px] uppercase tracking-[0.28em] text-[#64748B]">
+                  I got
+                </p>
+                <h2
+                  className="mt-1 font-serif text-[34px] font-black uppercase leading-[0.95] tracking-normal"
+                  style={{ color: blendColors.primary, textShadow: `0 0 30px ${blendColors.primary}50` }}
+                >
+                  {blend.name}
+                </h2>
+                <p className="mt-2 font-serif text-sm text-[#E2E8F0]">{blend.blend}</p>
+
+                <div className="relative mt-4 flex h-[210px] w-full items-end justify-center">
+                  <div
+                    className="absolute bottom-0 h-[150px] w-[150px] rounded-full opacity-30 blur-2xl"
+                    style={{ backgroundColor: blendColors.primary }}
+                  />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={temperament.characterImage}
+                    alt={temperament.title}
+                    crossOrigin="anonymous"
+                    className="relative z-10 h-[210px] w-auto object-contain"
+                    style={{ filter: `drop-shadow(0 0 22px ${blendColors.primary}55)` }}
+                  />
+                </div>
+
+                <div className="mt-4 w-full rounded-2xl border p-4 text-left" style={{ borderColor: `${blendColors.primary}38`, backgroundColor: '#FFFFFF0D' }}>
+                  <p className="mb-3 font-serif text-[10px] uppercase tracking-[0.28em] text-[#64748B]">
+                    Painfully Accurate
+                  </p>
+                  <div className="flex flex-col gap-2.5">
+                    {storyBullets.map((bullet) => (
+                      <div key={bullet} className="flex items-start gap-2">
+                        <span
+                          className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
+                          style={{ backgroundColor: blendColors.primary }}
+                        />
+                        <p className="font-sans text-[13px] leading-snug text-[#E2E8F0]">{bullet}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4 rounded-2xl border px-4 py-3" style={{ borderColor: `${blendColors.primary}42`, backgroundColor: `${blendColors.primary}14` }}>
+                <p className="text-center font-serif text-[17px] font-black leading-tight text-[#F8FAFC]">
+                  What are you?
+                </p>
+                <p className="mt-1 text-center font-sans text-[12px] tracking-[0.18em] text-[#CBD5E1]">
+                  fourtype.com
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div
+          ref={cardRef}
+          className="relative overflow-hidden rounded-2xl p-4 w-full"
+          style={{
+            backgroundColor: '#0D0D0F',
+            border: `2px solid ${blendColors.primary}`,
+          }}
+        >
+          {/* Glow background */}
         <div
           className="absolute inset-0 opacity-20 pointer-events-none"
           style={{
@@ -180,12 +325,47 @@ export default function ShareableCard({ heroName, temperament, scores }: Shareab
             <p className="font-sans text-[9px] text-[#3A3A50]">fourtype.com</p>
           </div>
         </div>
-      </div>
+        </div>
+      )}
 
-      {/* Action button */}
-      <ShareTextButton color={blendColors.primary} onCopy={handleCopyText} />
+      {/* Action buttons */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <ShareTextButton color={blendColors.primary} onCopy={handleCopyText} />
+        <DownloadCardButton
+          color={blendColors.primary}
+          onDownload={handleDownloadCard}
+          label={`Download ${cardMode === 'story' ? 'Story' : 'Card'}`}
+        />
+      </div>
     </div>
   )
+}
+
+function getStoryBullets(primary: TemperamentKey) {
+  const bullets: Record<TemperamentKey, string[]> = {
+    Red: [
+      'Takes charge before anyone asks.',
+      'Hates slow, vague decisions.',
+      'Looks calm until control is lost.',
+    ],
+    Yellow: [
+      'Turns silence into a stage.',
+      'Needs momentum more than permission.',
+      'Feels bored before they admit it.',
+    ],
+    Blue: [
+      'Spots flaws nobody else sees.',
+      'Calls it standards, not overthinking.',
+      'Needs meaning before momentum.',
+    ],
+    Green: [
+      'Keeps the peace until they are done.',
+      'Not lazy, just allergic to chaos.',
+      'Says yes while quietly tracking everything.',
+    ],
+  }
+
+  return bullets[primary]
 }
 
 function ShareTextButton({
@@ -243,6 +423,70 @@ function ShareTextButton({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
           Copy Text
+        </>
+      )}
+    </button>
+  )
+}
+
+function DownloadCardButton({
+  color,
+  label,
+  onDownload,
+}: {
+  color: string
+  label: string
+  onDownload: () => Promise<boolean>
+}) {
+  const [downloaded, setDownloaded] = useState(false)
+  const [downloading, setDownloading] = useState(false)
+
+  const handleClick = async () => {
+    if (downloading) return
+    setDownloading(true)
+    try {
+      const success = await onDownload()
+      if (success) {
+        setDownloaded(true)
+        setTimeout(() => setDownloaded(false), 2000)
+      }
+    } finally {
+      setDownloading(false)
+    }
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      disabled={downloading}
+      className="flex-1 flex items-center justify-center gap-2 font-serif text-xs font-bold tracking-widest uppercase py-3 rounded-xl border transition-all duration-200 cursor-pointer disabled:cursor-wait disabled:opacity-70"
+      style={{
+        borderColor: `${color}40`,
+        color,
+        backgroundColor: `${color}08`,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = color
+        e.currentTarget.style.backgroundColor = `${color}12`
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = `${color}40`
+        e.currentTarget.style.backgroundColor = `${color}08`
+      }}
+    >
+      {downloaded ? (
+        <>
+          <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          Downloaded
+        </>
+      ) : (
+        <>
+          <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" />
+          </svg>
+          {downloading ? 'Rendering...' : label}
         </>
       )}
     </button>
