@@ -24,6 +24,7 @@ const testGuideSlugs = [
   'temperament-test-questions',
   '4-temperaments-test-free',
   'best-free-four-temperaments-test',
+  'temperament-test-comparison',
   'ospp-four-temperaments-test',
   'four-humors-test',
 ]
