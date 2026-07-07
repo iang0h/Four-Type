@@ -23,6 +23,9 @@ export function localizedMetadata(locale: LocaleCode, pageKey: LocalizedPageKey)
   return {
     title: `${page.title} | FourType`,
     description: page.description,
+    other: {
+      'content-language': locale,
+    },
     alternates: {
       canonical,
       languages: {
