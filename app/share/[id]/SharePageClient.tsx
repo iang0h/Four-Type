@@ -8,6 +8,7 @@ import { Temperament, TEMPERAMENTS } from '@/lib/temperaments'
 import { TemperamentKey } from '@/lib/scoringKey'
 import { getSubtypeByBlendKey } from '@/lib/subtypes'
 import { getShareText } from '@/lib/share-copy'
+import { trackFourTypeEvent } from '@/lib/analytics'
 import CinematicBackground from '@/components/CinematicBackground'
 import { YouTubeEmbed } from '@/components/YouTubeEmbed'
 
@@ -33,10 +34,22 @@ export default function SharePageClient({
   const subtype = getSubtypeByBlendKey(blend.key)
   
   const shareUrl = `https://www.fourtype.com/share/${shareId}`
+
+  const trackSharePageEvent = (event: 'share-click' | 'copy-link', source: string) => {
+    trackFourTypeEvent({
+      event,
+      locale: 'share',
+      blendKey: blend.key,
+      resultName: blend.name,
+      shareId,
+      source,
+    })
+  }
   
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl)
+      trackSharePageEvent('copy-link', 'share-page-copy-link')
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
@@ -47,6 +60,7 @@ export default function SharePageClient({
       textarea.select()
       document.execCommand('copy')
       document.body.removeChild(textarea)
+      trackSharePageEvent('copy-link', 'share-page-copy-link-fallback')
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     }
@@ -62,6 +76,7 @@ export default function SharePageClient({
     if (navigator.share) {
       try {
         await navigator.share(shareData)
+        trackSharePageEvent('share-click', 'share-page-native-share')
       } catch {
         // User cancelled or error
       }
@@ -248,6 +263,17 @@ export default function SharePageClient({
               }}
             >
               Take the Free Quiz
+            </Link>
+            <Link
+              href={`/quiz?compare=${shareId}`}
+              className="mt-3 block w-full font-serif text-sm font-bold tracking-widest uppercase py-4 rounded-xl border-2 text-center transition-all duration-200"
+              style={{
+                borderColor: `${primaryColor}66`,
+                color: primaryColor,
+                backgroundColor: `${primaryColor}10`,
+              }}
+            >
+              Compare Your Type With Mine
             </Link>
           </div>
         </div>

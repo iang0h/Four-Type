@@ -16,6 +16,18 @@ export interface LeadCapturePayload {
   userAgent?: string
 }
 
+export interface AnalyticsEventPayload {
+  event: string
+  locale: string
+  blendKey: string
+  resultName: string
+  shareId: string
+  compareWith: string
+  source: string
+  path: string
+  userAgent?: string
+}
+
 type AccessToken = {
   token: string
   expiresAt: number
@@ -138,5 +150,44 @@ export async function appendLeadToGoogleSheet(payload: LeadCapturePayload) {
   if (!response.ok) {
     const message = await response.text()
     throw new Error(`Google Sheets append failed: ${message}`)
+  }
+}
+
+export async function appendEventToGoogleSheet(payload: AnalyticsEventPayload) {
+  const config = getSheetsConfig()
+
+  if (!config) {
+    throw new Error('Google Sheets lead capture is not configured.')
+  }
+
+  const token = await getGoogleSheetsAccessToken()
+  const sheetName = process.env.GOOGLE_SHEETS_EVENTS_SHEET_NAME || 'Events'
+  const range = encodeURIComponent(`${sheetName}!A:J`)
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`
+  const row = [
+    new Date().toISOString(),
+    payload.event,
+    payload.locale,
+    payload.blendKey,
+    payload.resultName,
+    payload.shareId,
+    payload.compareWith,
+    payload.source,
+    payload.path,
+    payload.userAgent || '',
+  ]
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ values: [row] }),
+  })
+
+  if (!response.ok) {
+    const message = await response.text()
+    throw new Error(`Google Sheets event append failed: ${message}`)
   }
 }

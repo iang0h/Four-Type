@@ -1,39 +1,10 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import SharePageClient from './SharePageClient'
-import { BLENDS, BlendKey } from '@/lib/blends'
+import { BLENDS } from '@/lib/blends'
 import { TEMPERAMENTS } from '@/lib/temperaments'
 import { getShareMetadata } from '@/lib/share-copy'
-
-// Decode a shareable ID back into result data
-function decodeShareId(id: string): { 
-  heroName: string
-  blendKey: BlendKey
-  scores: { Yellow: number; Red: number; Blue: number; Green: number }
-} | null {
-  try {
-    // Format: base64(heroName|blendKey|Y,R,B,G)
-    const decoded = atob(id.replace(/-/g, '+').replace(/_/g, '/'))
-    const [heroName, blendKey, scoresStr] = decoded.split('|')
-    const [y, r, b, g] = scoresStr.split(',').map(Number)
-    
-    if (!heroName || !blendKey || isNaN(y) || isNaN(r) || isNaN(b) || isNaN(g)) {
-      return null
-    }
-    
-    if (!(blendKey in BLENDS)) {
-      return null
-    }
-    
-    return {
-      heroName: heroName.slice(0, 30), // Limit name length
-      blendKey: blendKey as BlendKey,
-      scores: { Yellow: y, Red: r, Blue: b, Green: g }
-    }
-  } catch {
-    return null
-  }
-}
+import { decodeShareId } from '@/lib/share-id'
 
 interface PageProps {
   params: Promise<{ id: string }>

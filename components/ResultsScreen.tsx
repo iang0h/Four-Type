@@ -1,27 +1,22 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import type { FormEvent } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ScoreMap, TemperamentKey, getDominantAndSecondary, getMaskingWarning, resolveBlend } from '@/lib/scoringKey'
 import { TEMPERAMENTS } from '@/lib/temperaments'
-import { BLENDS, getBlendColors } from '@/lib/blends'
+import { BLENDS, type BlendKey, getBlendColors } from '@/lib/blends'
 import { getSubtypeByBlendKey } from '@/lib/subtypes'
 import { getLocalizedBlendSummary, type QuizCopy, type QuizLocale } from '@/lib/quiz-i18n'
 import { getShareText } from '@/lib/share-copy'
 import { getMisunderstoodLine, getResultOneSentence, getSharePrompts, getWeeklyChallenge } from '@/lib/result-virality'
+import { generateShareId, type DecodedShareResult } from '@/lib/share-id'
+import { getComparisonInsight } from '@/lib/comparison'
+import { trackFourTypeEvent } from '@/lib/analytics'
 import ScoreChart from './ScoreChart'
 import CinematicBackground from './CinematicBackground'
 import ShareableCard from './ShareableCard'
-
-// Generate a shareable URL-safe ID
-function generateShareId(heroName: string, blendKey: string, scores: ScoreMap): string {
-  const data = `${heroName}|${blendKey}|${scores.Yellow},${scores.Red},${scores.Blue},${scores.Green}`
-  // Base64 encode and make URL safe
-  const base64 = btoa(data)
-  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-}
 
 // Get reading resources based on temperament
 function getReadingResources(primaryKey: TemperamentKey, blendKey: string) {
@@ -74,11 +69,12 @@ interface ResultsScreenProps {
   onRetake: () => void
   copy: QuizCopy['results']
   locale: QuizLocale
+  comparison?: DecodedShareResult | null
 }
 
 type Tab = 'strengths' | 'shadow' | 'communication' | 'partners' | 'deeper' | 'growth'
 
-export default function ResultsScreen({ heroName, scores, onRetake, copy, locale }: ResultsScreenProps) {
+export default function ResultsScreen({ heroName, scores, onRetake, copy, locale, comparison }: ResultsScreenProps) {
   // Resolve the 15-type blend
   const blendResult = resolveBlend(scores)
   const blend = BLENDS[blendResult.blendKey]
@@ -122,16 +118,33 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
   const [leadEmail, setLeadEmail] = useState('')
   const [leadWebsite, setLeadWebsite] = useState('')
   const [leadStatus, setLeadStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const resultTrackedKey = useRef('')
   const viewingTemp = viewingClass ? TEMPERAMENTS[viewingClass] : null
   
   // Generate shareable URL
   const shareId = useMemo(() => generateShareId(heroName, blendResult.blendKey, scores), [heroName, blendResult.blendKey, scores])
   const shareUrl = `https://www.fourtype.com/share/${shareId}`
+  const compareUrl = `https://www.fourtype.com/quiz?compare=${shareId}`
   const readingResources = useMemo(() => getReadingResources(dominant, blendResult.blendKey), [dominant, blendResult.blendKey])
+  const friendBlend = comparison ? BLENDS[comparison.blendKey as BlendKey] : null
+  const comparisonInsight = friendBlend ? getComparisonInsight(blend, friendBlend) : null
+
+  const trackShareEvent = (event: 'share-click' | 'copy-link', source: string) => {
+    trackFourTypeEvent({
+      event,
+      locale,
+      blendKey: blendResult.blendKey,
+      resultName,
+      shareId,
+      compareWith: comparison?.blendKey,
+      source,
+    })
+  }
   
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl)
+      trackShareEvent('copy-link', 'result-copy-link')
       setLinkCopied(true)
       setTimeout(() => setLinkCopied(false), 2000)
     } catch {
@@ -142,6 +155,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
       textarea.select()
       document.execCommand('copy')
       document.body.removeChild(textarea)
+      trackShareEvent('copy-link', 'result-copy-link-fallback')
       setLinkCopied(true)
       setTimeout(() => setLinkCopied(false), 2000)
     }
@@ -155,6 +169,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
           text: getShareText(blend),
           url: shareUrl,
         })
+        trackShareEvent('share-click', 'result-native-share')
       } catch {
         // User cancelled
       }
@@ -173,6 +188,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
           text: promptText,
           url: shareUrl,
         })
+        trackShareEvent('share-click', 'result-prompt-share')
         return
       } catch {
         // User cancelled
@@ -181,6 +197,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
 
     try {
       await navigator.clipboard.writeText(`${promptText}\n\n${shareUrl}`)
+      trackShareEvent('copy-link', 'result-prompt-copy')
       setLinkCopied(true)
       setTimeout(() => setLinkCopied(false), 2000)
     } catch {
@@ -229,6 +246,23 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
     const timer = setTimeout(() => setRevealed(true), 100)
     return () => clearTimeout(timer)
   }, [])
+
+  useEffect(() => {
+    const trackingKey = `${comparison ? 'compare-result' : 'quiz-result'}:${shareId}:${comparison?.blendKey || ''}`
+
+    if (resultTrackedKey.current === trackingKey) return
+
+    resultTrackedKey.current = trackingKey
+    trackFourTypeEvent({
+      event: comparison ? 'compare-result' : 'quiz-result',
+      locale,
+      blendKey: blendResult.blendKey,
+      resultName,
+      shareId,
+      compareWith: comparison?.blendKey,
+      source: comparison ? 'compare-quiz-result' : 'quiz-result',
+    })
+  }, [blendResult.blendKey, comparison, locale, resultName, shareId])
 
   function getInterpretation(): string {
     if (blendResult.flag === 'pure') {
@@ -501,6 +535,41 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
           )}
         </div>
 
+        {friendBlend && comparisonInsight && (
+          <div
+            className="rounded-2xl border p-5 flex flex-col gap-4 relative overflow-hidden"
+            style={{ backgroundColor: 'rgba(26, 26, 46, 0.86)', borderColor: `${primaryColor}35` }}
+          >
+            <div
+              className="absolute -top-16 -right-16 w-40 h-40 rounded-full blur-3xl opacity-15"
+              style={{ backgroundColor: primaryColor }}
+            />
+            <div className="relative flex flex-col gap-2">
+              <p className="font-serif text-xs tracking-widest uppercase" style={{ color: primaryColor }}>
+                Compare With {comparison?.heroName}
+              </p>
+              <h2 className="font-serif text-xl font-black text-[#E2E8F0] leading-tight">
+                {resultName} + {friendBlend.name}
+              </h2>
+              <p className="font-sans text-sm text-[#94A3B8] leading-relaxed">
+                {comparisonInsight.headline}
+              </p>
+            </div>
+            <div className="relative grid gap-3">
+              {[
+                { label: 'Chemistry', body: comparisonInsight.chemistry },
+                { label: 'Friction', body: comparisonInsight.friction },
+                { label: 'Repair Move', body: comparisonInsight.repair },
+              ].map((item) => (
+                <div key={item.label} className="rounded-xl border p-4" style={{ borderColor: `${primaryColor}22`, backgroundColor: 'rgba(13, 13, 15, 0.46)' }}>
+                  <p className="font-sans text-[10px] uppercase tracking-wider text-[#64748B] mb-1">{item.label}</p>
+                  <p className="font-sans text-sm text-[#94A3B8] leading-relaxed">{item.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* TABS */}
         <div
           className="rounded-2xl border overflow-hidden"
@@ -734,6 +803,17 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
             </button>
           </div>
 
+          <Link
+            href={`/quiz?compare=${shareId}`}
+            className="rounded-xl border px-4 py-3 font-sans text-sm text-[#E2E8F0] transition-all hover:text-white"
+            style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}08` }}
+          >
+            Compare your result with a friend
+            <span className="block text-xs text-[#64748B] mt-1">
+              Send them this quiz link so FourType can show how your patterns work together.
+            </span>
+          </Link>
+
           {showShareCard && (
             <ShareableCard
               heroName={heroName}
@@ -770,6 +850,23 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
                 Share text copied.
               </p>
             )}
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(compareUrl)
+                  trackShareEvent('copy-link', 'result-compare-link')
+                  setLinkCopied(true)
+                  setTimeout(() => setLinkCopied(false), 2000)
+                } catch {
+                  handleCopyLink()
+                }
+              }}
+              className="mt-3 w-full rounded-lg border px-3 py-2 font-sans text-xs text-left text-[#94A3B8] transition-all hover:text-[#E2E8F0] cursor-pointer"
+              style={{ borderColor: `${primaryColor}22`, backgroundColor: `${primaryColor}06` }}
+            >
+              Copy compare-with-me quiz link
+            </button>
           </div>
         </div>
 

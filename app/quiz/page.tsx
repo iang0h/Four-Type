@@ -1,11 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { Suspense, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { AnswerLetter } from '@/lib/questions'
 import { calculateScores, ScoreMap } from '@/lib/scoringKey'
 import { getQuizCopy, getQuizQuestions, type QuizLocale } from '@/lib/quiz-i18n'
+import { decodeShareId } from '@/lib/share-id'
 import NameInputScreen from '@/components/NameInputScreen'
 import QuestionScreen from '@/components/QuestionScreen'
 import LoadingScreen from '@/components/LoadingScreen'
@@ -14,10 +16,21 @@ import ResultsScreen from '@/components/ResultsScreen'
 type Stage = 'name' | 'quiz' | 'loading' | 'results'
 
 export default function QuizPage() {
-  return <QuizExperience locale="en" />
+  return (
+    <Suspense fallback={null}>
+      <QuizExperienceWithSearch locale="en" />
+    </Suspense>
+  )
 }
 
-export function QuizExperience({ locale = 'en', showSeo = true }: { locale?: QuizLocale; showSeo?: boolean }) {
+function QuizExperienceWithSearch({ locale = 'en', showSeo = true }: { locale?: QuizLocale; showSeo?: boolean }) {
+  const searchParams = useSearchParams()
+
+  return <QuizExperience locale={locale} showSeo={showSeo} comparisonId={searchParams.get('compare') || ''} />
+}
+
+export function QuizExperience({ locale = 'en', showSeo = true, comparisonId = '' }: { locale?: QuizLocale; showSeo?: boolean; comparisonId?: string }) {
+  const comparison = useMemo(() => decodeShareId(comparisonId), [comparisonId])
   const [stage, setStage] = useState<Stage>('name')
   const [heroName, setHeroName] = useState('')
   const [answers, setAnswers] = useState<Record<number, AnswerLetter>>({})
@@ -66,7 +79,7 @@ export function QuizExperience({ locale = 'en', showSeo = true }: { locale?: Qui
       break
 
     case 'results':
-      screen = <ResultsScreen heroName={heroName} scores={scores} onRetake={handleRetake} copy={copy.results} locale={locale} />
+      screen = <ResultsScreen heroName={heroName} scores={scores} onRetake={handleRetake} copy={copy.results} locale={locale} comparison={comparison} />
       break
 
     default:

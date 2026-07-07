@@ -1010,6 +1010,72 @@ export const blogArticles: BlogArticle[] = [
     ],
   },
   {
+    slug: 'temperament-test-languages',
+    title: 'Temperament Test in Different Languages: Why Localized Results Matter',
+    shortTitle: 'Temperament Test Languages',
+    description: 'Learn why FourType supports Chinese and Spanish, which temperament test languages should come next, and why localization needs more than direct translation.',
+    keywords: ['temperament test languages', 'Chinese temperament test', 'Spanish temperament test', 'Bahasa temperament test', 'Vietnamese temperament test', 'Hindi temperament test'],
+    category: 'International',
+    readTime: '8 min',
+    accent: 'gold',
+    icon: MessageCircle,
+    image: '/images/temperament-wheel.jpg',
+    imageAlt: 'FourType temperament test language expansion',
+    published: '2026-07-07',
+    blocks: [
+      {
+        type: 'section',
+        title: 'A temperament result should feel clear in your own language',
+        body: [
+          'Personality and temperament language is emotional. A result does not land just because the words are technically translated. It has to explain stress, conflict, work style, and relationships in language that feels natural.',
+          'That is why FourType starts with English, Chinese, and Spanish, then expands carefully instead of dumping every page through a machine translation pipeline.',
+        ],
+      },
+      {
+        type: 'grid',
+        title: 'Languages that can unlock the next growth wave',
+        intro: 'The best next languages are the ones with strong search demand, active social sharing, and thinner competition than English.',
+        items: [
+          { title: 'Chinese', body: 'Chinese is already useful because FourType has visitor demand from China and Chinese-speaking users need results that feel native, not awkwardly literal.', accent: 'red' },
+          { title: 'Spanish', body: 'Spanish expands reach across many countries and creates a strong base for relationship, work, and compatibility content.', accent: 'gold' },
+          { title: 'Bahasa Indonesia and Malay', body: 'Bahasa content can serve Southeast Asian search demand where personality and relationship quizzes travel well socially.', accent: 'green' },
+          { title: 'Vietnamese, Hindi, and Portuguese', body: 'These languages can open large audiences with less direct competition for four temperaments SEO than English.', accent: 'blue' },
+        ],
+      },
+      {
+        type: 'section',
+        title: 'Localization is not only interface translation',
+        body: [
+          'A useful localized temperament test needs translated quiz questions, result names, subtype summaries, share copy, email report copy, and SEO pages. The biggest mistake is translating the buttons while leaving the result explanation in English.',
+          'FourType should localize the parts people actually share: the result card, the painfully accurate bullets, the compatibility pages, and the email mini-report. Those are the places where a user decides whether to send it to a friend.',
+        ],
+      },
+      {
+        type: 'callout',
+        title: 'A practical rollout order',
+        body: 'The best language roadmap is small enough to ship and broad enough to learn from traffic.',
+        bullets: [
+          'Keep improving English because it still drives search authority.',
+          'Deepen Chinese and Spanish across quiz, result, email, and share pages.',
+          'Add Bahasa Indonesia or Malay next for Southeast Asian growth.',
+          'Use analytics to decide whether Vietnamese, Hindi, or Portuguese should follow.',
+        ],
+      },
+    ],
+    related: [
+      { href: '/zh-CN', title: 'FourType Chinese', description: 'Use the Chinese FourType experience.' },
+      { href: '/es', title: 'FourType Spanish', description: 'Use the Spanish FourType experience.' },
+      { href: '/blog/temperament-by-country', title: 'Temperament by Country', description: 'Use visitor data responsibly for localization.' },
+      { href: '/blog/personality-test-vs-temperament-test', title: 'Personality Test vs Temperament Test', description: 'Understand why temperament is useful across cultures.' },
+    ],
+    faq: [
+      { question: 'Is the FourType temperament test available in Chinese?', answer: 'Yes. FourType includes a Chinese-language experience for users who prefer Chinese result copy and navigation.' },
+      { question: 'Is the FourType temperament test available in Spanish?', answer: 'Yes. FourType includes a Spanish-language experience for Spanish-speaking users.' },
+      { question: 'What languages should FourType add next?', answer: 'Bahasa Indonesia or Malay, Vietnamese, Hindi, and Portuguese are strong candidates because they can support large audiences and thinner SEO competition.' },
+      { question: 'Why does temperament translation need care?', answer: 'Temperament content includes emotional nuance, stress language, relationship examples, and share copy. Direct translation can sound stiff or misleading if it is not localized.' },
+    ],
+  },
+  {
     slug: 'personality-test-vs-temperament-test',
     title: 'Personality Test vs Temperament Test: Which One Should You Take First?',
     shortTitle: 'Personality Test vs Temperament Test',
