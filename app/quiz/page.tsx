@@ -8,6 +8,7 @@ import { AnswerLetter } from '@/lib/questions'
 import { calculateScores, ScoreMap } from '@/lib/scoringKey'
 import { getQuizCopy, getQuizQuestions, type QuizLocale } from '@/lib/quiz-i18n'
 import { decodeShareId } from '@/lib/share-id'
+import { TrustProof } from '@/components/TrustProof'
 import NameInputScreen from '@/components/NameInputScreen'
 import QuestionScreen from '@/components/QuestionScreen'
 import LoadingScreen from '@/components/LoadingScreen'
@@ -109,6 +110,8 @@ function QuizSeoSection() {
             behavior under ordinary pressure, then compare your score spread across all four temperaments.
           </p>
         </div>
+
+        <TrustProof variant="compact" className="mb-12" />
 
         <div className="grid md:grid-cols-2 gap-4 mb-12">
           {[

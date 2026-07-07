@@ -6,8 +6,10 @@ import { ArrowRight } from 'lucide-react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { ContentBlocks } from '@/components/ContentBlocks'
+import { EditorialNote } from '@/components/EditorialNote'
 import { FaqSection } from '@/components/FaqSection'
 import { InternalLinkHub } from '@/components/InternalLinkHub'
+import { TrustProof } from '@/components/TrustProof'
 import { accentStyles, blogArticles, breadcrumbJsonLd, faqJsonLd, fourTypeOrganizationRef, fourTypeQuizAppRef, fourTypeWebsiteRef, getBlogArticle, itemListJsonLd, popularGuideLinks, quizActionJsonLd, temperamentTopicJsonLd } from '@/lib/seo-content'
 
 type Props = {
@@ -77,6 +79,15 @@ export default async function BlogArticlePage({ params }: Props) {
   const relatedGuideLinks = [...article.related, ...popularGuideLinks].filter((item, index, links) => (
     links.findIndex((link) => link.href === item.href) === index
   )).slice(0, 8)
+  const trustArticleSlugs = new Set([
+    'best-temperament-test',
+    'best-free-four-temperaments-test',
+    'temperament-test-accuracy',
+    'temperament-test-questions',
+    'personality-test-vs-temperament-test',
+    'how-to-read-temperament-test-results',
+  ])
+  const showTrustSignals = trustArticleSlugs.has(article.slug)
   const relatedGuidesSchema = itemListJsonLd('Related temperament test guides', relatedGuideLinks)
 
   return (
@@ -126,6 +137,12 @@ export default async function BlogArticlePage({ params }: Props) {
           </div>
 
           <ContentBlocks blocks={article.blocks} />
+          {showTrustSignals && (
+            <div className="mb-16 space-y-6">
+              <TrustProof variant={article.slug === 'best-temperament-test' ? 'full' : 'compact'} />
+              <EditorialNote />
+            </div>
+          )}
           <InternalLinkHub title="Related Temperament Test Guides" links={relatedGuideLinks} />
           <FaqSection faq={article.faq} />
 

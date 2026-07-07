@@ -5,8 +5,10 @@ import { ArrowRight } from 'lucide-react'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import { ContentBlocks } from '@/components/ContentBlocks'
+import { EditorialNote } from '@/components/EditorialNote'
 import { FaqSection } from '@/components/FaqSection'
 import { InternalLinkHub } from '@/components/InternalLinkHub'
+import { TrustProof } from '@/components/TrustProof'
 import { accentStyles, breadcrumbJsonLd, faqJsonLd, fourTypeOrganizationRef, fourTypeQuizAppRef, fourTypeWebsiteRef, getSeoPage, guideLinksForSeoPage, itemListJsonLd, quizActionJsonLd, seoPages, temperamentTopicJsonLd } from '@/lib/seo-content'
 import { localizedPath, type LocalizedPageKey } from '@/lib/localized-content'
 
@@ -58,6 +60,8 @@ export default async function SeoLandingPage({ params }: Props) {
   const Icon = page.icon
   const accent = accentStyles[page.accent]
   const relatedGuideLinks = guideLinksForSeoPage(page.slug).filter((link) => link.href !== `/${page.slug}`)
+  const trustPageSlugs = new Set(['temperament-test', 'four-temperaments-test', 'temperament-quiz', 'methodology', 'personality-temperament-test'])
+  const showTrustSignals = trustPageSlugs.has(page.slug)
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -110,6 +114,12 @@ export default async function SeoLandingPage({ params }: Props) {
           </div>
 
           <ContentBlocks blocks={page.blocks} />
+          {showTrustSignals && (
+            <div className="mb-16 space-y-6">
+              <TrustProof variant={page.slug === 'methodology' ? 'full' : 'compact'} />
+              <EditorialNote />
+            </div>
+          )}
           <InternalLinkHub title="Keep Exploring Temperament Tests" links={relatedGuideLinks} />
           <FaqSection faq={page.faq} />
 
