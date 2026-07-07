@@ -81,6 +81,7 @@ export default async function BlogArticlePage({ params }: Props) {
   )).slice(0, 8)
   const trustArticleSlugs = new Set([
     'best-temperament-test',
+    'temperament-test-comparison',
     'idrlabs-temperament-test-vs-fourtype',
     'jobcannon-temperament-test-vs-fourtype',
     'temperament-test-vs-personality-test',
