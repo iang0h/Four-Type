@@ -40,6 +40,13 @@ export type ContentBlock =
       intro?: string
       items: { title: string; body: string; accent?: Accent }[]
     }
+  | {
+      type: 'table'
+      title: string
+      intro?: string
+      columns: string[]
+      rows: string[][]
+    }
 
 export type SeoPage = {
   slug: string
@@ -942,6 +949,20 @@ export const blogArticles: BlogArticle[] = [
         ],
       },
       {
+        type: 'table',
+        title: 'Best temperament test comparison table',
+        intro: 'If you are deciding quickly, compare the main trade-offs before taking a quiz.',
+        columns: ['Test', 'Best for', 'Result depth', 'Main trade-off'],
+        rows: [
+          ['FourType', 'Practical self-knowledge, sharing, subtypes, relationships, and work-style insight.', '40 questions, score spread, subtype direction, share card, and follow-up guides.', 'Less academic in tone than OSPP or IDRlabs because it is built for everyday use.'],
+          ['OSPP/O4TS', 'Open-source psychometrics context and transparent development notes.', 'Compact four-temperaments scale with scoring context.', 'More utilitarian result experience and less practical follow-up content.'],
+          ['IDRlabs', 'Academic-style framing and Eysenck-influenced temperament language.', 'Professional-feeling result with broad test-library context.', 'Can feel more like a test library than a focused temperament learning path.'],
+          ['Truity', 'A broader 16-type personality ecosystem.', 'Temperament through Myers-Briggs and Keirsey-style language.', 'Not focused only on the classical Choleric, Sanguine, Melancholic, and Phlegmatic model.'],
+          ['JobCannon', 'A very short first signal inside a quick-test hub.', 'Short quiz with fast career/personality positioning.', 'Fewer questions means less room for score spread and subtype nuance.'],
+          ['TemperamentQuiz.com', 'Simple sharing and comparing with friends.', 'Clear labels and social comparison flow.', 'Less depth for subtype interpretation, methodology, and long-term learning.'],
+        ],
+      },
+      {
         type: 'section',
         title: 'Why FourType is different',
         body: [
@@ -1022,6 +1043,20 @@ export const blogArticles: BlogArticle[] = [
           { title: 'Responsible limits', body: 'The test should avoid clinical, medical, hiring, or permanent-identity claims.', accent: 'purple' },
           { title: 'Useful next steps', body: 'The result should help with stress response, communication, relationships, work style, and growth.', accent: 'red' },
           { title: 'Low friction', body: 'A free temperament test should not hide the core result behind an account or payment wall.', accent: 'green' },
+        ],
+      },
+      {
+        type: 'table',
+        title: 'FourType vs other temperament tests at a glance',
+        intro: 'This table summarizes the decision for people comparing FourType with the main search-result alternatives.',
+        columns: ['Option', 'Why people choose it', 'Where FourType is stronger', 'Best next step'],
+        rows: [
+          ['FourType', 'They want a free four temperaments result that turns into practical insight.', 'It combines score spread, subtypes, compatibility, share cards, methodology, localized pages, and growth guidance in one focused site.', 'Take FourType first, then read your subtype and compare with a friend.'],
+          ['OSPP/O4TS', 'They want an open-source-style temperament scale with development and scoring context.', 'FourType is easier to apply after the result because it links the score to relationships, work, conflict, and growth.', 'Use OSPP as a second opinion if transparency is the priority.'],
+          ['IDRlabs', 'They want academic-style framing and a familiar personality-test library.', 'FourType gives a more focused four-temperaments journey with subtype pages and practical follow-through.', 'Use IDRlabs if professional-style framing matters most.'],
+          ['Truity', 'They want temperament inside a larger 16-type ecosystem.', 'FourType answers classical four-temperaments intent more directly: Choleric, Sanguine, Melancholic, Phlegmatic, and blends.', 'Use Truity if you want a broader TypeFinder path.'],
+          ['Psych Central', 'They want a brief, familiar quiz from a broad health publisher.', 'FourType gives more nuance through 40 questions, score spread, and subtype interpretation.', 'Use brief quizzes for curiosity; use FourType for deeper self-understanding.'],
+          ['JobCannon', 'They want a quick test inside a broader assessment hub.', 'FourType has more temperament-specific depth and shareable result design.', 'Use JobCannon for speed; use FourType for insight.'],
         ],
       },
       {
@@ -3907,6 +3942,19 @@ export function contentToMarkdown(title: string, description: string, blocks: Co
       for (const item of block.items) {
         lines.push(`### ${item.title}`, '', item.body, '')
       }
+      continue
+    }
+
+    if (block.type === 'table') {
+      if (block.intro) {
+        lines.push(block.intro, '')
+      }
+      lines.push(`| ${block.columns.join(' | ')} |`)
+      lines.push(`| ${block.columns.map(() => '---').join(' | ')} |`)
+      for (const row of block.rows) {
+        lines.push(`| ${row.join(' | ')} |`)
+      }
+      lines.push('')
       continue
     }
 

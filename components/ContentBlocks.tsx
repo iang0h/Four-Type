@@ -40,6 +40,39 @@ export function ContentBlocks({ blocks }: { blocks: ContentBlock[] }) {
           )
         }
 
+        if (block.type === 'table') {
+          return (
+            <section key={block.title} className="py-2">
+              <h2 className="text-2xl md:text-3xl font-serif font-bold mb-4">{block.title}</h2>
+              {block.intro && <p className="text-muted-foreground mb-6 leading-relaxed">{block.intro}</p>}
+              <div className="overflow-x-auto rounded-xl border border-border bg-secondary/20">
+                <table className="w-full min-w-[720px] border-collapse text-left text-sm">
+                  <thead className="bg-secondary/50 text-foreground">
+                    <tr>
+                      {block.columns.map((column) => (
+                        <th key={column} scope="col" className="border-b border-border px-4 py-3 font-serif text-base font-bold">
+                          {column}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {block.rows.map((row) => (
+                      <tr key={row.join('|')} className="border-b border-border last:border-b-0">
+                        {row.map((cell, index) => (
+                          <td key={`${row[0]}-${index}`} className="px-4 py-4 align-top text-muted-foreground">
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          )
+        }
+
         const accent = accentStyles[block.accent ?? 'gold']
         return (
           <section key={block.title} className={`border-l-4 ${accent.border} pl-6 py-4`}>
