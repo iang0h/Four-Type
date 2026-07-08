@@ -2,7 +2,12 @@
 
 import { useEffect, useState } from 'react'
 
-const LEVEL_GATES = [10, 20, 30, 40]
+const CHAPTER_GATES = [
+  { question: 12, label: 'CH.I' },
+  { question: 19, label: 'CH.II' },
+  { question: 24, label: 'CH.III' },
+  { question: 40, label: 'FINALE' },
+]
 
 interface XPProgressBarProps {
   current: number
@@ -14,9 +19,9 @@ export default function XPProgressBar({ current, total, heroName }: XPProgressBa
   const pct = (current / total) * 100
   const [flash, setFlash] = useState(false)
 
-  // Flash effect on level milestones
+  // Flash after a real chapter boundary has just been crossed.
   useEffect(() => {
-    if (LEVEL_GATES.slice(0, -1).includes(current)) {
+    if (CHAPTER_GATES.slice(0, -1).some((gate) => gate.question === current - 1)) {
       setFlash(true)
       const timer = setTimeout(() => setFlash(false), 500)
       return () => clearTimeout(timer)
@@ -100,12 +105,12 @@ export default function XPProgressBar({ current, total, heroName }: XPProgressBa
         </div>
 
         {/* Level gate markers (diamond icons) - now larger */}
-        {LEVEL_GATES.slice(0, -1).map((gate) => {
-          const markerPct = (gate / total) * 100
-          const reached = current >= gate
+        {CHAPTER_GATES.slice(0, -1).map((gate) => {
+          const markerPct = (gate.question / total) * 100
+          const reached = current > gate.question
           return (
             <div
-              key={gate}
+              key={gate.question}
               className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10 transition-all duration-300"
               style={{ left: `${markerPct}%` }}
             >
@@ -127,12 +132,12 @@ export default function XPProgressBar({ current, total, heroName }: XPProgressBa
 
       {/* Level labels - more visible */}
       <div className="relative w-full h-5">
-        {LEVEL_GATES.map((gate) => {
-          const markerPct = (gate / total) * 100
-          const reached = current >= gate
+        {CHAPTER_GATES.map((gate) => {
+          const markerPct = (gate.question / total) * 100
+          const reached = current > gate.question || current === total
           return (
             <div
-              key={gate}
+              key={gate.question}
               className="absolute -translate-x-1/2 flex flex-col items-center"
               style={{ left: `${markerPct}%` }}
             >
@@ -143,7 +148,7 @@ export default function XPProgressBar({ current, total, heroName }: XPProgressBa
                   textShadow: reached ? '0 0 10px rgba(255,215,0,0.6)' : 'none',
                 }}
               >
-                {gate === 40 ? 'FINALE' : `CH.${Math.floor(gate / 10)}`}
+                {gate.label}
               </span>
             </div>
           )

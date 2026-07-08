@@ -89,7 +89,9 @@ export default function QuestionScreen({ heroName, onComplete, copy, questions }
 
   function handleSelect(letter: AnswerLetter, event: React.MouseEvent) {
     if (selected) return
-    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
+    const selectedButton = event.currentTarget as HTMLElement
+    selectedButton.blur()
+    const rect = selectedButton.getBoundingClientRect()
     spawnSparks(rect.left + rect.width / 2, rect.top + rect.height / 2)
     setSelected(letter)
 
@@ -336,7 +338,7 @@ export default function QuestionScreen({ heroName, onComplete, copy, questions }
                 const isSelected = selected === answer.letter
                 return (
                   <button
-                    key={answer.letter}
+                    key={`${currentQ.id}-${answer.letter}`}
                     id={`answer-${answer.letter}`}
                     onClick={(e) => handleSelect(answer.letter, e)}
                     disabled={!!selected}

@@ -141,9 +141,9 @@ const enCopy: QuizCopy = {
     keyboardHint: 'Press A, B, C, or D to answer quickly',
     sectionNames: { 1: 'CHAPTER I', 2: 'CHAPTER II', 3: 'CHAPTER III', 4: 'CHAPTER IV' },
     levelGateMessages: {
-      10: "Level Up! You've crossed the first threshold.",
-      20: 'Level Up! The oracle grows attentive.',
-      30: 'Level Up! Your true nature emerges.',
+      12: 'Chapter complete! The path turns toward your choices.',
+      19: 'Chapter complete! The oracle grows attentive.',
+      24: 'Chapter complete! Your true nature emerges.',
     },
   },
   loading: {
@@ -277,9 +277,9 @@ const zhCopy: QuizCopy = {
     keyboardHint: '按 A、B、C 或 D 可快速作答',
     sectionNames: { 1: '第一章', 2: '第二章', 3: '第三章', 4: '第四章' },
     levelGateMessages: {
-      10: '升级！你已经跨过第一道门槛。',
-      20: '升级！神谕开始认真倾听。',
-      30: '升级！你的真实本性逐渐显现。',
+      12: '章节完成！道路转向你的选择。',
+      19: '章节完成！神谕开始认真倾听。',
+      24: '章节完成！你的真实本性逐渐显现。',
     },
   },
   loading: {
@@ -414,9 +414,9 @@ const esCopy: QuizCopy = {
     keyboardHint: 'Pulsa A, B, C o D para responder rápido',
     sectionNames: { 1: 'CAPÍTULO I', 2: 'CAPÍTULO II', 3: 'CAPÍTULO III', 4: 'CAPÍTULO IV' },
     levelGateMessages: {
-      10: '¡Subiste de nivel! Cruzaste el primer umbral.',
-      20: '¡Subiste de nivel! El oráculo presta atención.',
-      30: '¡Subiste de nivel! Tu verdadera naturaleza aparece.',
+      12: '¡Capítulo completo! El camino gira hacia tus elecciones.',
+      19: '¡Capítulo completo! El oráculo presta atención.',
+      24: '¡Capítulo completo! Tu verdadera naturaleza aparece.',
     },
   },
   loading: {
