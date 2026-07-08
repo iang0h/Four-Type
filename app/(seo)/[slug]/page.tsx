@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: page.description,
       url: `https://www.fourtype.com/${page.slug}`,
       type: 'article',
-      images: [{ url: 'https://www.fourtype.com/og-image.jpg', width: 1280, height: 960, alt: page.shortTitle }],
+      images: [{ url: 'https://www.fourtype.com/og-image.png', width: 1672, height: 941, alt: page.shortTitle }],
     },
   }
 }
@@ -67,7 +67,7 @@ export default async function SeoLandingPage({ params }: Props) {
     '@type': 'Article',
     headline: page.title,
     description: page.description,
-    image: 'https://www.fourtype.com/og-image.jpg',
+    image: 'https://www.fourtype.com/og-image.png',
     url: `https://www.fourtype.com/${page.slug}`,
     datePublished: '2026-07-02',
     dateModified: contentLastReviewed,

@@ -42,9 +42,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       siteName: 'FourType',
       images: [
         {
-          url: 'https://www.fourtype.com/og-image.jpg',
-          width: 1280,
-          height: 960,
+          url: 'https://www.fourtype.com/og-image.png',
+          width: 1672,
+          height: 941,
           alt: `${subtype.name} temperament subtype result`,
         },
       ],

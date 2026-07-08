@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     description: 'FourType is a free temperament test and self-reflection project created by Ian Goh.',
     url: 'https://www.fourtype.com/about',
     type: 'article',
-    images: [{ url: 'https://www.fourtype.com/og-image.jpg', width: 1280, height: 960, alt: 'FourType temperament test' }],
+    images: [{ url: 'https://www.fourtype.com/og-image.png', width: 1672, height: 941, alt: 'FourType temperament test' }],
   },
 }
 

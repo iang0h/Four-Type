@@ -34,6 +34,12 @@ const temperaments = [
 ]
 
 const featureIcons = [Brain, Users, BookOpen, Sparkles]
+const youtubeChannelUrl = 'https://www.youtube.com/@fourtypequiz'
+const youtubeChannelCta: Record<HomeLocale, string> = {
+  en: 'Watch more FourType lessons on YouTube',
+  'zh-CN': '在 YouTube 观看更多 FourType 课程',
+  es: 'Ver más lecciones de FourType en YouTube',
+}
 
 export default function HomePage() {
   return <HomeExperience locale="en" />
@@ -86,9 +92,9 @@ export function HomeExperience({ locale = 'en' }: { locale?: HomeLocale }) {
     isPartOf: { '@id': 'https://www.fourtype.com/#website' },
     primaryImageOfPage: {
       '@type': 'ImageObject',
-      url: 'https://www.fourtype.com/og-image.jpg',
-      width: 1280,
-      height: 960,
+      url: 'https://www.fourtype.com/og-image.png',
+      width: 1672,
+      height: 941,
     },
     mainEntity: {
       '@id': `https://www.fourtype.com${quizHref}#app`,
@@ -462,6 +468,14 @@ export function HomeExperience({ locale = 'en' }: { locale?: HomeLocale }) {
               </p>
               <div className="w-full max-w-4xl mx-auto mb-16">
                 <YouTubeEmbed videoId="MFi57x7BBXE" title={copy.videoTitle} />
+                <a
+                  href={youtubeChannelUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex items-center justify-center rounded-lg border border-primary/30 px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary/10"
+                >
+                  {youtubeChannelCta[locale]}
+                </a>
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

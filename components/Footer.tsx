@@ -38,6 +38,8 @@ const footerLinks = {
   ],
 }
 
+const youtubeUrl = 'https://www.youtube.com/@fourtypequiz'
+
 export default function Footer() {
   return (
     <footer className="bg-card border-t border-border">
@@ -124,6 +126,16 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <a
+                  href={youtubeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  YouTube
+                </a>
+              </li>
             </ul>
           </div>
         </div>

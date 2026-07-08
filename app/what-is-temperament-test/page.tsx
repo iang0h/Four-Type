@@ -26,9 +26,9 @@ export const metadata: Metadata = {
     type: 'article',
     images: [
       {
-        url: 'https://www.fourtype.com/og-image.jpg',
-        width: 1280,
-        height: 960,
+        url: 'https://www.fourtype.com/og-image.png',
+        width: 1672,
+        height: 941,
         alt: 'FourType Temperament Test - Discover Your True Nature',
       },
     ],
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'What Is a Temperament Test? | Free Quiz',
     description: 'Discover the 4 temperament types and take our free personality quiz.',
-    images: ['https://www.fourtype.com/og-image.jpg'],
+    images: ['https://www.fourtype.com/og-image.png'],
   },
 }
 
@@ -448,7 +448,7 @@ export default function WhatIsTemperamentTestPage() {
             '@type': 'Article',
             headline: 'What Is a Temperament Test? Understanding the 4 Temperament Types',
             description: 'A comprehensive guide to temperament tests and the four temperament types: Choleric, Sanguine, Melancholic, and Phlegmatic.',
-            image: 'https://www.fourtype.com/og-image.jpg',
+            image: 'https://www.fourtype.com/og-image.png',
             author: {
               '@type': 'Organization',
               name: 'FourType',

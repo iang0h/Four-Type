@@ -40,7 +40,7 @@ export function localizedMetadata(locale: LocaleCode, pageKey: LocalizedPageKey)
       url: canonical,
       type: 'website',
       locale: locale === 'zh-CN' ? 'zh_CN' : 'es_ES',
-      images: [{ url: 'https://www.fourtype.com/og-image.jpg', width: 1280, height: 960, alt: page.title }],
+      images: [{ url: 'https://www.fourtype.com/og-image.png', width: 1672, height: 941, alt: page.title }],
     },
   }
 }

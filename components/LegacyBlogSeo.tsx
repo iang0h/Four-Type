@@ -8,7 +8,7 @@ type LegacyBlogSeoProps = {
   image?: string
 }
 
-export function LegacyBlogSeo({ title, description, path, published, image = 'https://www.fourtype.com/og-image.jpg' }: LegacyBlogSeoProps) {
+export function LegacyBlogSeo({ title, description, path, published, image = 'https://www.fourtype.com/og-image.png' }: LegacyBlogSeoProps) {
   const canonicalUrl = `https://www.fourtype.com${path}`
   const articleSchema = {
     '@context': 'https://schema.org',

@@ -24,9 +24,9 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: 'https://www.fourtype.com/og-image.jpg',
-        width: 1280,
-        height: 960,
+        url: 'https://www.fourtype.com/og-image.png',
+        width: 1672,
+        height: 941,
         alt: 'FourType Temperament Test - 40 Questions, 4 Temperaments',
       },
     ],
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Free Temperament Test 2026 | 40-Question Quiz',
     description: 'Discover your temperament score spread: Choleric, Sanguine, Melancholic, Phlegmatic, and blended subtype direction.',
-    images: ['https://www.fourtype.com/og-image.jpg'],
+    images: ['https://www.fourtype.com/og-image.png'],
   },
 }
 
@@ -96,7 +96,7 @@ export default function QuizLayout({
     alternateName: ['Free Temperament Test', 'Four Temperaments Test', '4 Temperament Test'],
     url: 'https://www.fourtype.com/quiz',
     description: 'A free 40-question temperament quiz for comparing Choleric, Sanguine, Melancholic, Phlegmatic, and blended subtype patterns.',
-    image: 'https://www.fourtype.com/og-image.jpg',
+    image: 'https://www.fourtype.com/og-image.png',
     inLanguage: 'en-US',
     educationalUse: 'Self assessment',
     assesses: 'Four temperaments pattern: Choleric, Sanguine, Melancholic, Phlegmatic, and blended subtypes',

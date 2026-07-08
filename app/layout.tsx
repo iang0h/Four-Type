@@ -50,9 +50,9 @@ export const metadata: Metadata = {
     siteName: 'FourType',
     images: [
       {
-        url: 'https://www.fourtype.com/og-image.jpg',
-        width: 1280,
-        height: 960,
+        url: 'https://www.fourtype.com/og-image.png',
+        width: 1672,
+        height: 941,
         alt: 'FourType — Know Your True Nature. The Temperament Quest. 40 questions. 4 temperaments. Free forever.',
       },
     ],
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'FourType — Discover Your Temperament',
     description: 'Understanding your temperament unlocks the key to why you think, feel, and act the way you do. Free 40-question quiz.',
-    images: ['https://www.fourtype.com/og-image.jpg'],
+    images: ['https://www.fourtype.com/og-image.png'],
   },
   robots: {
     index: true,
@@ -103,14 +103,14 @@ export default function RootLayout({
           width: 512,
           height: 512,
         },
-        sameAs: ['https://www.fourtype.com'],
+        sameAs: ['https://www.fourtype.com', 'https://www.youtube.com/@fourtypequiz'],
       },
       {
         '@type': 'Person',
         '@id': 'https://www.fourtype.com/#ian-goh',
         name: 'Ian Goh',
         url: 'https://iangoh.com',
-        sameAs: ['https://iangoh.com'],
+        sameAs: ['https://iangoh.com', 'https://www.youtube.com/@fourtypequiz'],
         worksFor: { '@id': 'https://www.fourtype.com/#organization' },
         knowsAbout: [
           'Four temperaments',
