@@ -395,6 +395,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
                 style={{
                   backgroundColor: '#0D0D0F',
                   boxShadow: `0 0 60px ${primaryColor}40, inset 0 0 30px ${primaryColor}15`,
+                  animation: 'counter-rotate 12s linear infinite',
                 }}
               >
                 <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
@@ -1231,6 +1232,10 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
         @keyframes rotate {
           from { transform: rotate(0deg); }
           to { transform: rotate(360deg); }
+        }
+        @keyframes counter-rotate {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(-360deg); }
         }
         @keyframes pulse-glow {
           0%, 100% { opacity: 0.3; }
