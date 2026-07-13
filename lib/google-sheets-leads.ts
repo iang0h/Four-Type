@@ -20,10 +20,13 @@ export interface AnalyticsEventPayload {
   event: string
   locale: string
   blendKey: string
+  inviterBlendKey: string
   resultName: string
   shareId: string
   compareWith: string
   source: string
+  chapter?: number
+  question?: number
   path: string
   userAgent?: string
 }
@@ -162,17 +165,20 @@ export async function appendEventToGoogleSheet(payload: AnalyticsEventPayload) {
 
   const token = await getGoogleSheetsAccessToken()
   const sheetName = process.env.GOOGLE_SHEETS_EVENTS_SHEET_NAME || 'Events'
-  const range = encodeURIComponent(`${sheetName}!A:J`)
+  const range = encodeURIComponent(`${sheetName}!A:M`)
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${config.spreadsheetId}/values/${range}:append?valueInputOption=USER_ENTERED&insertDataOption=INSERT_ROWS`
   const row = [
     new Date().toISOString(),
     payload.event,
     payload.locale,
     payload.blendKey,
+    payload.inviterBlendKey,
     payload.resultName,
     payload.shareId,
     payload.compareWith,
     payload.source,
+    payload.chapter ?? '',
+    payload.question ?? '',
     payload.path,
     payload.userAgent || '',
   ]
