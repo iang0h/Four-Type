@@ -1,6 +1,7 @@
 import type { Blend } from './blends'
 
 type Primary = Blend['primary']
+type ResultLocale = 'en' | 'zh-CN' | 'es' | 'id'
 
 const oneSentenceByPrimary: Record<Primary, string> = {
   Red: 'You calm down by taking control, moving the situation forward, and making the next decision obvious.',
@@ -46,6 +47,34 @@ const socialPromptByPrimary: Record<Primary, string[]> = {
   ],
 }
 
+const idOneSentence: Record<Primary, string> = {
+  Red: 'Anda merasa lebih tenang dengan mengambil kendali, menggerakkan keadaan, dan memperjelas keputusan berikutnya.',
+  Yellow: 'Anda menjadi hidup ketika ada energi, orang untuk diajak terhubung, dan sesuatu yang layak dirayakan.',
+  Blue: 'Anda melihat kekurangan tersembunyi, makna yang lebih dalam, dan standar yang sering dilewati orang lain.',
+  Green: 'Anda menjaga suhu emosi tetap stabil, jauh sebelum orang lain menyadari bahwa suasana perlu ditenangkan.',
+}
+
+const idMisunderstood: Record<Primary, string> = {
+  Red: 'Orang mungkin menyebut Anda mengendalikan, padahal Anda sering berusaha menghentikan keadaan yang mengambang, pemborosan, atau kepemimpinan lemah.',
+  Yellow: 'Orang mungkin menganggap Anda tidak serius, padahal Anda berusaha menjaga harapan, hubungan, dan semangat tetap hidup.',
+  Blue: 'Orang mungkin menyebut Anda negatif, padahal Anda sedang menjaga kebenaran, ketelitian, keindahan, atau kualitas.',
+  Green: 'Orang mungkin menyebut Anda pasif, padahal Anda sering berusaha menjaga kepercayaan, kedamaian, dan keamanan emosi.',
+}
+
+const idChallenge: Record<Primary, string> = {
+  Red: 'Ajukan satu pertanyaan lagi sebelum memberikan jawaban.',
+  Yellow: 'Selesaikan satu janji kecil sebelum mengejar hal menarik berikutnya.',
+  Blue: 'Bagikan draf sebelum terasa sepenuhnya siap.',
+  Green: 'Nyatakan satu pilihan nyata sebelum orang harus bertanya dua kali.',
+}
+
+const idSocialPrompts: Record<Primary, string[]> = {
+  Red: ['Kirim kepada teman yang selalu mengambil kendali.', 'Kirim kepada orang yang sering berkata, "putuskan saja".', 'Kirim kepada orang yang lebih tenang ketika rencananya jelas.'],
+  Yellow: ['Kirim kepada teman yang dapat menghidupkan ruangan.', 'Kirim kepada orang yang memulai banyak hal karena semuanya terasa seru.', 'Kirim kepada orang yang mengubah urusan biasa menjadi acara.'],
+  Blue: ['Kirim kepada teman yang melihat detail yang terlewat.', 'Kirim kepada orang yang berkata, "tergantung," karena memang begitu.', 'Kirim kepada orang yang merasa mendalam tetapi menjelaskannya dengan hati-hati.'],
+  Green: ['Kirim kepada teman yang berkata, "saya baik-baik saja," tetapi jelas punya pikiran.', 'Kirim kepada orang yang menjaga semua orang tetap tenang tanpa mendapat pujian.', 'Kirim kepada orang yang menghindari drama sampai diamnya menjadi drama.'],
+}
+
 const ogHookByPrimary: Record<Primary, string> = {
   Red: 'It knew I take over when nobody decides',
   Yellow: 'It knew I chase the energy in the room',
@@ -60,20 +89,20 @@ const ogLineByPrimary: Record<Primary, string> = {
   Green: 'Painfully accurate: calm, avoidance, and the things I do not say out loud.',
 }
 
-export function getResultOneSentence(blend: Blend) {
-  return oneSentenceByPrimary[blend.primary]
+export function getResultOneSentence(blend: Blend, locale: ResultLocale = 'en') {
+  return locale === 'id' ? idOneSentence[blend.primary] : oneSentenceByPrimary[blend.primary]
 }
 
-export function getMisunderstoodLine(blend: Blend) {
-  return misunderstoodByPrimary[blend.primary]
+export function getMisunderstoodLine(blend: Blend, locale: ResultLocale = 'en') {
+  return locale === 'id' ? idMisunderstood[blend.primary] : misunderstoodByPrimary[blend.primary]
 }
 
-export function getWeeklyChallenge(blend: Blend) {
-  return challengeByPrimary[blend.primary]
+export function getWeeklyChallenge(blend: Blend, locale: ResultLocale = 'en') {
+  return locale === 'id' ? idChallenge[blend.primary] : challengeByPrimary[blend.primary]
 }
 
-export function getSharePrompts(blend: Blend) {
-  return socialPromptByPrimary[blend.primary]
+export function getSharePrompts(blend: Blend, locale: ResultLocale = 'en') {
+  return locale === 'id' ? idSocialPrompts[blend.primary] : socialPromptByPrimary[blend.primary]
 }
 
 export function getOgHook(blend: Blend) {

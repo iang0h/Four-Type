@@ -3,15 +3,21 @@ import { notFound } from 'next/navigation'
 import SharePageClient from './SharePageClient'
 import { BLENDS } from '@/lib/blends'
 import { TEMPERAMENTS } from '@/lib/temperaments'
-import { getShareMetadata } from '@/lib/share-copy'
+import { getShareMetadata, type ShareLocale } from '@/lib/share-copy'
 import { decodeShareId } from '@/lib/share-id'
 
 interface PageProps {
   params: Promise<{ id: string }>
+  searchParams: Promise<{ lang?: string }>
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+function normalizeShareLocale(lang?: string): ShareLocale {
+  return lang === 'zh-CN' || lang === 'es' || lang === 'id' ? lang : 'en'
+}
+
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { id } = await params
+  const locale = normalizeShareLocale((await searchParams).lang)
   const data = decodeShareId(id)
   
   if (!data) {
@@ -26,7 +32,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
   
   const blend = BLENDS[data.blendKey]
-  const shareMetadata = getShareMetadata(data.heroName, blend)
+  const shareMetadata = getShareMetadata(data.heroName, blend, locale)
   
   const title = `${shareMetadata.title} | FourType`
   const description = shareMetadata.description
@@ -39,7 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       follow: true,
     },
     alternates: {
-      canonical: 'https://www.fourtype.com/quiz',
+      canonical: `https://www.fourtype.com/share/${id}`,
     },
     openGraph: {
       title: shareMetadata.ogTitle,
@@ -54,7 +60,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
           alt: `${blend.name} - ${blend.blend}`,
         },
       ],
-      locale: 'en_US',
+      locale: locale === 'zh-CN' ? 'zh_CN' : locale === 'es' ? 'es_ES' : locale === 'id' ? 'id_ID' : 'en_US',
       type: 'website',
     },
     twitter: {
@@ -66,8 +72,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 }
 
-export default async function SharePage({ params }: PageProps) {
+export default async function SharePage({ params, searchParams }: PageProps) {
   const { id } = await params
+  const locale = normalizeShareLocale((await searchParams).lang)
   const data = decodeShareId(id)
   
   if (!data) {
@@ -84,6 +91,7 @@ export default async function SharePage({ params }: PageProps) {
       dominantTemp={dominantTemp}
       scores={data.scores}
       shareId={id}
+      locale={locale}
     />
   )
 }

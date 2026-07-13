@@ -11,7 +11,7 @@ import { getLocalizedBlendSummary, type QuizCopy, type QuizLocale } from '@/lib/
 import { getShareText } from '@/lib/share-copy'
 import { getMisunderstoodLine, getResultOneSentence, getSharePrompts, getWeeklyChallenge } from '@/lib/result-virality'
 import { generateShareId, type DecodedShareResult } from '@/lib/share-id'
-import { getComparisonInsight } from '@/lib/comparison'
+import { getLocalizedComparisonInsight } from '@/lib/comparison-i18n'
 import { trackFourTypeEvent, type FourTypeEventName } from '@/lib/analytics'
 import ScoreChart from './ScoreChart'
 import CinematicBackground from './CinematicBackground'
@@ -19,7 +19,7 @@ import ShareableCard from './ShareableCard'
 import PairComparison from './PairComparison'
 
 // Get reading resources based on temperament
-function getReadingResources(primaryKey: TemperamentKey, blendKey: string) {
+function getReadingResources(primaryKey: TemperamentKey, blendKey: string, locale: QuizLocale) {
   const temperamentMap: Record<TemperamentKey, { name: string; slug: string }> = {
     Yellow: { name: 'Sanguine', slug: 'sanguine' },
     Red: { name: 'Choleric', slug: 'choleric' },
@@ -29,6 +29,19 @@ function getReadingResources(primaryKey: TemperamentKey, blendKey: string) {
   
   const temp = temperamentMap[primaryKey]
   const subtype = getSubtypeByBlendKey(blendKey)
+  const localizedName = locale === 'id'
+    ? ({ Yellow: 'Sanguinis', Red: 'Koleris', Blue: 'Melankolis', Green: 'Plegmatis' } as const)[primaryKey]
+    : temp.name
+
+  if (locale === 'id') {
+    return [
+      ...(subtype ? [{ title: `${subtype.name}: Perpaduan Anda`, description: 'Pelajari pola utama dan sekunder Anda secara lebih khusus.', href: `/subtype/${subtype.slug}` }] : []),
+      { title: `Panduan temperamen ${localizedName}`, description: 'Kekuatan, tantangan, pekerjaan, dan hubungan.', href: `/temperament/${temp.slug}` },
+      { title: `Artikel mendalam ${localizedName}`, description: 'Penjelasan rinci dengan langkah praktis.', href: `/blog/${temp.slug}` },
+      { title: '16 pola FourType', description: 'Pahami semua perpaduan termasuk hasil Anda.', href: '/blog/subtypes' },
+      { title: 'Sejarah empat temperamen', description: 'Dari dunia kuno hingga psikologi modern.', href: '/blog/history-of-temperaments' },
+    ].slice(0, 5)
+  }
   
   const resources = [
     ...(subtype ? [
@@ -91,10 +104,13 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
   const resultSpeakTo = localizedBlend?.speakTo ?? blend.speakTo
   const resultNeverDo = localizedBlend?.neverDo ?? blend.neverDo
   const blendColors = getBlendColors(blend)
-  const resultOneSentence = getResultOneSentence(blend)
-  const misunderstoodLine = getMisunderstoodLine(blend)
-  const weeklyChallenge = getWeeklyChallenge(blend)
-  const sharePrompts = getSharePrompts(blend)
+  const resultOneSentence = getResultOneSentence(blend, locale)
+  const misunderstoodLine = getMisunderstoodLine(blend, locale)
+  const weeklyChallenge = getWeeklyChallenge(blend, locale)
+  const sharePrompts = getSharePrompts(blend, locale)
+  const mirrorLabels = locale === 'id'
+    ? { title: 'Bagian yang biasanya terasa sangat tepat', sentence: 'Pola Anda dalam satu kalimat', misread: 'Yang sering disalahpahami orang', challenge: 'Tantangan Anda minggu ini', send: 'Kirim kepada seseorang yang...', copied: 'Teks berbagi disalin.', mbti: 'Kemungkinan MBTI', enneagram: 'Enneagram', inviteTitle: 'Tantang teman yang mengenal Anda', inviteBody: 'Setelah mereka selesai, FourType akan menunjukkan kekuatan bersama, kemungkinan gesekan, dan cara berkomunikasi yang lebih baik.', inviteButton: 'Tantang seorang teman' }
+    : { title: 'The Part That Usually Lands', sentence: 'Your pattern in one sentence', misread: 'What people misread', challenge: 'Your challenge this week', send: 'Send this to someone who...', copied: 'Share text copied.', mbti: 'Likely MBTI', enneagram: 'Enneagram', inviteTitle: 'Challenge a friend who knows you well', inviteBody: 'When they finish, FourType will reveal your shared strengths, likely friction, and how to communicate better.', inviteButton: 'Challenge a Friend' }
   
   // Legacy temperament data for character images and some content
   const [dominant, secondary] = getDominantAndSecondary(scores)
@@ -121,11 +137,15 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
   
   // Generate shareable URL
   const shareId = useMemo(() => generateShareId(heroName, blendResult.blendKey, scores), [heroName, blendResult.blendKey, scores])
-  const shareUrl = `https://www.fourtype.com/share/${shareId}`
-  const compareUrl = `https://www.fourtype.com/quiz?compare=${shareId}`
-  const readingResources = useMemo(() => getReadingResources(dominant, blendResult.blendKey), [dominant, blendResult.blendKey])
+  const localePrefix = locale === 'en' ? '' : `/${locale}`
+  const languageQuery = locale === 'en' ? '' : `?lang=${locale}`
+  const shareUrl = `https://www.fourtype.com/share/${shareId}${languageQuery}`
+  const comparePath = `${localePrefix}/quiz?compare=${shareId}`
+  const compareUrl = `https://www.fourtype.com${comparePath}`
+  const readingResources = useMemo(() => getReadingResources(dominant, blendResult.blendKey, locale), [dominant, blendResult.blendKey, locale])
   const friendBlend = comparison ? BLENDS[comparison.blendKey] : null
-  const comparisonInsight = friendBlend ? getComparisonInsight(blend, friendBlend) : null
+  const localizedFriendBlend = comparison ? getLocalizedBlendSummary(locale, comparison.blendKey) : null
+  const comparisonInsight = friendBlend ? getLocalizedComparisonInsight(locale, blend, friendBlend) : null
 
   const trackShareEvent = (event: FourTypeEventName, source: string) => {
     trackFourTypeEvent({
@@ -164,7 +184,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
       try {
         await navigator.share({
           title: `I am ${resultName}!`,
-          text: getShareText(blend),
+          text: getShareText(blend, undefined, locale),
           url: shareUrl,
         })
         trackShareEvent('share-click', 'result-native-share')
@@ -180,8 +200,10 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `Compare your FourType with ${resultName}`,
-          text: `I got ${resultName}. Take the FourType test so we can reveal our shared strengths, likely friction, and communication style.`,
+          title: locale === 'id' ? `Bandingkan FourType Anda dengan ${resultName}` : `Compare your FourType with ${resultName}`,
+          text: locale === 'id'
+            ? `Saya mendapatkan ${resultName}. Ikuti tes FourType agar kita dapat melihat kekuatan bersama, kemungkinan gesekan, dan gaya komunikasi.`
+            : `I got ${resultName}. Take the FourType test so we can reveal our shared strengths, likely friction, and communication style.`,
           url: compareUrl,
         })
         trackShareEvent('invite-share', 'result-invite-native-share')
@@ -215,12 +237,16 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
 
   const handlePairShare = async () => {
     if (!friendBlend || !comparisonInsight || !comparison) return
-    const text = `${heroName} is ${resultName}. ${comparison.heroName} is ${friendBlend.name}. ${comparisonInsight.sharedQuality}`
+    const text = locale === 'id'
+      ? `${heroName} adalah ${resultName}. ${comparison.heroName} adalah ${friendBlend.name}. ${comparisonInsight.sharedQuality}`
+      : `${heroName} is ${resultName}. ${comparison.heroName} is ${friendBlend.name}. ${comparisonInsight.sharedQuality}`
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `${heroName} + ${comparison.heroName}: our FourType pair`,
+          title: locale === 'id'
+            ? `${heroName} + ${comparison.heroName}: pasangan FourType kami`
+            : `${heroName} + ${comparison.heroName}: our FourType pair`,
           text,
           url: compareUrl,
         })
@@ -254,7 +280,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
   }
 
   const handlePromptShare = async (prompt: string) => {
-    const promptText = `${prompt}\n\n${getShareText(blend)}`
+    const promptText = `${prompt}\n\n${getShareText(blend, undefined, locale)}`
 
     if (navigator.share) {
       try {
@@ -467,13 +493,13 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
               className="px-2 py-1 rounded text-[10px] font-sans border"
               style={{ borderColor: `${primaryColor}30`, color: '#94A3B8' }}
             >
-              Likely MBTI: {blend.mbti.join(' / ')}
+              {mirrorLabels.mbti}: {blend.mbti.join(' / ')}
             </span>
             <span
               className="px-2 py-1 rounded text-[10px] font-sans border"
               style={{ borderColor: `${primaryColor}30`, color: '#94A3B8' }}
             >
-              Enneagram: {blend.enneagram[0]}
+              {mirrorLabels.enneagram}: {blend.enneagram[0]}
             </span>
           </div>
         </div>
@@ -489,10 +515,10 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
           />
           <div className="relative flex flex-col gap-1">
             <p className="font-serif text-sm font-bold text-[#E2E8F0]">
-              Challenge a friend who knows you well
+              {mirrorLabels.inviteTitle}
             </p>
             <p className="font-sans text-xs leading-relaxed text-[#94A3B8]">
-              When they finish, FourType will reveal your shared strengths, likely friction, and how to communicate better.
+              {mirrorLabels.inviteBody}
             </p>
           </div>
           <div className="relative grid gap-2 sm:grid-cols-2">
@@ -502,7 +528,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
               className="rounded-xl px-4 py-3 font-serif text-xs font-bold uppercase tracking-widest transition-all cursor-pointer"
               style={{ backgroundColor: primaryColor, color: '#0D0D0F' }}
             >
-              Challenge a Friend
+              {mirrorLabels.inviteButton}
             </button>
             <button
               type="button"
@@ -551,19 +577,19 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
           style={{ backgroundColor: 'rgba(26, 26, 46, 0.84)', borderColor: `${primaryColor}35` }}
         >
           <p className="font-serif text-xs tracking-widest uppercase" style={{ color: primaryColor }}>
-            The Part That Usually Lands
+            {mirrorLabels.title}
           </p>
           <div className="grid gap-3">
             <div className="rounded-xl border p-4" style={{ borderColor: `${primaryColor}25`, backgroundColor: `${primaryColor}08` }}>
-              <p className="font-sans text-[10px] uppercase tracking-wider text-[#64748B] mb-1">Your pattern in one sentence</p>
+              <p className="font-sans text-[10px] uppercase tracking-wider text-[#64748B] mb-1">{mirrorLabels.sentence}</p>
               <p className="font-sans text-sm text-[#E2E8F0] leading-relaxed">{resultOneSentence}</p>
             </div>
             <div className="rounded-xl border p-4" style={{ borderColor: `${primaryColor}25`, backgroundColor: 'rgba(13, 13, 15, 0.52)' }}>
-              <p className="font-sans text-[10px] uppercase tracking-wider text-[#64748B] mb-1">What people misread</p>
+              <p className="font-sans text-[10px] uppercase tracking-wider text-[#64748B] mb-1">{mirrorLabels.misread}</p>
               <p className="font-sans text-sm text-[#94A3B8] leading-relaxed">{misunderstoodLine}</p>
             </div>
             <div className="rounded-xl border p-4" style={{ borderColor: `${primaryColor}40`, backgroundColor: `${primaryColor}12` }}>
-              <p className="font-sans text-[10px] uppercase tracking-wider text-[#64748B] mb-1">Your challenge this week</p>
+              <p className="font-sans text-[10px] uppercase tracking-wider text-[#64748B] mb-1">{mirrorLabels.challenge}</p>
               <p className="font-serif text-lg font-bold leading-snug" style={{ color: primaryColor }}>{weeklyChallenge}</p>
             </div>
           </div>
@@ -620,7 +646,10 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
             friendName={comparison.heroName}
             selfBlend={blend}
             friendBlend={friendBlend}
+            selfBlendLabel={resultBlend}
+            friendBlendLabel={localizedFriendBlend?.blend ?? friendBlend.blend}
             insight={comparisonInsight}
+            copy={copy.pair}
             copied={compareCopied}
             onShare={handlePairShare}
             onCopy={handlePairCopy}
@@ -862,13 +891,13 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
           </div>
 
           <Link
-            href={`/quiz?compare=${shareId}`}
+            href={comparePath}
             className="rounded-xl border px-4 py-3 font-sans text-sm text-[#E2E8F0] transition-all hover:text-white"
             style={{ borderColor: `${primaryColor}30`, backgroundColor: `${primaryColor}08` }}
           >
-            Compare your result with a friend
+            {copy.pair.compareTitle}
             <span className="block text-xs text-[#64748B] mt-1">
-              Send them this quiz link so FourType can show how your patterns work together.
+              {copy.pair.compareBody}
             </span>
           </Link>
 
@@ -877,6 +906,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
               heroName={heroName}
               temperament={t}
               scores={scores}
+              locale={locale}
             />
           )}
 
@@ -888,7 +918,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
 
           <div className="border-t pt-4" style={{ borderColor: `${primaryColor}20` }}>
             <p className="font-serif text-xs tracking-widest uppercase mb-3" style={{ color: primaryColor }}>
-              Send this to someone who...
+              {mirrorLabels.send}
             </p>
             <div className="flex flex-col gap-2">
               {sharePrompts.map((prompt) => (
@@ -905,7 +935,7 @@ export default function ResultsScreen({ heroName, scores, onRetake, copy, locale
             </div>
             {linkCopied && (
               <p className="font-sans text-xs mt-2" style={{ color: primaryColor }}>
-                Share text copied.
+                {mirrorLabels.copied}
               </p>
             )}
             <button

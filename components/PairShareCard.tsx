@@ -5,6 +5,7 @@ import { Download } from 'lucide-react'
 import type { Blend } from '@/lib/blends'
 import type { PairInsight } from '@/lib/comparison'
 import { TEMPERAMENTS } from '@/lib/temperaments'
+import type { QuizCopy } from '@/lib/quiz-i18n'
 
 type PairShareCardProps = {
   selfName: string
@@ -12,10 +13,11 @@ type PairShareCardProps = {
   selfBlend: Blend
   friendBlend: Blend
   insight: PairInsight
+  copy: QuizCopy['results']['pair']
   onDownload?: () => void
 }
 
-export default function PairShareCard({ selfName, friendName, selfBlend, friendBlend, insight, onDownload }: PairShareCardProps) {
+export default function PairShareCard({ selfName, friendName, selfBlend, friendBlend, insight, copy, onDownload }: PairShareCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const [downloading, setDownloading] = useState(false)
   const [downloadError, setDownloadError] = useState(false)
@@ -57,11 +59,11 @@ export default function PairShareCard({ selfName, friendName, selfBlend, friendB
         <div className="relative z-10 flex h-full flex-col">
           <div className="flex items-center justify-between">
             <p className="font-serif text-[11px] uppercase tracking-[0.28em] text-[#FFD700]">FourType</p>
-            <p className="font-sans text-[9px] uppercase tracking-[0.16em] text-[#64748B]">Pair result</p>
+            <p className="font-sans text-[9px] uppercase tracking-[0.16em] text-[#64748B]">{copy.pairResult}</p>
           </div>
 
           <div className="mt-6 text-center">
-            <p className="font-sans text-[10px] uppercase tracking-[0.22em] text-[#94A3B8]">Our FourType Pair</p>
+            <p className="font-sans text-[10px] uppercase tracking-[0.22em] text-[#94A3B8]">{copy.ourPair}</p>
             <h2 className="mt-2 font-serif text-2xl font-black leading-tight text-[#F8FAFC]">{selfBlend.name} + {friendBlend.name}</h2>
           </div>
 
@@ -82,12 +84,12 @@ export default function PairShareCard({ selfName, friendName, selfBlend, friendB
           </div>
 
           <div className="mt-5 rounded-lg border border-[#FFD700]/25 bg-[#FFD700]/[0.07] p-4">
-            <p className="font-serif text-[9px] uppercase tracking-[0.2em] text-[#FFD700]">What connects us</p>
+            <p className="font-serif text-[9px] uppercase tracking-[0.2em] text-[#FFD700]">{copy.connects}</p>
             <p className="mt-2 font-sans text-xs leading-relaxed text-[#E2E8F0]">{insight.sharedQuality}</p>
           </div>
 
           <div className="mt-auto border-t border-white/10 pt-4 text-center">
-            <p className="font-serif text-sm font-black text-[#F8FAFC]">Who understands you best?</p>
+            <p className="font-serif text-sm font-black text-[#F8FAFC]">{copy.whoUnderstands}</p>
             <p className="mt-1 font-sans text-[10px] tracking-[0.18em] text-[#FFD700]">FOURTYPE.COM</p>
           </div>
         </div>
@@ -100,11 +102,11 @@ export default function PairShareCard({ selfName, friendName, selfBlend, friendB
         className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg border border-[#FFD700]/40 px-4 font-sans text-xs font-semibold text-[#E2E8F0] transition-colors hover:border-[#FFD700] disabled:opacity-60"
       >
         <Download className="h-4 w-4" aria-hidden="true" />
-        {downloading ? 'Preparing card...' : 'Download pair card'}
+        {downloading ? copy.preparing : copy.download}
       </button>
       {downloadError && (
         <p className="text-center font-sans text-xs text-[#E63946]">
-          The card could not be generated. You can still share the comparison link above.
+          {copy.error}
         </p>
       )}
     </div>

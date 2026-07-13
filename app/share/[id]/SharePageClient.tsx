@@ -8,6 +8,8 @@ import { Temperament, TEMPERAMENTS } from '@/lib/temperaments'
 import { TemperamentKey } from '@/lib/scoringKey'
 import { getSubtypeByBlendKey } from '@/lib/subtypes'
 import { getShareText } from '@/lib/share-copy'
+import type { ShareLocale } from '@/lib/share-copy'
+import { getLocalizedBlendSummary, getQuizCopy } from '@/lib/quiz-i18n'
 import { trackFourTypeEvent } from '@/lib/analytics'
 import type { FourTypeEventName } from '@/lib/analytics'
 import CinematicBackground from '@/components/CinematicBackground'
@@ -20,6 +22,27 @@ interface SharePageClientProps {
   dominantTemp: Temperament
   scores: { Yellow: number; Red: number; Blue: number; Green: number }
   shareId: string
+  locale: ShareLocale
+}
+
+const enLabels = {
+  is: 'is', breakdown: 'Temperament Breakdown', strengths: 'Key Strengths', question: "What's your temperament?",
+  compare: 'Take the Test and Compare', solo: 'Take the Test Without Comparing', storyEyebrow: 'Save the Story Card',
+  storyTitle: 'Share the part that makes people say, “wait, that is me.”', storyBody: 'Download a vertical Instagram or TikTok story card with the character, result name, and three painfully accurate lines.',
+  challenge: 'Challenge a Friend', copied: 'Copied!', copy: 'Copy Challenge Link', learn: 'Learn More',
+  learnPrompt: 'Want to learn more about your temperament?', profile: 'Explore Full Profile', continue: 'Continue Learning',
+  deeper: (name: string) => `Dive deeper into understanding ${name}:`,
+  footer: 'Understanding your temperament unlocks the key to why you think, feel, and act the way you do.',
+}
+
+const idLabels = {
+  is: 'adalah', breakdown: 'Sebaran temperamen', strengths: 'Kekuatan utama', question: 'Apa temperamen Anda?',
+  compare: 'Ikuti tes dan bandingkan', solo: 'Ikuti tes tanpa membandingkan', storyEyebrow: 'Simpan kartu cerita',
+  storyTitle: 'Bagikan bagian yang membuat orang berkata, “ini benar-benar saya.”', storyBody: 'Unduh kartu vertikal untuk Instagram atau TikTok yang memuat karakter, nama hasil, dan tiga kalimat yang terasa sangat akurat.',
+  challenge: 'Tantang seorang teman', copied: 'Disalin!', copy: 'Salin tautan tantangan', learn: 'Pelajari lebih lanjut',
+  learnPrompt: 'Ingin memahami temperamen Anda lebih dalam?', profile: 'Buka profil lengkap', continue: 'Lanjutkan belajar',
+  deeper: (name: string) => `Pelajari ${name} lebih dalam:`,
+  footer: 'Memahami temperamen membantu Anda mengenali alasan di balik cara berpikir, merasa, dan bertindak.',
 }
 
 export default function SharePageClient({ 
@@ -27,20 +50,31 @@ export default function SharePageClient({
   blend, 
   dominantTemp, 
   scores,
-  shareId 
+  shareId,
+  locale,
 }: SharePageClientProps) {
   const blendColors = getBlendColors(blend)
   const primaryColor = blendColors.primary
   const total = Object.values(scores).reduce((a, b) => a + b, 0)
   const [copied, setCopied] = useState(false)
   const subtype = getSubtypeByBlendKey(blend.key)
-  
-  const compareUrl = `https://www.fourtype.com/quiz?compare=${shareId}`
+  const labels = locale === 'id' ? idLabels : enLabels
+  const resultCopy = getLocalizedBlendSummary(locale, blend.key)
+  const quizCopy = getQuizCopy(locale)
+  const displayName = resultCopy?.name ?? blend.name
+  const displayBlend = resultCopy?.blend ?? blend.blend
+  const displayClass = resultCopy?.rpgClass ?? blend.rpgClass
+  const displayTagline = resultCopy?.tagline ?? blend.tagline
+  const displayStrengths = resultCopy?.strengths ?? blend.strengths
+  const localePrefix = locale === 'en' ? '' : `/${locale}`
+  const homeHref = localePrefix || '/'
+  const comparePath = `${localePrefix}/quiz?compare=${shareId}`
+  const compareUrl = `https://www.fourtype.com${comparePath}`
 
   const trackSharePageEvent = (event: FourTypeEventName, source: string) => {
     trackFourTypeEvent({
       event,
-      locale: 'share',
+      locale,
       blendKey: blend.key,
       resultName: blend.name,
       shareId,
@@ -70,8 +104,10 @@ export default function SharePageClient({
   
   const handleShare = async () => {
     const shareData = {
-      title: `Compare your FourType with ${heroName}`,
-      text: `${getShareText(blend)} Take the test so we can compare our shared strengths, likely friction, and communication style.`,
+      title: locale === 'id' ? `Bandingkan FourType Anda dengan ${heroName}` : `Compare your FourType with ${heroName}`,
+      text: locale === 'id'
+        ? `${getShareText(blend, undefined, locale)} Ikuti tes agar kita dapat membandingkan kekuatan bersama, kemungkinan gesekan, dan gaya komunikasi.`
+        : `${getShareText(blend, undefined, locale)} Take the test so we can compare our shared strengths, likely friction, and communication style.`,
       url: compareUrl,
     }
     
@@ -88,7 +124,7 @@ export default function SharePageClient({
   }
 
   // Get reading resources based on the dominant temperament
-  const readingResources = getReadingResources(blend.primary, blend.key)
+  const readingResources = getReadingResources(blend.primary, blend.key, locale)
 
   return (
     <main className="relative min-h-screen flex flex-col items-center px-4 pt-8 pb-16" style={{ background: '#0D0D0F' }}>
@@ -96,7 +132,7 @@ export default function SharePageClient({
       
       <div className="relative z-10 w-full max-w-xl flex flex-col items-center gap-8">
         {/* FourType branding */}
-        <Link href="/" className="flex items-center gap-2 group">
+        <Link href={homeHref} className="flex items-center gap-2 group">
           <Image
             src="/icon.png"
             alt="FourType"
@@ -141,7 +177,7 @@ export default function SharePageClient({
             >
               <Image
                 src={dominantTemp.characterImage}
-                alt={blend.name}
+                alt={displayName}
                 width={140}
                 height={170}
                 className="object-contain"
@@ -149,14 +185,14 @@ export default function SharePageClient({
               />
             </div>
             
-            <p className="font-sans text-xs text-[#64748B] mb-1">{heroName} is</p>
+            <p className="font-sans text-xs text-[#64748B] mb-1">{heroName} {labels.is}</p>
             <h1
               className="font-serif text-4xl md:text-5xl font-black mb-2"
               style={{ color: primaryColor, textShadow: `0 0 40px ${primaryColor}50` }}
             >
-              {blend.name.toUpperCase()}
+              {displayName.toUpperCase()}
             </h1>
-            <p className="font-serif text-lg text-[#E2E8F0] mb-3">{blend.blend}</p>
+            <p className="font-serif text-lg text-[#E2E8F0] mb-3">{displayBlend}</p>
             
             {/* Blend color bar */}
             <div className="flex items-center justify-center gap-1 mb-4">
@@ -181,7 +217,7 @@ export default function SharePageClient({
               }}
             >
               <span className="font-serif text-sm font-bold" style={{ color: primaryColor }}>
-                {blend.rpgClass}
+                {displayClass}
               </span>
             </div>
           </div>
@@ -192,14 +228,14 @@ export default function SharePageClient({
               className="font-serif text-xl text-center italic text-[#E2E8F0]"
               style={{ textShadow: `0 0 30px ${primaryColor}30` }}
             >
-              &ldquo;{blend.tagline}&rdquo;
+              &ldquo;{displayTagline}&rdquo;
             </blockquote>
           </div>
           
           {/* Score breakdown */}
           <div className="px-8 py-6 border-t" style={{ borderColor: `${primaryColor}20` }}>
             <p className="font-serif text-xs tracking-widest uppercase text-[#64748B] mb-4 text-center">
-              Temperament Breakdown
+              {labels.breakdown}
             </p>
             <div className="flex gap-0.5 h-4 rounded-full overflow-hidden mb-3" style={{ backgroundColor: '#1A1A2E' }}>
               {(['Yellow', 'Red', 'Blue', 'Green'] as TemperamentKey[]).map((key) => {
@@ -228,7 +264,7 @@ export default function SharePageClient({
                 return (
                   <div key={key} className={`flex flex-col items-center ${isMain ? '' : 'opacity-60'}`}>
                     <span className="font-serif text-xs font-bold" style={{ color: t.colorHex }}>{pct}%</span>
-                    <span className="font-sans text-[9px] text-[#64748B]">{t.name}</span>
+                    <span className="font-sans text-[9px] text-[#64748B]">{quizCopy.results.temperamentNames[key]}</span>
                   </div>
                 )
               })}
@@ -238,10 +274,10 @@ export default function SharePageClient({
           {/* Key strengths */}
           <div className="px-8 py-6 border-t" style={{ borderColor: `${primaryColor}20` }}>
             <p className="font-serif text-xs tracking-widest uppercase text-[#64748B] mb-4">
-              Key Strengths
+              {labels.strengths}
             </p>
             <ul className="flex flex-col gap-2">
-              {blend.strengths.slice(0, 4).map((s, i) => (
+              {displayStrengths.slice(0, 4).map((s, i) => (
                 <li key={i} className="flex items-start gap-3 font-sans text-sm text-[#94A3B8] leading-relaxed">
                   <span className="shrink-0 mt-1 w-1.5 h-1.5 rounded-full" style={{ backgroundColor: primaryColor }} />
                   {s}
@@ -253,10 +289,10 @@ export default function SharePageClient({
           {/* CTA */}
           <div className="px-8 py-8 border-t" style={{ borderColor: `${primaryColor}20` }}>
             <p className="font-sans text-center text-sm text-[#64748B] mb-4">
-              What&apos;s your temperament?
+              {labels.question}
             </p>
             <Link
-              href={`/quiz?compare=${shareId}`}
+              href={comparePath}
               className="block w-full font-serif text-sm font-bold tracking-widest uppercase py-4 rounded-xl border-2 text-center transition-all duration-200"
               style={{
                 borderColor: primaryColor,
@@ -264,10 +300,10 @@ export default function SharePageClient({
                 backgroundColor: primaryColor,
               }}
             >
-              Take the Test and Compare
+              {labels.compare}
             </Link>
             <Link
-              href="/quiz"
+              href={`${localePrefix}/quiz`}
               className="mt-3 block w-full font-serif text-sm font-bold tracking-widest uppercase py-4 rounded-xl border-2 text-center transition-all duration-200"
               style={{
                 borderColor: `${primaryColor}66`,
@@ -275,7 +311,7 @@ export default function SharePageClient({
                 backgroundColor: `${primaryColor}10`,
               }}
             >
-              Take the Test Without Comparing
+              {labels.solo}
             </Link>
           </div>
         </div>
@@ -287,16 +323,16 @@ export default function SharePageClient({
         >
           <div className="flex flex-col gap-2">
             <p className="font-serif text-xs tracking-widest uppercase" style={{ color: primaryColor }}>
-              Save the Story Card
+              {labels.storyEyebrow}
             </p>
             <h2 className="font-serif text-2xl font-black leading-tight text-[#E2E8F0]">
-              Share the part that makes people say, &ldquo;wait, that is me.&rdquo;
+              {labels.storyTitle}
             </h2>
             <p className="font-sans text-sm leading-relaxed text-[#94A3B8]">
-              Download a vertical Instagram or TikTok story card with the character, result name, and three painfully accurate lines.
+              {labels.storyBody}
             </p>
           </div>
-          <ShareableCard heroName={heroName} temperament={dominantTemp} scores={scores} />
+          <ShareableCard heroName={heroName} temperament={dominantTemp} scores={scores} locale={locale} />
         </div>
 
         {/* Share actions */}
@@ -313,7 +349,7 @@ export default function SharePageClient({
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
             </svg>
-            Challenge a Friend
+            {labels.challenge}
           </button>
           
           <button
@@ -330,14 +366,14 @@ export default function SharePageClient({
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                Copied!
+                {labels.copied}
               </>
             ) : (
               <>
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
                 </svg>
-                Copy Challenge Link
+                {labels.copy}
               </>
             )}
           </button>
@@ -355,7 +391,7 @@ export default function SharePageClient({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <p className="font-serif text-sm tracking-widest uppercase" style={{ color: primaryColor }}>
-                Learn More
+                {labels.learn}
               </p>
             </div>
           </div>
@@ -364,7 +400,7 @@ export default function SharePageClient({
 
         {/* Learn More CTA */}
         <div className="w-full text-center p-6 rounded-2xl border" style={{ backgroundColor: 'rgba(26, 26, 46, 0.8)', borderColor: '#2A2A40' }}>
-          <p className="text-muted-foreground mb-4 font-sans text-sm">Want to learn more about your temperament?</p>
+          <p className="text-muted-foreground mb-4 font-sans text-sm">{labels.learnPrompt}</p>
           <Link
             href={subtype ? `/subtype/${subtype.slug}` : '/subtypes'}
             className="inline-block px-6 py-3 rounded-lg font-semibold transition-all hover:opacity-90 font-serif"
@@ -373,7 +409,7 @@ export default function SharePageClient({
               color: '#0D0D0F',
             }}
           >
-            Explore Full Profile
+            {labels.profile}
           </Link>
         </div>
 
@@ -387,12 +423,12 @@ export default function SharePageClient({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
             <p className="font-serif text-sm tracking-widest uppercase" style={{ color: primaryColor }}>
-              Continue Learning
+              {labels.continue}
             </p>
           </div>
           
           <p className="font-sans text-sm text-[#64748B]">
-            Dive deeper into understanding {blend.name}:
+            {labels.deeper(displayName)}
           </p>
           
           <div className="flex flex-col gap-2">
@@ -436,12 +472,12 @@ export default function SharePageClient({
 
         {/* Footer branding */}
         <div className="flex flex-col items-center gap-2 pt-4">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href={homeHref} className="flex items-center gap-2">
             <Image src="/icon.png" alt="FourType" width={24} height={24} className="opacity-60" />
             <span className="font-serif text-xs tracking-[0.2em] uppercase text-[#3A3A50]">FourType.com</span>
           </Link>
           <p className="font-sans text-[10px] text-[#2A2A40]">
-            Understanding your temperament unlocks the key to why you think, feel, and act the way you do.
+            {labels.footer}
           </p>
         </div>
       </div>
@@ -449,7 +485,7 @@ export default function SharePageClient({
   )
 }
 
-function getReadingResources(primaryKey: TemperamentKey, blendKey: string) {
+function getReadingResources(primaryKey: TemperamentKey, blendKey: string, locale: ShareLocale) {
   const temperamentMap: Record<TemperamentKey, { name: string; slug: string }> = {
     Yellow: { name: 'Sanguine', slug: 'sanguine' },
     Red: { name: 'Choleric', slug: 'choleric' },
@@ -459,6 +495,17 @@ function getReadingResources(primaryKey: TemperamentKey, blendKey: string) {
   
   const temp = temperamentMap[primaryKey]
   const subtype = getSubtypeByBlendKey(blendKey)
+  const localizedName = ({ Yellow: 'Sanguinis', Red: 'Koleris', Blue: 'Melankolis', Green: 'Plegmatis' } as const)[primaryKey]
+
+  if (locale === 'id') {
+    return [
+      ...(subtype ? [{ title: `${localizedName}: Perpaduan lengkap`, description: 'Pelajari pola utama dan sekunder Anda secara lebih khusus.', href: `/subtype/${subtype.slug}` }] : []),
+      { title: `Panduan lengkap ${localizedName}`, description: 'Pelajari kekuatan, tantangan, pekerjaan, dan hubungan.', href: `/temperament/${temp.slug}` },
+      { title: `Artikel ${localizedName}`, description: 'Penjelasan mendalam dengan langkah pertumbuhan praktis.', href: `/blog/${temp.slug}` },
+      { title: '16 pola FourType', description: 'Pahami semua perpaduan termasuk hasil Anda.', href: '/blog/subtypes' },
+      { title: 'Sejarah empat temperamen', description: 'Dari dunia kuno hingga psikologi modern.', href: '/blog/history-of-temperaments' },
+    ].slice(0, 5)
+  }
   
   return [
     ...(subtype ? [

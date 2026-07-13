@@ -70,6 +70,27 @@ export interface QuizCopy {
       title: string
       body: string
     }
+    pair: {
+      eyebrow: string
+      sharedQuality: string
+      naturalComplement: string
+      likelyFriction: string
+      personMove: (name: string) => string
+      tryTogether: string
+      safety: string
+      challengeAnother: string
+      copyAria: string
+      copied: string
+      pairResult: string
+      ourPair: string
+      connects: string
+      whoUnderstands: string
+      preparing: string
+      download: string
+      error: string
+      compareTitle: string
+      compareBody: string
+    }
     retakeButton: string
     footer: string
     leadCapture: {
@@ -206,6 +227,27 @@ const enCopy: QuizCopy = {
     friendPrompt: {
       title: 'Ask one friend: "Is this me?"',
       body: 'The fun part is not just getting the result. It is sending it to someone who knows you and seeing how fast they say, "That is painfully accurate."',
+    },
+    pair: {
+      eyebrow: 'Your pair revealed',
+      sharedQuality: 'Shared quality',
+      naturalComplement: 'Natural complement',
+      likelyFriction: 'Likely friction',
+      personMove: (name) => `${name}'s move`,
+      tryTogether: 'Try this together',
+      safety: 'Use this as a conversation starter, not a prediction or diagnosis.',
+      challengeAnother: 'Challenge another friend',
+      copyAria: 'Copy pair challenge link',
+      copied: 'Challenge link copied.',
+      pairResult: 'Pair result',
+      ourPair: 'Our FourType Pair',
+      connects: 'What connects us',
+      whoUnderstands: 'Who understands you best?',
+      preparing: 'Preparing card...',
+      download: 'Download pair card',
+      error: 'The card could not be generated. You can still share the comparison link above.',
+      compareTitle: 'Compare your result with a friend',
+      compareBody: 'Send them this quiz link so FourType can show how your patterns work together.',
     },
     retakeButton: 'Retake Quest',
     footer: 'FourType • Free forever • Know Thyself.',
@@ -344,6 +386,27 @@ const zhCopy: QuizCopy = {
       title: '问一个朋友：“这像我吗？”',
       body: '有趣的地方不只是看到结果，而是发给真正了解你的人，看他们会不会立刻说：“这也太准了吧。”',
     },
+    pair: {
+      eyebrow: '你们的组合结果',
+      sharedQuality: '共同优势',
+      naturalComplement: '自然互补',
+      likelyFriction: '可能的摩擦',
+      personMove: (name) => `${name} 的行动`,
+      tryTogether: '一起试试',
+      safety: '把它当作对话的起点，而不是预测或诊断。',
+      challengeAnother: '挑战另一位朋友',
+      copyAria: '复制好友比较链接',
+      copied: '比较链接已复制。',
+      pairResult: '组合结果',
+      ourPair: '我们的 FourType 组合',
+      connects: '让我们连结的地方',
+      whoUnderstands: '谁最懂你？',
+      preparing: '正在生成卡片...',
+      download: '下载组合卡片',
+      error: '无法生成卡片，但你仍可以分享上方的比较链接。',
+      compareTitle: '和朋友比较结果',
+      compareBody: '把测试链接发给朋友，看看你们的模式如何一起运作。',
+    },
     retakeButton: '重新测试',
     footer: 'FourType • 永久免费 • 认识你自己。',
     leadCapture: {
@@ -481,6 +544,27 @@ const esCopy: QuizCopy = {
       title: 'Pregúntale a un amigo: "¿Soy así?"',
       body: 'Lo divertido no es solo ver el resultado. Es enviárselo a alguien que te conoce y ver qué tan rápido dice: "Eso es demasiado preciso."',
     },
+    pair: {
+      eyebrow: 'Su combinación revelada',
+      sharedQuality: 'Cualidad compartida',
+      naturalComplement: 'Complemento natural',
+      likelyFriction: 'Posible fricción',
+      personMove: (name) => `Paso de ${name}`,
+      tryTogether: 'Prueben esto juntos',
+      safety: 'Úsenlo para iniciar una conversación, no como predicción ni diagnóstico.',
+      challengeAnother: 'Retar a otro amigo',
+      copyAria: 'Copiar enlace de comparación',
+      copied: 'Enlace de comparación copiado.',
+      pairResult: 'Resultado de pareja',
+      ourPair: 'Nuestra pareja FourType',
+      connects: 'Lo que nos conecta',
+      whoUnderstands: '¿Quién te entiende mejor?',
+      preparing: 'Preparando tarjeta...',
+      download: 'Descargar tarjeta de pareja',
+      error: 'No se pudo generar la tarjeta. Aún puedes compartir el enlace de comparación.',
+      compareTitle: 'Compara tu resultado con un amigo',
+      compareBody: 'Envíale este enlace para que FourType muestre cómo funcionan sus patrones juntos.',
+    },
     retakeButton: 'Repetir misión',
     footer: 'FourType • Gratis para siempre • Conócete a ti mismo.',
     leadCapture: {
@@ -617,6 +701,27 @@ const idCopy: QuizCopy = {
     friendPrompt: {
       title: 'Tanyakan kepada seorang teman: "Apakah ini saya?"',
       body: 'Bagian paling menarik adalah mengirim hasil ini kepada orang yang mengenal Anda dan melihat seberapa cepat mereka berkata, "Ini benar-benar mirip kamu."',
+    },
+    pair: {
+      eyebrow: 'Pola kalian terungkap',
+      sharedQuality: 'Kekuatan bersama',
+      naturalComplement: 'Saling melengkapi',
+      likelyFriction: 'Kemungkinan gesekan',
+      personMove: (name) => `Langkah ${name}`,
+      tryTogether: 'Coba ini bersama',
+      safety: 'Gunakan ini sebagai pembuka percakapan, bukan prediksi atau diagnosis.',
+      challengeAnother: 'Tantang teman lain',
+      copyAria: 'Salin tautan tantangan pasangan',
+      copied: 'Tautan tantangan disalin.',
+      pairResult: 'Hasil pasangan',
+      ourPair: 'Pasangan FourType kami',
+      connects: 'Yang menghubungkan kami',
+      whoUnderstands: 'Siapa yang paling memahami Anda?',
+      preparing: 'Menyiapkan kartu...',
+      download: 'Unduh kartu pasangan',
+      error: 'Kartu tidak dapat dibuat. Anda tetap dapat membagikan tautan perbandingan di atas.',
+      compareTitle: 'Bandingkan hasil Anda dengan teman',
+      compareBody: 'Kirim tautan tes ini agar FourType menunjukkan bagaimana pola kalian bekerja bersama.',
     },
     retakeButton: 'Ulangi tes',
     footer: 'FourType • Gratis • Kenali diri Anda.',
