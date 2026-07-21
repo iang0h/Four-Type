@@ -94,13 +94,13 @@ export const GET = createDownloadGetHandler({
 async function sendFreshProductionAccessEmail(entitlement: FieldGuideEntitlement) {
   const secret = getAccessTokenSecret()
   await deliverReaccessEntitlement(entitlement, {
-    claimDelivery: () => claimEmailDelivery(entitlement.sessionId, vercelPrivateBlobStore, Date.now(), 'reaccess', true),
+    claimDelivery: () => claimEmailDelivery(entitlement.sessionId, vercelPrivateBlobStore, 'reaccess', Date.now(), true),
     recordProviderAttempt: (claimId, payloadDigest) => (
-      recordEmailDeliveryProviderAttempt(entitlement.sessionId, claimId, payloadDigest, vercelPrivateBlobStore, Date.now(), 'reaccess')
+      recordEmailDeliveryProviderAttempt(entitlement.sessionId, claimId, payloadDigest, vercelPrivateBlobStore, 'reaccess', Date.now())
     ),
     releaseDelivery: (claimId) => releaseEmailDeliveryClaim(entitlement.sessionId, claimId, vercelPrivateBlobStore, 'reaccess'),
     completeDelivery: (claimId, providerMessageId) => (
-      completeEmailDelivery(entitlement.sessionId, claimId, providerMessageId, vercelPrivateBlobStore, Date.now(), 'reaccess')
+      completeEmailDelivery(entitlement.sessionId, claimId, providerMessageId, vercelPrivateBlobStore, 'reaccess', Date.now())
     ),
     signAccessToken: (input) => signAccessToken(input, secret),
     createAccessUrl,

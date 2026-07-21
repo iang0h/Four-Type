@@ -31,6 +31,20 @@ Implemented and verified in-process. No live Stripe key was supplied or used, an
 - Production build: `PATH=/Users/iangoh/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH pnpm build` - passed. The existing multi-lockfile workspace-root and edge-runtime static-generation warnings were emitted.
 - Diff check: `git diff --check` passed with no whitespace errors.
 
+## Namespace Follow-Up
+
+- Fixed the re-access provider-attempt write to retain its `reaccess` purpose. The write now targets the same namespaced record that the claim read, preventing private-Blob ETag failures against the fulfillment namespace.
+- Delivery purpose is explicit and runtime-validated for claim, provider attempt, claim release, and receipt completion. The internal writer requires the purpose argument, preventing a state transition from silently selecting a default namespace.
+- Added a real in-memory Blob integration regression covering re-access claim -> provider-attempt digest -> receipt -> sent state. It verifies that only the re-access delivery pathname is written and no fulfillment delivery record appears.
+
+### Namespace Follow-Up Verification
+
+- Focused delivery suites: `PATH=/Users/iangoh/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH pnpm exec tsx --test tests/field-guide-delivery.test.ts tests/field-guide-fulfillment.test.ts tests/field-guide-reaccess.test.ts` - 28 passed.
+- Full suite: `PATH=/Users/iangoh/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH pnpm test` - 108 passed.
+- TypeScript: `PATH=/Users/iangoh/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH pnpm exec tsc --noEmit` - passed with no diagnostics.
+- Production build: `PATH=/Users/iangoh/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH pnpm build` - passed. The pre-existing multi-lockfile workspace-root and edge-runtime static-generation warnings were emitted.
+- Diff check: `git diff --check` passed with no whitespace errors.
+
 ## Review Remediation
 
 Follow-up review findings were fixed with regression tests before implementation:

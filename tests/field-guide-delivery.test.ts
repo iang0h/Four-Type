@@ -1,14 +1,35 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import {
-  claimEmailDelivery,
-  completeEmailDelivery,
+  claimEmailDelivery as claimEmailDeliveryWithPurpose,
+  completeEmailDelivery as completeEmailDeliveryWithPurpose,
   EMAIL_DELIVERY_REUSE_MIN_REMAINING_MS,
-  recordEmailDeliveryProviderAttempt,
-  releaseEmailDeliveryClaim,
+  recordEmailDeliveryProviderAttempt as recordEmailDeliveryProviderAttemptWithPurpose,
+  releaseEmailDeliveryClaim as releaseEmailDeliveryClaimWithPurpose,
 } from '../lib/field-guide/delivery'
 import type { PrivateBlobStore } from '../lib/field-guide/blob'
 import { FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS } from '../lib/field-guide/tokens'
+
+const claimEmailDelivery = (sessionId: string, store: PrivateBlobStore, now = Date.now()) => (
+  claimEmailDeliveryWithPurpose(sessionId, store, 'fulfillment', now)
+)
+const recordEmailDeliveryProviderAttempt = (
+  sessionId: string,
+  claimId: string,
+  payloadDigest: string,
+  store: PrivateBlobStore,
+  now = Date.now(),
+) => recordEmailDeliveryProviderAttemptWithPurpose(sessionId, claimId, payloadDigest, store, 'fulfillment', now)
+const releaseEmailDeliveryClaim = (sessionId: string, claimId: string, store: PrivateBlobStore) => (
+  releaseEmailDeliveryClaimWithPurpose(sessionId, claimId, store, 'fulfillment')
+)
+const completeEmailDelivery = (
+  sessionId: string,
+  claimId: string,
+  providerMessageId: string,
+  store: PrivateBlobStore,
+  now = Date.now(),
+) => completeEmailDeliveryWithPurpose(sessionId, claimId, providerMessageId, store, 'fulfillment', now)
 
 const PAYLOAD_DIGEST_A = 'a'.repeat(64)
 const PAYLOAD_DIGEST_B = 'b'.repeat(64)
@@ -59,6 +80,15 @@ test('durably claims, retries, and records one supporter email receipt', async (
 
   await completeEmailDelivery('cs_test_paid', retry.claimId, 'email_test_123', store, 1_003)
   assert.deepEqual(await claimEmailDelivery('cs_test_paid', store, 1_004), { status: 'sent' })
+})
+
+test('requires an explicit delivery purpose for every state transition', async () => {
+  const store = new MemoryBlobStore()
+
+  await assert.rejects(
+    () => claimEmailDeliveryWithPurpose('cs_test_paid', store, undefined as never, 1_000),
+    /purpose/i,
+  )
 })
 
 test('reclaims a stale in-progress delivery without changing its idempotency key', async () => {

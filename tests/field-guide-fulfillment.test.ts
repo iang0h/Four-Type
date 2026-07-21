@@ -230,23 +230,23 @@ test('does not send changed copy inside the provider ambiguity window and rotate
   const fake = fakeDependencies()
   const store = new MemoryDeliveryStore()
   const createdAt = 1_000
-  const initialClaim = await claimEmailDelivery('cs_test_paid', store, createdAt)
+  const initialClaim = await claimEmailDelivery('cs_test_paid', store, 'fulfillment', createdAt)
   if (initialClaim.status !== 'claimed') throw new Error('Expected an initial email delivery claim')
-  await releaseEmailDeliveryClaim('cs_test_paid', initialClaim.claimId, store)
+  await releaseEmailDeliveryClaim('cs_test_paid', initialClaim.claimId, store, 'fulfillment')
 
   let deliveryNow = createdAt + 23 * 60 * 60 * 1_000
   let payloadDigest = 'a'.repeat(64)
   const preparedKeys: string[] = []
   const providerCalls: string[] = []
-  fake.dependencies.claimEmailDelivery = (sessionId) => claimEmailDelivery(sessionId, store, deliveryNow)
+  fake.dependencies.claimEmailDelivery = (sessionId) => claimEmailDelivery(sessionId, store, 'fulfillment', deliveryNow)
   fake.dependencies.recordEmailDeliveryProviderAttempt = (sessionId, claimId, digest) => (
-    recordEmailDeliveryProviderAttempt(sessionId, claimId, digest, store, deliveryNow)
+    recordEmailDeliveryProviderAttempt(sessionId, claimId, digest, store, 'fulfillment', deliveryNow)
   )
   fake.dependencies.releaseEmailDeliveryClaim = (sessionId, claimId) => (
-    releaseEmailDeliveryClaim(sessionId, claimId, store)
+    releaseEmailDeliveryClaim(sessionId, claimId, store, 'fulfillment')
   )
   fake.dependencies.completeEmailDelivery = (sessionId, claimId, providerMessageId) => (
-    completeEmailDelivery(sessionId, claimId, providerMessageId, store, deliveryNow)
+    completeEmailDelivery(sessionId, claimId, providerMessageId, store, 'fulfillment', deliveryNow)
   )
   fake.dependencies.signAccessToken = ({ sessionId, expiresAt }) => {
     const remainingLifetime = expiresAt - deliveryNow

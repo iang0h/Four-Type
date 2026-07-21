@@ -2,6 +2,11 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { claimReaccessCooldown, REACCESS_COOLDOWN_MS } from '../lib/field-guide/reaccess-cooldown'
 import { deliverReaccessEntitlement } from '../lib/field-guide/reaccess'
+import {
+  claimEmailDelivery,
+  completeEmailDelivery,
+  recordEmailDeliveryProviderAttempt,
+} from '../lib/field-guide/delivery'
 import type { PrivateBlobStore } from '../lib/field-guide/blob'
 import type { FieldGuideEntitlement } from '../lib/field-guide/entitlements'
 
@@ -90,6 +95,29 @@ test('uses a namespaced durable delivery claim with a stable provider key and pa
     'complete:email-reaccess-1',
   ])
   assert.equal(state.released, false)
+})
+
+test('persists a real re-access provider attempt and receipt in its own namespace', async () => {
+  const store = new MemoryBlobStore()
+  const claim = await claimEmailDelivery('cs_test_reaccess', store, 'reaccess', 1_000)
+  if (claim.status !== 'claimed') throw new Error('Expected a re-access delivery claim')
+
+  assert.equal(
+    await recordEmailDeliveryProviderAttempt(
+      'cs_test_reaccess',
+      claim.claimId,
+      'a'.repeat(64),
+      store,
+      'reaccess',
+      1_000,
+    ),
+    'recorded',
+  )
+  await completeEmailDelivery('cs_test_reaccess', claim.claimId, 'email-reaccess-1', store, 'reaccess', 1_001)
+
+  assert.deepEqual(await claimEmailDelivery('cs_test_reaccess', store, 'reaccess', 1_002), { status: 'sent' })
+  assert.equal(store.serialized().filter(([pathname]) => pathname.includes('/reaccess-delivery/')).length, 1)
+  assert.equal(store.serialized().filter(([pathname]) => pathname.includes('/email-delivery/')).length, 0)
 })
 
 test('releases a re-access delivery claim after transport failure without exposing its payload', async () => {

@@ -29,6 +29,12 @@ export type EmailDeliveryClaim =
 
 export type EmailDeliveryPurpose = 'fulfillment' | 'reaccess'
 
+function assertDeliveryPurpose(purpose: unknown): asserts purpose is EmailDeliveryPurpose {
+  if (purpose !== 'fulfillment' && purpose !== 'reaccess') {
+    throw new Error('Email delivery purpose is invalid')
+  }
+}
+
 function deliveryDigest(sessionId: string) {
   return createHash('sha256').update(sessionId).digest('hex')
 }
@@ -88,8 +94,8 @@ async function writeRecord(
   sessionId: string,
   store: PrivateBlobStore,
   value: DeliveryRecord,
-  etag?: string,
-  purpose: EmailDeliveryPurpose = 'fulfillment',
+  etag: string | undefined,
+  purpose: EmailDeliveryPurpose,
 ) {
   return store.put(deliveryPath(sessionId, purpose), JSON.stringify(value), {
     access: 'private',
@@ -110,10 +116,11 @@ function hasUsefulAccessTokenLifetime(expiresAt: number | undefined, now: number
 export async function claimEmailDelivery(
   sessionId: string,
   store: PrivateBlobStore,
+  purpose: EmailDeliveryPurpose,
   now = Date.now(),
-  purpose: EmailDeliveryPurpose = 'fulfillment',
   renewSent = false,
 ): Promise<EmailDeliveryClaim> {
+  assertDeliveryPurpose(purpose)
   if (!Number.isSafeInteger(now)) throw new Error('Email delivery time is invalid')
   if (!Number.isSafeInteger(now + FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS)) throw new Error('Email delivery time is invalid')
 
@@ -194,9 +201,10 @@ export async function recordEmailDeliveryProviderAttempt(
   claimId: string,
   payloadDigest: string,
   store: PrivateBlobStore,
+  purpose: EmailDeliveryPurpose,
   now = Date.now(),
-  purpose: EmailDeliveryPurpose = 'fulfillment',
 ) {
+  assertDeliveryPurpose(purpose)
   if (!Number.isSafeInteger(now) || !/^[a-f0-9]{64}$/.test(payloadDigest)) {
     throw new Error('Email delivery provider payload is invalid')
   }
@@ -240,7 +248,7 @@ export async function recordEmailDeliveryProviderAttempt(
         ...current.value,
         firstProviderAttemptAt: now,
         firstProviderPayloadDigest: payloadDigest,
-      }, current.etag)
+      }, current.etag, purpose)
       return 'recorded'
     } catch (error) {
       if (!isConcurrentWrite(error)) throw error
@@ -254,8 +262,9 @@ export async function releaseEmailDeliveryClaim(
   sessionId: string,
   claimId: string,
   store: PrivateBlobStore,
-  purpose: EmailDeliveryPurpose = 'fulfillment',
+  purpose: EmailDeliveryPurpose,
 ) {
+  assertDeliveryPurpose(purpose)
   const current = await readRecord(sessionId, store, purpose)
   if (!current || current.value.state !== 'sending' || current.value.claimId !== claimId) return
   await writeRecord(sessionId, store, {
@@ -280,9 +289,10 @@ export async function completeEmailDelivery(
   claimId: string,
   providerMessageId: string,
   store: PrivateBlobStore,
+  purpose: EmailDeliveryPurpose,
   now = Date.now(),
-  purpose: EmailDeliveryPurpose = 'fulfillment',
 ) {
+  assertDeliveryPurpose(purpose)
   if (!providerMessageId || !Number.isSafeInteger(now)) throw new Error('Email delivery receipt is invalid')
   const current = await readRecord(sessionId, store, purpose)
   if (current?.value.state === 'sent') return

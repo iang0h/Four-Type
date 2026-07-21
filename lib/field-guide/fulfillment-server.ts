@@ -57,13 +57,13 @@ export function createFieldGuideFulfillmentDependencies(
     getConfiguredPriceId: (tier, currency) => getConfiguredPriceId(tier, currency, environment),
     readEntitlement: (sessionId) => readEntitlement(sessionId, vercelPrivateBlobStore),
     writeEntitlement: (entitlement) => writeEntitlement(entitlement, vercelPrivateBlobStore, emailIndexSecret),
-    claimEmailDelivery: (sessionId) => claimEmailDelivery(sessionId, vercelPrivateBlobStore),
+    claimEmailDelivery: (sessionId) => claimEmailDelivery(sessionId, vercelPrivateBlobStore, 'fulfillment'),
     recordEmailDeliveryProviderAttempt: (sessionId, claimId, payloadDigest) => (
-      recordEmailDeliveryProviderAttempt(sessionId, claimId, payloadDigest, vercelPrivateBlobStore)
+      recordEmailDeliveryProviderAttempt(sessionId, claimId, payloadDigest, vercelPrivateBlobStore, 'fulfillment')
     ),
-    releaseEmailDeliveryClaim: (sessionId, claimId) => releaseEmailDeliveryClaim(sessionId, claimId, vercelPrivateBlobStore),
+    releaseEmailDeliveryClaim: (sessionId, claimId) => releaseEmailDeliveryClaim(sessionId, claimId, vercelPrivateBlobStore, 'fulfillment'),
     completeEmailDelivery: (sessionId, claimId, providerMessageId) => (
-      completeEmailDelivery(sessionId, claimId, providerMessageId, vercelPrivateBlobStore)
+      completeEmailDelivery(sessionId, claimId, providerMessageId, vercelPrivateBlobStore, 'fulfillment')
     ),
     signAccessToken: (input) => signAccessToken(input, accessTokenSecret),
     createAccessUrl: (token) => getAccessUrl(token, environment.NEXT_PUBLIC_SITE_URL),
