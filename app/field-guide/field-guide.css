@@ -438,11 +438,10 @@
 .field-guide-tools-list p { margin: 0; color: #4d5f61; font-size: 0.95rem; line-height: 1.55; }
 
 .field-guide-support .field-guide-section-heading { margin-bottom: 37px; }
-.field-guide-currency-placeholder { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 22px; color: #cabfae; font-size: 0.83rem; }
-.field-guide-currency-placeholder > span { margin-right: 4px; color: #a89e91; font-size: 0.69rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
-.field-guide-currency-placeholder button { min-height: 38px; border: 1px solid #77663d; padding: 8px 12px; background: transparent; color: #d8cfbf; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.08em; }
-.field-guide-currency-placeholder button[aria-pressed='true'] { border-color: var(--fg-gold); background: rgba(225, 173, 59, 0.14); color: #f3c65e; }
-.field-guide-currency-placeholder small { flex-basis: 100%; margin-top: 4px; color: #91877b; font-size: 0.75rem; }
+.field-guide-currency-selector { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 22px; color: #cabfae; font-size: 0.83rem; }
+.field-guide-currency-selector > span { margin-right: 4px; color: #a89e91; font-size: 0.69rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.field-guide-currency-selector button { min-height: 42px; border: 1px solid #77663d; padding: 8px 12px; cursor: pointer; background: transparent; color: #d8cfbf; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.08em; }
+.field-guide-currency-selector button[aria-pressed='true'] { border-color: var(--fg-gold); background: rgba(225, 173, 59, 0.14); color: #f3c65e; }
 .field-guide-tier-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
 .field-guide-tier { border: 1px solid #5a513d; padding: clamp(25px, 4vw, 42px); background: var(--fg-panel); }
 .field-guide-tier-primary { border-color: var(--fg-gold); background: linear-gradient(130deg, #1c180e, #121317 62%); }
@@ -454,6 +453,8 @@
 .field-guide-tier li { border-bottom: 1px solid rgba(227, 215, 190, 0.16); padding: 10px 0 10px 24px; position: relative; color: #e0d6c7; font-size: 0.88rem; line-height: 1.4; }
 .field-guide-tier li::before { content: '•'; position: absolute; left: 7px; color: var(--fg-gold); }
 .field-guide-tier .field-guide-button { width: 100%; }
+.field-guide-checkout-action { width: 100%; }
+.field-guide-checkout-error { margin: 10px 0 0; color: #f5d07a; font-size: 0.82rem; line-height: 1.45; }
 .field-guide-tier-fine { margin: 15px 0 0; color: #94897c; font-size: 0.75rem; line-height: 1.45; }
 
 .field-guide-fulfillment { padding: 100px 0; background: #171717; }

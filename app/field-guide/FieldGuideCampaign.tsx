@@ -6,7 +6,7 @@ import BookPreview, { BookPreviewProvider } from '@/components/field-guide/BookP
 import { CampaignCtaLink } from '@/components/field-guide/CampaignAnalytics'
 import FourTypeCompass from '@/components/field-guide/FourTypeCompass'
 import InteractiveBook from '@/components/field-guide/InteractiveBook'
-import { getSupporterOffer } from '@/lib/field-guide/catalog'
+import SupporterTiers from '@/components/field-guide/SupporterTiers'
 
 const faqItems = [
   {
@@ -48,11 +48,6 @@ function SectionEyebrow({ children }: { children: React.ReactNode }) {
 }
 
 export default function FieldGuideCampaign() {
-  const fieldGuideUsd = getSupporterOffer('field-guide', 'usd').label
-  const fieldGuideMyr = getSupporterOffer('field-guide', 'myr').label
-  const foundingUsd = getSupporterOffer('founding', 'usd').label
-  const foundingMyr = getSupporterOffer('founding', 'myr').label
-
   return (
     <div className="field-guide-page">
       <Navigation />
@@ -201,41 +196,7 @@ export default function FieldGuideCampaign() {
               <p>Both are digital supporter rewards. No physical product is shipped.</p>
             </div>
 
-            <div className="field-guide-currency-placeholder" aria-label="Currency selection placeholder">
-              <span>Currency</span>
-              <button type="button" disabled aria-disabled="true">USD</button>
-              <button type="button" disabled aria-disabled="true">MYR</button>
-              <small id="supporter-controls-status">Checkout is being prepared. Currency selection will be available when it opens.</small>
-            </div>
-
-            <div className="field-guide-tier-grid">
-              <article className="field-guide-tier field-guide-tier-primary">
-                <p className="field-guide-tier-kicker">Field Guide Supporter</p>
-                <p className="field-guide-tier-price">{fieldGuideUsd}<span> / {fieldGuideMyr}</span></p>
-                <p className="field-guide-tier-intro">The complete illustrated guide for your own reading and practice.</p>
-                <ul>
-                  <li>Complete 144-page PDF</li>
-                  <li>Reflowable EPUB</li>
-                  <li>Immediate secure access after verified payment</li>
-                  <li>Personal-use license</li>
-                </ul>
-                <button type="button" disabled aria-disabled="true" aria-describedby="supporter-controls-status" className="field-guide-button field-guide-button-primary">Support and receive the guide <ArrowRight aria-hidden="true" size={17} /></button>
-              </article>
-              <article className="field-guide-tier">
-                <p className="field-guide-tier-kicker">Founding Supporter</p>
-                <p className="field-guide-tier-price">{foundingUsd}<span> / {foundingMyr}</span></p>
-                <p className="field-guide-tier-intro">A voluntary extra level for people who want the printable practice material and Edition 1 revisions.</p>
-                <ul>
-                  <li>Complete 144-page PDF</li>
-                  <li>Reflowable EPUB</li>
-                  <li>Separate printable worksheet pack</li>
-                  <li>Future revisions of Edition 1</li>
-                  <li>Personal-use license</li>
-                </ul>
-                <button type="button" disabled aria-disabled="true" aria-describedby="supporter-controls-status" className="field-guide-button field-guide-button-secondary">Become a Founding Supporter <ArrowRight aria-hidden="true" size={17} /></button>
-                <p className="field-guide-tier-fine">Edition 1 revisions are revised files within this edition, not every future book or a future edition.</p>
-              </article>
-            </div>
+            <SupporterTiers />
           </div>
         </section>
 

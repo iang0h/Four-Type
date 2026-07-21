@@ -4,6 +4,7 @@ import test from 'node:test'
 
 const page = readFileSync('app/field-guide/page.tsx', 'utf8')
 const campaign = readFileSync('app/field-guide/FieldGuideCampaign.tsx', 'utf8')
+const supporterTiers = 'components/field-guide/SupporterTiers.tsx'
 
 test('uses supporter framing and responsible-use language', () => {
   assert.match(campaign, /Help more people read the room/)
@@ -19,10 +20,14 @@ test('publishes truthful metadata without ratings', () => {
   assert.doesNotMatch(page, /InStock/)
 })
 
-test('keeps unavailable supporter controls disabled until checkout exists', () => {
-  assert.match(campaign, /<button type="button" disabled aria-disabled="true">USD<\/button>/)
-  assert.match(campaign, /<button type="button" disabled aria-disabled="true">MYR<\/button>/)
-  assert.match(campaign, /<button(?=[^>]*disabled)(?=[^>]*aria-disabled="true")(?=[^>]*field-guide-button-primary)[^>]*>Support and receive the guide/)
-  assert.match(campaign, /<button(?=[^>]*disabled)(?=[^>]*aria-disabled="true")(?=[^>]*field-guide-button-secondary)[^>]*>Become a Founding Supporter/)
-  assert.match(campaign, /Checkout is being prepared\./)
+test('renders active supporter controls with explicit session-persisted currency selection', () => {
+  assert.match(campaign, /<SupporterTiers \/>/)
+
+  const component = readFileSync(supporterTiers, 'utf8')
+  assert.match(component, /sessionStorage/)
+  assert.match(component, /USD/)
+  assert.match(component, /MYR/)
+  assert.match(component, /Support and receive the guide/)
+  assert.match(component, /Become a Founding Supporter/)
+  assert.doesNotMatch(component, /disabled aria-disabled="true"/)
 })

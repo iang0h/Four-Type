@@ -170,13 +170,13 @@ export default function BookPreview() {
     return () => document.removeEventListener('keydown', handleDialogKeyDown)
   }, [closePreview, isInlinePreview, isOpen, navigatePreview])
 
-  function handleTouchStart(event: TouchEvent<HTMLDivElement>) {
+  function handleTouchStart(event: TouchEvent<HTMLElement>) {
     const touch = event.changedTouches[0]
     didSwipeRef.current = false
     touchStartRef.current = { x: touch.clientX, y: touch.clientY }
   }
 
-  function handleTouchEnd(event: TouchEvent<HTMLDivElement>) {
+  function handleTouchEnd(event: TouchEvent<HTMLElement>) {
     const touch = event.changedTouches[0]
     const touchStart = touchStartRef.current
 
@@ -211,10 +211,12 @@ export default function BookPreview() {
 
   return (
     <div className="field-guide-preview-experience" aria-label="Field Guide page previews">
-      <div className="field-guide-preview-viewer" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <div className="field-guide-preview-viewer">
         <button
           type="button"
           className="field-guide-preview-page"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
           onClick={handleOpenPreviewClick}
           aria-label={`Open page ${activePage.page}, ${activePage.title}, in an enlarged preview`}
         >
@@ -255,13 +257,11 @@ export default function BookPreview() {
             aria-modal={isInlinePreview ? undefined : true}
             aria-label={`Enlarged preview of page ${activePage.page}: ${activePage.title}`}
             tabIndex={-1}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
           >
             <button ref={closeButtonRef} type="button" className="field-guide-preview-close" onClick={closePreview} aria-label="Close enlarged preview">
               <X aria-hidden="true" size={20} />
             </button>
-            <button type="button" className="field-guide-preview-dialog-page" onClick={handleDialogPreviewClick} aria-label="Show next preview page">
+            <button type="button" className="field-guide-preview-dialog-page" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onClick={handleDialogPreviewClick} aria-label="Show next preview page">
               <Image src={activePage.src} alt={activePage.alt} width={980} height={1400} sizes="(max-width: 680px) 100vw, 70vw" />
             </button>
             <div className="field-guide-preview-controls">

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import test from 'node:test'
 import {
   consumePreviewClickGuard,
@@ -29,6 +30,14 @@ test('leaves vertical preview scrolling unclassified', () => {
 test('consumes the recognized-swipe click guard exactly once', () => {
   assert.deepEqual(consumePreviewClickGuard(true), { didSwipe: false, shouldSuppressClick: true })
   assert.deepEqual(consumePreviewClickGuard(false), { didSwipe: false, shouldSuppressClick: false })
+})
+
+test('scopes preview swipe handlers to image surfaces instead of arrow controls', () => {
+  const preview = readFileSync('components/field-guide/BookPreview.tsx', 'utf8')
+
+  assert.doesNotMatch(preview, /field-guide-preview-viewer" onTouchStart=/)
+  assert.match(preview, /field-guide-preview-page"\s+onTouchStart={handleTouchStart}\s+onTouchEnd={handleTouchEnd}/)
+  assert.match(preview, /field-guide-preview-dialog-page"\s+onTouchStart={handleTouchStart}\s+onTouchEnd={handleTouchEnd}/)
 })
 
 test('moves compass roving focus across wrapped and endpoint keys', () => {
