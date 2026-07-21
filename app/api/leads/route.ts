@@ -68,13 +68,10 @@ export async function POST(request: Request) {
     try {
       const emailResult = await sendProfileEmail(payload)
       emailSent = emailResult.sent
-    } catch (emailError) {
-      console.error(emailError)
-    }
+    } catch {}
 
     return NextResponse.json({ ok: true, emailSent })
-  } catch (error) {
-    console.error(error)
+  } catch {
     return NextResponse.json({ ok: false, error: 'Could not save lead.' }, { status: 500 })
   }
 }

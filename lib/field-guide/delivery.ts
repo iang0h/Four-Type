@@ -27,16 +27,20 @@ export type EmailDeliveryClaim =
   | { status: 'in-progress' }
   | { status: 'sent' }
 
+export type EmailDeliveryPurpose = 'fulfillment' | 'reaccess'
+
 function deliveryDigest(sessionId: string) {
   return createHash('sha256').update(sessionId).digest('hex')
 }
 
-function deliveryPath(sessionId: string) {
-  return `field-guide/entitlements/email-delivery/${deliveryDigest(sessionId)}.json`
+function deliveryPath(sessionId: string, purpose: EmailDeliveryPurpose) {
+  const namespace = purpose === 'reaccess' ? 'reaccess-delivery' : 'email-delivery'
+  return `field-guide/entitlements/${namespace}/${deliveryDigest(sessionId)}.json`
 }
 
-function deliveryIdempotencyKey(sessionId: string, attempt: number) {
-  return `field-guide-access/${deliveryDigest(sessionId)}/${attempt}`
+function deliveryIdempotencyKey(sessionId: string, attempt: number, purpose: EmailDeliveryPurpose) {
+  const prefix = purpose === 'reaccess' ? 'field-guide-reaccess' : 'field-guide-access'
+  return `${prefix}/${deliveryDigest(sessionId)}/${attempt}`
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -63,8 +67,8 @@ function isDeliveryRecord(value: unknown): value is DeliveryRecord {
     && (value.providerMessageId === undefined || typeof value.providerMessageId === 'string')
 }
 
-async function readRecord(sessionId: string, store: PrivateBlobStore) {
-  const record = await store.get(deliveryPath(sessionId), { access: 'private', useCache: false })
+async function readRecord(sessionId: string, store: PrivateBlobStore, purpose: EmailDeliveryPurpose) {
+  const record = await store.get(deliveryPath(sessionId, purpose), { access: 'private', useCache: false })
   if (!record) return null
   let parsed: unknown
   try {
@@ -85,8 +89,9 @@ async function writeRecord(
   store: PrivateBlobStore,
   value: DeliveryRecord,
   etag?: string,
+  purpose: EmailDeliveryPurpose = 'fulfillment',
 ) {
-  return store.put(deliveryPath(sessionId), JSON.stringify(value), {
+  return store.put(deliveryPath(sessionId, purpose), JSON.stringify(value), {
     access: 'private',
     addRandomSuffix: false,
     allowOverwrite: Boolean(etag),
@@ -106,13 +111,30 @@ export async function claimEmailDelivery(
   sessionId: string,
   store: PrivateBlobStore,
   now = Date.now(),
+  purpose: EmailDeliveryPurpose = 'fulfillment',
+  renewSent = false,
 ): Promise<EmailDeliveryClaim> {
   if (!Number.isSafeInteger(now)) throw new Error('Email delivery time is invalid')
   if (!Number.isSafeInteger(now + FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS)) throw new Error('Email delivery time is invalid')
 
   for (let attempt = 0; attempt < MAX_WRITE_ATTEMPTS; attempt += 1) {
-    const current = await readRecord(sessionId, store)
-    if (current?.value.state === 'sent') return { status: 'sent' }
+    const current = await readRecord(sessionId, store, purpose)
+    if (current?.value.state === 'sent') {
+      if (!renewSent) return { status: 'sent' }
+      const deliveryAttempt = (current.value.attempt ?? 0) + 1
+      try {
+        await writeRecord(sessionId, store, {
+          version: 1,
+          state: 'pending',
+          idempotencyKey: deliveryIdempotencyKey(sessionId, deliveryAttempt, purpose),
+          attempt: deliveryAttempt,
+          accessTokenExpiresAt: now + FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS,
+        }, current.etag, purpose)
+      } catch (error) {
+        if (!isConcurrentWrite(error)) throw error
+      }
+      continue
+    }
     if (
       current?.value.state === 'sending'
       && typeof current.value.claimedAt === 'number'
@@ -141,7 +163,7 @@ export async function claimEmailDelivery(
     const claimId = randomUUID()
     const idempotencyKey = reuseAttempt
       ? current!.value.idempotencyKey
-      : deliveryIdempotencyKey(sessionId, deliveryAttempt)
+      : deliveryIdempotencyKey(sessionId, deliveryAttempt, purpose)
     try {
       await writeRecord(sessionId, store, {
         version: 1,
@@ -157,7 +179,7 @@ export async function claimEmailDelivery(
           : {}),
         claimId,
         claimedAt: now,
-      }, current?.etag)
+      }, current?.etag, purpose)
       return { status: 'claimed', claimId, idempotencyKey, accessTokenExpiresAt }
     } catch (error) {
       if (!isConcurrentWrite(error)) throw error
@@ -173,13 +195,14 @@ export async function recordEmailDeliveryProviderAttempt(
   payloadDigest: string,
   store: PrivateBlobStore,
   now = Date.now(),
+  purpose: EmailDeliveryPurpose = 'fulfillment',
 ) {
   if (!Number.isSafeInteger(now) || !/^[a-f0-9]{64}$/.test(payloadDigest)) {
     throw new Error('Email delivery provider payload is invalid')
   }
 
   for (let attempt = 0; attempt < MAX_WRITE_ATTEMPTS; attempt += 1) {
-    const current = await readRecord(sessionId, store)
+    const current = await readRecord(sessionId, store, purpose)
     if (!current || current.value.state !== 'sending' || current.value.claimId !== claimId) {
       throw new Error('Email delivery claim is no longer active')
     }
@@ -201,10 +224,10 @@ export async function recordEmailDeliveryProviderAttempt(
         await writeRecord(sessionId, store, {
           version: 1,
           state: 'pending',
-          idempotencyKey: deliveryIdempotencyKey(sessionId, deliveryAttempt),
+          idempotencyKey: deliveryIdempotencyKey(sessionId, deliveryAttempt, purpose),
           attempt: deliveryAttempt,
           accessTokenExpiresAt: now + FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS,
-        }, current.etag)
+        }, current.etag, purpose)
       } catch (error) {
         if (isConcurrentWrite(error)) continue
         throw error
@@ -231,8 +254,9 @@ export async function releaseEmailDeliveryClaim(
   sessionId: string,
   claimId: string,
   store: PrivateBlobStore,
+  purpose: EmailDeliveryPurpose = 'fulfillment',
 ) {
-  const current = await readRecord(sessionId, store)
+  const current = await readRecord(sessionId, store, purpose)
   if (!current || current.value.state !== 'sending' || current.value.claimId !== claimId) return
   await writeRecord(sessionId, store, {
     version: 1,
@@ -248,7 +272,7 @@ export async function releaseEmailDeliveryClaim(
     ...(current.value.firstProviderPayloadDigest === undefined
       ? {}
       : { firstProviderPayloadDigest: current.value.firstProviderPayloadDigest }),
-  }, current.etag)
+  }, current.etag, purpose)
 }
 
 export async function completeEmailDelivery(
@@ -257,9 +281,10 @@ export async function completeEmailDelivery(
   providerMessageId: string,
   store: PrivateBlobStore,
   now = Date.now(),
+  purpose: EmailDeliveryPurpose = 'fulfillment',
 ) {
   if (!providerMessageId || !Number.isSafeInteger(now)) throw new Error('Email delivery receipt is invalid')
-  const current = await readRecord(sessionId, store)
+  const current = await readRecord(sessionId, store, purpose)
   if (current?.value.state === 'sent') return
   if (!current || current.value.state !== 'sending' || current.value.claimId !== claimId) {
     throw new Error('Email delivery claim is no longer active')
@@ -281,5 +306,5 @@ export async function completeEmailDelivery(
       : { firstProviderPayloadDigest: current.value.firstProviderPayloadDigest }),
     sentAt: now,
     providerMessageId,
-  }, current.etag)
+  }, current.etag, purpose)
 }

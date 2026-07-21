@@ -36,6 +36,8 @@ export type SuccessAccessDependencies = {
 export type RequestAccessDependencies = {
   findEntitlementsByEmail: (email: string) => Promise<FieldGuideEntitlement[]>
   sendFreshAccessEmail: (entitlement: FieldGuideEntitlement) => Promise<void>
+  claimCooldown?: (email: string) => Promise<'claimed' | 'cooldown'>
+  canonicalOrigin?: string
   padResponse?: () => Promise<void>
   schedule?: (work: () => Promise<void>) => void
 }
@@ -154,6 +156,8 @@ function normalizeAccessEmail(value: unknown): string | null {
 }
 
 async function requestEmail(request: Request): Promise<string | null> {
+  const contentType = request.headers.get('content-type')?.split(';', 1)[0]?.trim().toLowerCase()
+  if (contentType !== 'application/json') return null
   const contentLength = request.headers.get('content-length')
   if (contentLength && (!/^\d+$/.test(contentLength) || Number(contentLength) > MAX_ACCESS_REQUEST_BYTES)) return null
 
@@ -170,6 +174,12 @@ async function requestEmail(request: Request): Promise<string | null> {
   return normalizeAccessEmail((body as { email?: unknown }).email)
 }
 
+function isTrustedRequestOrigin(request: Request, canonicalOrigin: string | undefined) {
+  const origin = request.headers.get('origin')
+  if (!origin) return true
+  return Boolean(canonicalOrigin && origin === canonicalOrigin)
+}
+
 function accessRequestResponse() {
   return Response.json({ message: ACCESS_REQUEST_MESSAGE })
 }
@@ -177,22 +187,25 @@ function accessRequestResponse() {
 export function createRequestAccessPostHandler(dependencies: RequestAccessDependencies) {
   return async function POST(request: Request) {
     const startedAt = Date.now()
-    const email = await requestEmail(request)
+    const email = isTrustedRequestOrigin(request, dependencies.canonicalOrigin) ? await requestEmail(request) : null
 
     if (email) {
-      const work = async () => {
-        const entitlements = await dependencies.findEntitlementsByEmail(email).catch(() => [])
-        await Promise.all(entitlements.map(async (entitlement) => {
-          try {
-            await dependencies.sendFreshAccessEmail(entitlement)
-          } catch {
-            // The response remains non-disclosing if a private delivery attempt fails.
-          }
-        }))
-      }
+      const cooldown = await dependencies.claimCooldown?.(email).catch(() => 'cooldown') ?? 'claimed'
+      if (cooldown === 'claimed') {
+        const work = async () => {
+          const entitlements = await dependencies.findEntitlementsByEmail(email).catch(() => [])
+          await Promise.all(entitlements.map(async (entitlement) => {
+            try {
+              await dependencies.sendFreshAccessEmail(entitlement)
+            } catch {
+              // The response remains non-disclosing if a private delivery attempt fails.
+            }
+          }))
+        }
 
-      if (dependencies.schedule) dependencies.schedule(work)
-      else await work()
+        if (dependencies.schedule) dependencies.schedule(work)
+        else await work()
+      }
     }
 
     if (dependencies.padResponse) await dependencies.padResponse()

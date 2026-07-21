@@ -1,6 +1,5 @@
 import 'server-only'
 
-import { randomUUID } from 'node:crypto'
 import {
   createDownloadGetHandler,
   createRequestAccessPostHandler,
@@ -11,9 +10,16 @@ import { createVercelPrivateAssetUrl, vercelPrivateBlobStore } from './blob-serv
 import { resolveCanonicalCheckoutOrigin } from './checkout-route'
 import { findEntitlementsByEmail, readEntitlement, type FieldGuideEntitlement } from './entitlements'
 import { prepareSupporterAccessEmail } from './email-server'
+import {
+  claimEmailDelivery,
+  completeEmailDelivery,
+  recordEmailDeliveryProviderAttempt,
+  releaseEmailDeliveryClaim,
+} from './delivery'
+import { deliverReaccessEntitlement } from './reaccess'
+import { claimReaccessCooldown } from './reaccess-cooldown'
 import { assetsForTier, FIELD_GUIDE_RELEASE, type FieldGuideAssetKey } from './release'
 import {
-  FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS,
   signAccessToken,
   signDownloadToken,
   verifyAccessToken,
@@ -86,19 +92,20 @@ export const GET = createDownloadGetHandler({
 })
 
 async function sendFreshProductionAccessEmail(entitlement: FieldGuideEntitlement) {
-  const now = Date.now()
   const secret = getAccessTokenSecret()
-  const accessToken = signAccessToken({
-    sessionId: entitlement.sessionId,
-    expiresAt: now + FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS,
-  }, secret, now)
-  const prepared = prepareSupporterAccessEmail(entitlement, createAccessUrl(accessToken), randomUUID())
-  if (!prepared) throw new Error('Field Guide access email delivery is unavailable')
-
-  const delivery = await prepared.send()
-  if (!delivery.sent || delivery.skipped || !delivery.providerMessageId) {
-    throw new Error('Field Guide access email delivery is unavailable')
-  }
+  await deliverReaccessEntitlement(entitlement, {
+    claimDelivery: () => claimEmailDelivery(entitlement.sessionId, vercelPrivateBlobStore, Date.now(), 'reaccess', true),
+    recordProviderAttempt: (claimId, payloadDigest) => (
+      recordEmailDeliveryProviderAttempt(entitlement.sessionId, claimId, payloadDigest, vercelPrivateBlobStore, Date.now(), 'reaccess')
+    ),
+    releaseDelivery: (claimId) => releaseEmailDeliveryClaim(entitlement.sessionId, claimId, vercelPrivateBlobStore, 'reaccess'),
+    completeDelivery: (claimId, providerMessageId) => (
+      completeEmailDelivery(entitlement.sessionId, claimId, providerMessageId, vercelPrivateBlobStore, Date.now(), 'reaccess')
+    ),
+    signAccessToken: (input) => signAccessToken(input, secret),
+    createAccessUrl,
+    prepareEmail: prepareSupporterAccessEmail,
+  })
 }
 
 export function createProductionRequestAccessPostHandler(
@@ -107,6 +114,8 @@ export function createProductionRequestAccessPostHandler(
   return createRequestAccessPostHandler({
     findEntitlementsByEmail: (email) => findEntitlementsByEmail(email, vercelPrivateBlobStore, getAccessTokenSecret()),
     sendFreshAccessEmail: sendFreshProductionAccessEmail,
+    claimCooldown: (email) => claimReaccessCooldown(email, vercelPrivateBlobStore, getAccessTokenSecret()),
+    canonicalOrigin: resolveCanonicalCheckoutOrigin(process.env.NEXT_PUBLIC_SITE_URL) ?? undefined,
     schedule,
   })
 }

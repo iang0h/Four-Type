@@ -30,3 +30,21 @@ Implemented and verified in-process. No live Stripe key was supplied or used, an
 - Full suite: `PATH=/Users/iangoh/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH pnpm test` - 97 passed.
 - Production build: `PATH=/Users/iangoh/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH pnpm build` - passed. The existing multi-lockfile workspace-root and edge-runtime static-generation warnings were emitted.
 - Diff check: `git diff --check` passed with no whitespace errors.
+
+## Review Remediation
+
+Follow-up review findings were fixed with regression tests before implementation:
+
+- Analytics now serializes only `window.location.pathname`. The `/api/events` boundary independently extracts a pathname from any supplied relative or absolute URL, strips query strings and fragments, rejects sensitive query-like values and embedded email-shaped values from persisted text fields, and ignores unrecognized request keys. Event append errors are not logged.
+- The event handler is dependency-injectable for route-to-persistence tests. Tests prove `?token=` and `?session_id=` never reach the persisted payload, and customer-facing event/lead routes do not log caught errors that might contain email, token, or session data.
+- Re-access delivery now reuses the durable Task 7 claim, provider-attempt digest, release, and receipt workflow under a distinct `reaccess` delivery purpose and idempotency-key prefix. Its private records use a separate hashed namespace and never store a raw email, token, or email body.
+- Re-access requests obtain a concurrency-safe, HMAC-keyed private 15-minute cooldown before work is scheduled. Concurrent requests yield one logical delivery per matching entitlement; cooldown, unknown, transport-failure, malformed, cross-origin, and non-JSON cases retain the same generic `200` response body. Failed and ambiguous delivery claims remain recoverable through the durable delivery state.
+- The request endpoint now requires `application/json`, bounds body parsing to 1 KiB, accepts a missing `Origin` for non-browser/same-origin callers, and rejects any supplied `Origin` that does not exactly match configured canonical `NEXT_PUBLIC_SITE_URL`; it never trusts `Host`.
+
+### Review Verification
+
+- Focused privacy/re-access suites: `PATH=/Users/iangoh/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH pnpm exec tsx --test tests/analytics-privacy.test.ts tests/analytics.test.ts tests/field-guide-download.test.ts tests/field-guide-reaccess.test.ts tests/field-guide-delivery.test.ts` - 31 passed.
+- Full suite: `PATH=/Users/iangoh/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH pnpm test` - 106 passed.
+- TypeScript: `PATH=/Users/iangoh/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH pnpm exec tsc --noEmit` - passed with no diagnostics.
+- Production build: after moving aside stale ignored `.next` output that caused an `ENOTEMPTY` cleanup error, `PATH=/Users/iangoh/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin:$PATH pnpm build` - passed. The pre-existing multi-lockfile workspace-root and edge-runtime static-generation warnings were emitted.
+- Diff check: `git diff --check` passed with no whitespace errors.

@@ -49,13 +49,19 @@ export function isFourTypeEventName(value: string): value is FourTypeEventName {
   return (FOURTYPE_EVENT_NAMES as readonly string[]).includes(value)
 }
 
+type AnalyticsLocation = Pick<Location, 'pathname' | 'search' | 'hash'>
+
+export function buildAnalyticsEventBody(payload: FourTypeEventPayload, location: AnalyticsLocation) {
+  return JSON.stringify({
+    ...payload,
+    path: location.pathname,
+  })
+}
+
 export function trackFourTypeEvent(payload: FourTypeEventPayload) {
   if (typeof navigator === 'undefined') return
 
-  const body = JSON.stringify({
-    ...payload,
-    path: typeof window === 'undefined' ? '' : `${window.location.pathname}${window.location.search}`,
-  })
+  const body = buildAnalyticsEventBody(payload, window.location)
 
   if (navigator.sendBeacon) {
     const blob = new Blob([body], { type: 'application/json' })

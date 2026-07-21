@@ -178,6 +178,91 @@ test('schedules valid renewal lookup after the fixed response path', async () =>
   assert.equal(lookups, 1)
 })
 
+test('returns the same renewal response without scheduling cross-origin or non-JSON requests', async () => {
+  let scheduled = 0
+  const handler = createRequestAccessPostHandler({
+    canonicalOrigin: 'https://www.fourtype.com',
+    claimCooldown: async () => 'claimed',
+    findEntitlementsByEmail: async () => [fieldGuideEntitlement],
+    sendFreshAccessEmail: async () => {},
+    padResponse: async () => {},
+    schedule: () => { scheduled += 1 },
+  })
+  const sameOrigin = await handler(new Request('https://www.fourtype.com/api/field-guide/request-access', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ email: 'supporter@example.com' }),
+  }))
+  const crossOrigin = await handler(new Request('https://www.fourtype.com/api/field-guide/request-access', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', origin: 'https://attacker.example' },
+    body: JSON.stringify({ email: 'supporter@example.com' }),
+  }))
+  const textPlain = await handler(new Request('https://www.fourtype.com/api/field-guide/request-access', {
+    method: 'POST',
+    headers: { 'content-type': 'text/plain' },
+    body: JSON.stringify({ email: 'supporter@example.com' }),
+  }))
+
+  const [sameOriginBody, crossOriginBody, textPlainBody] = await Promise.all([
+    sameOrigin.text(),
+    crossOrigin.text(),
+    textPlain.text(),
+  ])
+  assert.equal(sameOriginBody, crossOriginBody)
+  assert.equal(crossOriginBody, textPlainBody)
+  assert.equal(scheduled, 1)
+})
+
+test('returns the same renewal response during cooldown without scheduling delivery', async () => {
+  let scheduled = 0
+  const handler = createRequestAccessPostHandler({
+    claimCooldown: async () => 'cooldown',
+    findEntitlementsByEmail: async () => [fieldGuideEntitlement],
+    sendFreshAccessEmail: async () => {},
+    padResponse: async () => {},
+    schedule: () => { scheduled += 1 },
+  })
+
+  const response = await handler(new Request('http://localhost/api/field-guide/request-access', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ email: 'supporter@example.com' }),
+  }))
+
+  assert.equal(response.status, 200)
+  assert.equal(scheduled, 0)
+})
+
+test('concurrent renewal requests schedule one logical send per entitlement', async () => {
+  let claimed = false
+  const scheduled: Array<() => Promise<void>> = []
+  const sent: string[] = []
+  const handler = createRequestAccessPostHandler({
+    claimCooldown: async () => {
+      if (claimed) return 'cooldown'
+      claimed = true
+      return 'claimed'
+    },
+    findEntitlementsByEmail: async () => [fieldGuideEntitlement, foundingEntitlement],
+    sendFreshAccessEmail: async (entitlement) => { sent.push(entitlement.sessionId) },
+    padResponse: async () => {},
+    schedule: (work) => { scheduled.push(work) },
+  })
+  const request = () => handler(new Request('http://localhost/api/field-guide/request-access', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ email: 'supporter@example.com' }),
+  }))
+
+  const [first, second] = await Promise.all([request(), request()])
+  assert.equal(first.status, 200)
+  assert.equal(await first.text(), await second.text())
+  assert.equal(scheduled.length, 1)
+  await scheduled[0]?.()
+  assert.deepEqual(sent.sort(), ['cs_test_field_guide', 'cs_test_founding'])
+})
+
 test('redirects an authorized download and tracks no sensitive values', async () => {
   const analytics: unknown[] = []
   const handler = createDownloadGetHandler({
