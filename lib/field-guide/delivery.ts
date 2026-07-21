@@ -6,7 +6,7 @@ const CLAIM_TTL_MS = 5 * 60 * 1_000
 const MAX_WRITE_ATTEMPTS = 3
 export const EMAIL_DELIVERY_REUSE_MIN_REMAINING_MS = 29 * 24 * 60 * 60 * 1_000
 export const EMAIL_DELIVERY_PROVIDER_IDEMPOTENCY_WINDOW_MS = 24 * 60 * 60 * 1_000
-export const EMAIL_DELIVERY_SEND_MIN_REMAINING_MS = 24 * 60 * 60 * 1_000
+export const EMAIL_DELIVERY_RETRY_SEND_MIN_REMAINING_MS = 24 * 60 * 60 * 1_000
 
 type DeliveryRecord = {
   version: 1
@@ -15,6 +15,7 @@ type DeliveryRecord = {
   attempt?: number
   accessTokenExpiresAt?: number
   firstProviderAttemptAt?: number
+  firstProviderPayloadDigest?: string
   claimId?: string
   claimedAt?: number
   sentAt?: number
@@ -54,6 +55,8 @@ function isDeliveryRecord(value: unknown): value is DeliveryRecord {
       || (typeof value.accessTokenExpiresAt === 'number' && Number.isSafeInteger(value.accessTokenExpiresAt)))
     && (value.firstProviderAttemptAt === undefined
       || (typeof value.firstProviderAttemptAt === 'number' && Number.isSafeInteger(value.firstProviderAttemptAt)))
+    && (value.firstProviderPayloadDigest === undefined
+      || (typeof value.firstProviderPayloadDigest === 'string' && /^[a-f0-9]{64}$/.test(value.firstProviderPayloadDigest)))
     && (value.claimId === undefined || typeof value.claimId === 'string')
     && (value.claimedAt === undefined || Number.isSafeInteger(value.claimedAt))
     && (value.sentAt === undefined || Number.isSafeInteger(value.sentAt))
@@ -95,7 +98,7 @@ async function writeRecord(
 function hasUsefulAccessTokenLifetime(expiresAt: number | undefined, now: number) {
   const remainingLifetime = typeof expiresAt === 'number' ? expiresAt - now : undefined
   return typeof remainingLifetime === 'number'
-    && remainingLifetime >= EMAIL_DELIVERY_SEND_MIN_REMAINING_MS
+    && remainingLifetime >= EMAIL_DELIVERY_RETRY_SEND_MIN_REMAINING_MS
     && remainingLifetime <= FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS
 }
 
@@ -163,27 +166,55 @@ export async function claimEmailDelivery(
 export async function recordEmailDeliveryProviderAttempt(
   sessionId: string,
   claimId: string,
+  payloadDigest: string,
   store: PrivateBlobStore,
   now = Date.now(),
 ) {
-  if (!Number.isSafeInteger(now)) throw new Error('Email delivery time is invalid')
+  if (!Number.isSafeInteger(now) || !/^[a-f0-9]{64}$/.test(payloadDigest)) {
+    throw new Error('Email delivery provider payload is invalid')
+  }
 
   for (let attempt = 0; attempt < MAX_WRITE_ATTEMPTS; attempt += 1) {
     const current = await readRecord(sessionId, store)
     if (!current || current.value.state !== 'sending' || current.value.claimId !== claimId) {
       throw new Error('Email delivery claim is no longer active')
     }
-    if (!hasUsefulAccessTokenLifetime(current.value.accessTokenExpiresAt, now)) {
-      throw new Error('Email delivery access token does not have a useful lifetime')
+    if (current.value.firstProviderAttemptAt !== undefined) {
+      if (!hasUsefulAccessTokenLifetime(current.value.accessTokenExpiresAt, now)) {
+        throw new Error('Email delivery access token does not have a useful lifetime')
+      }
+      return current.value.firstProviderPayloadDigest === payloadDigest
+        ? 'matches'
+        : 'payload-mismatch'
     }
-    if (current.value.firstProviderAttemptAt !== undefined) return
+    if (!hasUsefulAccessTokenLifetime(current.value.accessTokenExpiresAt, now)
+      || current.value.accessTokenExpiresAt! - now < EMAIL_DELIVERY_REUSE_MIN_REMAINING_MS) {
+      if (!Number.isSafeInteger(now + FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS)) {
+        throw new Error('Email delivery time is invalid')
+      }
+      const deliveryAttempt = (current.value.attempt ?? 0) + 1
+      try {
+        await writeRecord(sessionId, store, {
+          version: 1,
+          state: 'pending',
+          idempotencyKey: deliveryIdempotencyKey(sessionId, deliveryAttempt),
+          attempt: deliveryAttempt,
+          accessTokenExpiresAt: now + FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS,
+        }, current.etag)
+      } catch (error) {
+        if (isConcurrentWrite(error)) continue
+        throw error
+      }
+      throw new Error('Email delivery access token does not have a full attempt lifetime')
+    }
 
     try {
       await writeRecord(sessionId, store, {
         ...current.value,
         firstProviderAttemptAt: now,
+        firstProviderPayloadDigest: payloadDigest,
       }, current.etag)
-      return
+      return 'recorded'
     } catch (error) {
       if (!isConcurrentWrite(error)) throw error
     }
@@ -210,6 +241,9 @@ export async function releaseEmailDeliveryClaim(
     ...(current.value.firstProviderAttemptAt === undefined
       ? {}
       : { firstProviderAttemptAt: current.value.firstProviderAttemptAt }),
+    ...(current.value.firstProviderPayloadDigest === undefined
+      ? {}
+      : { firstProviderPayloadDigest: current.value.firstProviderPayloadDigest }),
   }, current.etag)
 }
 
@@ -238,6 +272,9 @@ export async function completeEmailDelivery(
     ...(current.value.firstProviderAttemptAt === undefined
       ? {}
       : { firstProviderAttemptAt: current.value.firstProviderAttemptAt }),
+    ...(current.value.firstProviderPayloadDigest === undefined
+      ? {}
+      : { firstProviderPayloadDigest: current.value.firstProviderPayloadDigest }),
     sentAt: now,
     providerMessageId,
   }, current.etag)

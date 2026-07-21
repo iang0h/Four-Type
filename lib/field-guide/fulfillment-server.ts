@@ -7,7 +7,7 @@ import {
   recordEmailDeliveryProviderAttempt,
   releaseEmailDeliveryClaim,
 } from './delivery'
-import { sendSupporterAccessEmail } from './email-server'
+import { prepareSupporterAccessEmail } from './email-server'
 import {
   fulfillFieldGuideCheckout,
   type FieldGuideCheckoutSession,
@@ -58,8 +58,8 @@ export function createFieldGuideFulfillmentDependencies(
     readEntitlement: (sessionId) => readEntitlement(sessionId, vercelPrivateBlobStore),
     writeEntitlement: (entitlement) => writeEntitlement(entitlement, vercelPrivateBlobStore, emailIndexSecret),
     claimEmailDelivery: (sessionId) => claimEmailDelivery(sessionId, vercelPrivateBlobStore),
-    recordEmailDeliveryProviderAttempt: (sessionId, claimId) => (
-      recordEmailDeliveryProviderAttempt(sessionId, claimId, vercelPrivateBlobStore)
+    recordEmailDeliveryProviderAttempt: (sessionId, claimId, payloadDigest) => (
+      recordEmailDeliveryProviderAttempt(sessionId, claimId, payloadDigest, vercelPrivateBlobStore)
     ),
     releaseEmailDeliveryClaim: (sessionId, claimId) => releaseEmailDeliveryClaim(sessionId, claimId, vercelPrivateBlobStore),
     completeEmailDelivery: (sessionId, claimId, providerMessageId) => (
@@ -67,7 +67,7 @@ export function createFieldGuideFulfillmentDependencies(
     ),
     signAccessToken: (input) => signAccessToken(input, accessTokenSecret),
     createAccessUrl: (token) => getAccessUrl(token, environment.NEXT_PUBLIC_SITE_URL),
-    sendSupporterAccessEmail,
+    prepareSupporterAccessEmail,
   }
 }
 

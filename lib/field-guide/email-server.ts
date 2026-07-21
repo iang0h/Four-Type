@@ -1,15 +1,15 @@
 import 'server-only'
 
-import { sendEmail } from '../email-delivery-server'
+import { prepareEmailDelivery } from '../email-delivery-server'
 import type { FieldGuideEntitlement } from './entitlements'
 import { createSupporterAccessEmail } from './email'
 
-export function sendSupporterAccessEmail(
+export function prepareSupporterAccessEmail(
   entitlement: FieldGuideEntitlement,
   accessUrl: string,
   idempotencyKey: string,
 ) {
-  return sendEmail(
+  return prepareEmailDelivery(
     createSupporterAccessEmail(entitlement, accessUrl),
     'Supporter access email failed',
     idempotencyKey,

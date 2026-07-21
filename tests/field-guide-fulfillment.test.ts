@@ -4,7 +4,14 @@ import { fulfillFieldGuideCheckout, type FieldGuideFulfillmentDependencies } fro
 import { createSupporterAccessEmail } from '../lib/field-guide/email'
 import { FIELD_GUIDE_RELEASE } from '../lib/field-guide/release'
 import { FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS } from '../lib/field-guide/tokens'
-import { EMAIL_DELIVERY_REUSE_MIN_REMAINING_MS } from '../lib/field-guide/delivery'
+import {
+  claimEmailDelivery,
+  completeEmailDelivery,
+  EMAIL_DELIVERY_RETRY_SEND_MIN_REMAINING_MS,
+  EMAIL_DELIVERY_REUSE_MIN_REMAINING_MS,
+  recordEmailDeliveryProviderAttempt,
+  releaseEmailDeliveryClaim,
+} from '../lib/field-guide/delivery'
 import {
   findEntitlementsByEmail,
   readEntitlement,
@@ -30,6 +37,27 @@ type SessionOverrides = Partial<{
   payment_intent: string | null
   line_items: { data: Array<{ price: { id: string } | null; quantity: number | null }> }
 }>
+
+class MemoryDeliveryStore implements PrivateBlobStore {
+  private readonly records = new Map<string, { body: string; etag: string }>()
+  private sequence = 0
+
+  async get(pathname: string) {
+    return this.records.get(pathname) ?? null
+  }
+
+  async put(pathname: string, body: string, options: Parameters<PrivateBlobStore['put']>[2]) {
+    if (!options.allowOverwrite && this.records.has(pathname)) {
+      throw Object.assign(new Error('Blob already exists'), { code: 'already-exists' })
+    }
+    if (options.ifMatch && this.records.get(pathname)?.etag !== options.ifMatch) {
+      throw Object.assign(new Error('Blob precondition failed'), { code: 'precondition-failed' })
+    }
+    const etag = `etag-${++this.sequence}`
+    this.records.set(pathname, { body, etag })
+    return { etag }
+  }
+}
 
 function fakeDependencies(overrides: SessionOverrides = {}) {
   const now = 1_784_673_600_000
@@ -87,17 +115,20 @@ function fakeDependencies(overrides: SessionOverrides = {}) {
         accessTokenExpiresAt: now + FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS,
       }
     },
-    recordEmailDeliveryProviderAttempt: async () => {},
+    recordEmailDeliveryProviderAttempt: async () => 'recorded',
     releaseEmailDeliveryClaim: async () => {
       deliveryState = 'pending'
     },
     completeEmailDelivery: async () => {
       deliveryState = 'sent'
     },
-    sendSupporterAccessEmail: async (entitlement, accessUrl) => {
-      emailCalls.push({ entitlement, accessUrl })
-      return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
-    },
+    prepareSupporterAccessEmail: (entitlement, accessUrl) => ({
+      payloadDigest: 'a'.repeat(64),
+      send: async () => {
+        emailCalls.push({ entitlement, accessUrl })
+        return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
+      },
+    }),
     now: () => now,
   }
 
@@ -158,13 +189,16 @@ test('retries a failed access email with the same provider idempotency key', asy
   const idempotencyKeys: string[] = []
   const accessUrls: string[] = []
   let attempts = 0
-  fake.dependencies.sendSupporterAccessEmail = async (_entitlement, accessUrl, idempotencyKey) => {
-    idempotencyKeys.push(idempotencyKey)
-    accessUrls.push(accessUrl)
-    attempts += 1
-    if (attempts === 1) throw new Error('Email transport unavailable')
-    return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
-  }
+  fake.dependencies.prepareSupporterAccessEmail = (_entitlement, accessUrl, idempotencyKey) => ({
+    payloadDigest: 'a'.repeat(64),
+    send: async () => {
+      idempotencyKeys.push(idempotencyKey)
+      accessUrls.push(accessUrl)
+      attempts += 1
+      if (attempts === 1) throw new Error('Email transport unavailable')
+      return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
+    },
+  })
 
   await assert.rejects(() => fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies), /transport unavailable/)
   assert.deepEqual(await fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies), { status: 'already-fulfilled' })
@@ -178,14 +212,79 @@ test('records a provider attempt before sending the access email', async () => {
   const calls: string[] = []
   fake.dependencies.recordEmailDeliveryProviderAttempt = async () => {
     calls.push('record')
+    return 'recorded'
   }
-  fake.dependencies.sendSupporterAccessEmail = async () => {
-    calls.push('send')
-    return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
-  }
+  fake.dependencies.prepareSupporterAccessEmail = () => ({
+    payloadDigest: 'a'.repeat(64),
+    send: async () => {
+      calls.push('send')
+      return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
+    },
+  })
 
   await fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies)
   assert.deepEqual(calls, ['record', 'send'])
+})
+
+test('does not send changed copy inside the provider ambiguity window and rotates after it', async () => {
+  const fake = fakeDependencies()
+  const store = new MemoryDeliveryStore()
+  const createdAt = 1_000
+  const initialClaim = await claimEmailDelivery('cs_test_paid', store, createdAt)
+  if (initialClaim.status !== 'claimed') throw new Error('Expected an initial email delivery claim')
+  await releaseEmailDeliveryClaim('cs_test_paid', initialClaim.claimId, store)
+
+  let deliveryNow = createdAt + 23 * 60 * 60 * 1_000
+  let payloadDigest = 'a'.repeat(64)
+  const preparedKeys: string[] = []
+  const providerCalls: string[] = []
+  fake.dependencies.claimEmailDelivery = (sessionId) => claimEmailDelivery(sessionId, store, deliveryNow)
+  fake.dependencies.recordEmailDeliveryProviderAttempt = (sessionId, claimId, digest) => (
+    recordEmailDeliveryProviderAttempt(sessionId, claimId, digest, store, deliveryNow)
+  )
+  fake.dependencies.releaseEmailDeliveryClaim = (sessionId, claimId) => (
+    releaseEmailDeliveryClaim(sessionId, claimId, store)
+  )
+  fake.dependencies.completeEmailDelivery = (sessionId, claimId, providerMessageId) => (
+    completeEmailDelivery(sessionId, claimId, providerMessageId, store, deliveryNow)
+  )
+  fake.dependencies.signAccessToken = ({ sessionId, expiresAt }) => {
+    const remainingLifetime = expiresAt - deliveryNow
+    if (
+      remainingLifetime < EMAIL_DELIVERY_RETRY_SEND_MIN_REMAINING_MS
+      || remainingLifetime > FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS
+    ) {
+      throw new Error('Token expiry is invalid')
+    }
+    return `access-${sessionId}-${expiresAt}`
+  }
+  fake.dependencies.prepareSupporterAccessEmail = (_entitlement, _accessUrl, idempotencyKey) => {
+    preparedKeys.push(idempotencyKey)
+    return {
+      payloadDigest,
+      send: async () => {
+        providerCalls.push(idempotencyKey)
+        if (providerCalls.length === 1) throw new Error('Email transport unavailable')
+        return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
+      },
+    }
+  }
+
+  await assert.rejects(() => fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies), /transport unavailable/)
+
+  deliveryNow = createdAt + 25 * 60 * 60 * 1_000
+  payloadDigest = 'b'.repeat(64)
+  await assert.rejects(
+    () => fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies),
+    /awaiting provider idempotency/,
+  )
+  assert.deepEqual(providerCalls, [initialClaim.idempotencyKey])
+  assert.equal(preparedKeys[1], initialClaim.idempotencyKey)
+
+  deliveryNow = createdAt + 47 * 60 * 60 * 1_000 + 1
+  assert.deepEqual(await fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies), { status: 'already-fulfilled' })
+  assert.equal(providerCalls.length, 2)
+  assert.notEqual(preparedKeys[2], initialClaim.idempotencyKey)
 })
 
 test('sends an entitlement older than 30 days a fresh valid access token', async () => {
@@ -232,7 +331,10 @@ test('releases the delivery claim when token signing or access URL construction 
 
 test('does not silently fulfill when email delivery is skipped', async () => {
   const fake = fakeDependencies()
-  fake.dependencies.sendSupporterAccessEmail = async () => ({ sent: false, skipped: true })
+  fake.dependencies.prepareSupporterAccessEmail = () => ({
+    payloadDigest: 'a'.repeat(64),
+    send: async () => ({ sent: false, skipped: true }),
+  })
 
   await assert.rejects(() => fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies), /unavailable/)
 })
@@ -244,11 +346,14 @@ test('allows one concurrent access-email delivery claim', async () => {
     releaseEmail = resolve
   })
   let sendCalls = 0
-  fake.dependencies.sendSupporterAccessEmail = async () => {
-    sendCalls += 1
-    await emailStarted
-    return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
-  }
+  fake.dependencies.prepareSupporterAccessEmail = () => ({
+    payloadDigest: 'a'.repeat(64),
+    send: async () => {
+      sendCalls += 1
+      await emailStarted
+      return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
+    },
+  })
 
   const first = fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies)
   await new Promise((resolve) => setImmediate(resolve))

@@ -8,8 +8,28 @@ export type ResendEmailConfig = {
 
 type FetchImplementation = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>
 
-export async function deliverEmail(
-  message: EmailMessage,
+export type ResendEmailPayload = {
+  from: string
+  to: string
+  reply_to?: string
+  subject: string
+  text: string
+  html: string
+}
+
+export function createResendEmailPayload(message: EmailMessage, config: ResendEmailConfig): ResendEmailPayload {
+  return {
+    from: config.from,
+    to: message.to,
+    reply_to: config.replyTo,
+    subject: message.subject,
+    text: message.text,
+    html: message.html,
+  }
+}
+
+export async function deliverResendEmailPayload(
+  payload: ResendEmailPayload,
   config: ResendEmailConfig,
   idempotencyKey: string | undefined,
   fetchImplementation: FetchImplementation = fetch,
@@ -25,14 +45,7 @@ export async function deliverEmail(
       'Content-Type': 'application/json',
       ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {}),
     },
-    body: JSON.stringify({
-      from: config.from,
-      to: message.to,
-      reply_to: config.replyTo,
-      subject: message.subject,
-      text: message.text,
-      html: message.html,
-    }),
+    body: JSON.stringify(payload),
   })
 
   if (!response.ok) {
@@ -48,4 +61,18 @@ export async function deliverEmail(
   if (!providerMessageId) throw new Error('Email delivery receipt is invalid')
 
   return { sent: true, skipped: false, providerMessageId }
+}
+
+export async function deliverEmail(
+  message: EmailMessage,
+  config: ResendEmailConfig,
+  idempotencyKey: string | undefined,
+  fetchImplementation: FetchImplementation = fetch,
+): Promise<EmailDeliveryResult> {
+  return deliverResendEmailPayload(
+    createResendEmailPayload(message, config),
+    config,
+    idempotencyKey,
+    fetchImplementation,
+  )
 }

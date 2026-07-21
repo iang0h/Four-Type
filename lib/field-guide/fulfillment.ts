@@ -29,16 +29,20 @@ export type FieldGuideFulfillmentDependencies = {
     | { status: 'in-progress' }
     | { status: 'sent' }
   >
-  recordEmailDeliveryProviderAttempt: (sessionId: string, claimId: string) => Promise<void>
+  recordEmailDeliveryProviderAttempt: (
+    sessionId: string,
+    claimId: string,
+    payloadDigest: string,
+  ) => Promise<'recorded' | 'matches' | 'payload-mismatch'>
   releaseEmailDeliveryClaim: (sessionId: string, claimId: string) => Promise<void>
   completeEmailDelivery: (sessionId: string, claimId: string, providerMessageId: string) => Promise<void>
   signAccessToken: (input: { sessionId: string; expiresAt: number }) => string
   createAccessUrl: (token: string) => string
-  sendSupporterAccessEmail: (
+  prepareSupporterAccessEmail: (
     entitlement: FieldGuideEntitlement,
     accessUrl: string,
     idempotencyKey: string,
-  ) => Promise<{ sent: boolean; skipped: boolean; providerMessageId?: string }>
+  ) => { payloadDigest: string; send: () => Promise<{ sent: boolean; skipped: boolean; providerMessageId?: string }> } | null
   now?: () => number
 }
 
@@ -171,12 +175,21 @@ export async function fulfillFieldGuideCheckout(
       expiresAt: deliveryClaim.accessTokenExpiresAt,
     })
     const accessUrl = dependencies.createAccessUrl(accessToken)
-    await dependencies.recordEmailDeliveryProviderAttempt(sessionId, deliveryClaim.claimId)
-    const delivery = await dependencies.sendSupporterAccessEmail(
+    const preparedDelivery = dependencies.prepareSupporterAccessEmail(
       entitlement,
       accessUrl,
       deliveryClaim.idempotencyKey,
     )
+    if (!preparedDelivery) throw new Error('Field Guide access email delivery is unavailable')
+    const providerAttempt = await dependencies.recordEmailDeliveryProviderAttempt(
+      sessionId,
+      deliveryClaim.claimId,
+      preparedDelivery.payloadDigest,
+    )
+    if (providerAttempt === 'payload-mismatch') {
+      throw new Error('Field Guide access email delivery is awaiting provider idempotency')
+    }
+    const delivery = await preparedDelivery.send()
     if (!delivery.sent || delivery.skipped || !delivery.providerMessageId) {
       throw new Error('Field Guide access email delivery is unavailable')
     }

@@ -37,6 +37,12 @@ test('round-trips an access token and rejects tampering at the expiry boundary',
   assert.equal(verifyAccessToken(token, secret, 2_000), null)
 })
 
+test('deterministically signs a persisted access attempt input', () => {
+  const input = { sessionId: 'cs_test_123', expiresAt: 2_000 }
+
+  assert.equal(signAccessToken(input, secret, 1_000), signAccessToken(input, secret, 1_000))
+})
+
 test('scopes a download token to one exact approved asset', () => {
   const token = signDownloadToken({ sessionId: 'cs_test_123', asset: 'pdf', expiresAt: 2_000 }, secret, 1_000)
 

@@ -1,8 +1,9 @@
 import 'server-only'
 
+import { createHash } from 'node:crypto'
 import { BLENDS } from './blends'
 import type { EmailDeliveryResult, EmailMessage } from './email-delivery'
-import { deliverEmail } from './email-transport'
+import { createResendEmailPayload, deliverEmail, deliverResendEmailPayload } from './email-transport'
 import type { LeadCapturePayload } from './google-sheets-leads'
 import { getProfileEmailPreview, getSharePrompts } from './result-virality'
 import { getSubtypeByBlendKey } from './subtypes'
@@ -12,6 +13,41 @@ function getEmailConfig() {
   const from = process.env.FOURTYPE_EMAIL_FROM
   const replyTo = process.env.FOURTYPE_EMAIL_REPLY_TO
   return apiKey && from ? { apiKey, from, replyTo } : null
+}
+
+export type PreparedEmailDelivery = {
+  payloadDigest: string
+  send: () => Promise<EmailDeliveryResult>
+}
+
+function getEmailPayloadDigest(message: EmailMessage, config: NonNullable<ReturnType<typeof getEmailConfig>>, idempotencyKey: string) {
+  const payload = createResendEmailPayload(message, config)
+  const payloadDigest = createHash('sha256')
+    .update(JSON.stringify({ idempotencyKey, payload }))
+    .digest('hex')
+  return { payload, payloadDigest }
+}
+
+export function prepareEmailDelivery(
+  message: EmailMessage,
+  failureLabel: string,
+  idempotencyKey: string,
+): PreparedEmailDelivery | null {
+  const config = getEmailConfig()
+  if (!config) return null
+  const { payload, payloadDigest } = getEmailPayloadDigest(message, config, idempotencyKey)
+
+  return {
+    payloadDigest,
+    send: async () => {
+      try {
+        return await deliverResendEmailPayload(payload, config, idempotencyKey)
+      } catch (error) {
+        const messageText = error instanceof Error ? error.message.replace(/^Email delivery failed: /, '') : 'unknown error'
+        throw new Error(`${failureLabel}: ${messageText}`)
+      }
+    },
+  }
 }
 
 export function isProfileEmailConfigured() {
