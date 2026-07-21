@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { createWebhookPostHandler, handleVerifiedEvent } from '../lib/field-guide/webhook'
+import { createConfiguredWebhookPostHandler, createWebhookPostHandler, handleVerifiedEvent } from '../lib/field-guide/webhook'
 
 test('rejects a missing or invalid Stripe signature without reading parsed JSON', async () => {
   const handler = createWebhookPostHandler({
@@ -73,6 +73,21 @@ test('returns a retryable 500 when entitlement storage fails', async () => {
     method: 'POST',
     headers: { 'stripe-signature': 'valid' },
     body: '{"id":"evt_test"}',
+  }))
+
+  assert.equal(response.status, 500)
+  assert.equal(await response.text(), '')
+})
+
+test('returns 500 for missing or invalid webhook server configuration before signature verification', async () => {
+  const handler = createConfiguredWebhookPostHandler(() => {
+    throw new Error('Stripe configuration is unavailable')
+  })
+
+  const response = await handler(new Request('http://localhost/api/field-guide/webhook', {
+    method: 'POST',
+    headers: { 'stripe-signature': 'invalid' },
+    body: '{}',
   }))
 
   assert.equal(response.status, 500)

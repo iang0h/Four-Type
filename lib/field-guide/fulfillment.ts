@@ -25,9 +25,20 @@ export type FieldGuideFulfillmentDependencies = {
   getConfiguredPriceId: (tier: SupporterTierKey, currency: CurrencyKey) => string
   readEntitlement: (sessionId: string) => Promise<FieldGuideEntitlement | null>
   writeEntitlement: (entitlement: FieldGuideEntitlement) => Promise<'fulfilled' | 'already-fulfilled'>
+  claimEmailDelivery: (sessionId: string) => Promise<
+    | { status: 'claimed'; claimId: string; idempotencyKey: string }
+    | { status: 'in-progress' }
+    | { status: 'sent' }
+  >
+  releaseEmailDeliveryClaim: (sessionId: string, claimId: string) => Promise<void>
+  completeEmailDelivery: (sessionId: string, claimId: string, providerMessageId: string) => Promise<void>
   signAccessToken: (input: { sessionId: string; expiresAt: number }) => string
   createAccessUrl: (token: string) => string
-  sendSupporterAccessEmail: (entitlement: FieldGuideEntitlement, accessUrl: string) => Promise<unknown>
+  sendSupporterAccessEmail: (
+    entitlement: FieldGuideEntitlement,
+    accessUrl: string,
+    idempotencyKey: string,
+  ) => Promise<{ sent: boolean; skipped: boolean; providerMessageId?: string }>
   now?: () => number
 }
 
@@ -100,6 +111,32 @@ function getPaidAt(session: FieldGuideCheckoutSession) {
   return new Date(session.created * 1_000).toISOString()
 }
 
+function createEntitlement(
+  sessionId: string,
+  session: FieldGuideCheckoutSession,
+  selection: { tier: SupporterTierKey; currency: CurrencyKey },
+  now: number,
+): FieldGuideEntitlement {
+  const paymentIntentId = getPaymentIntentId(session.payment_intent)
+  return {
+    version: 1,
+    sessionId,
+    ...(paymentIntentId ? { paymentIntentId } : {}),
+    tier: selection.tier,
+    currency: selection.currency,
+    releaseId: FIELD_GUIDE_RELEASE.id,
+    customerEmail: getCustomerEmail(session),
+    paidAt: getPaidAt(session),
+    fulfilledAt: new Date(now).toISOString(),
+  }
+}
+
+function accessTokenExpiry(entitlement: FieldGuideEntitlement) {
+  const fulfilledAt = Date.parse(entitlement.fulfilledAt)
+  if (!Number.isSafeInteger(fulfilledAt)) throw new Error('Entitlement fulfillment time is invalid')
+  return fulfilledAt + ACCESS_TOKEN_TTL_MS
+}
+
 export async function fulfillFieldGuideCheckout(
   sessionId: string,
   dependencies: FieldGuideFulfillmentDependencies,
@@ -112,35 +149,51 @@ export async function fulfillFieldGuideCheckout(
   if (session.payment_status !== 'paid') throw new Error('Checkout Session is not paid')
 
   const selection = getApprovedSelection(session, dependencies)
-  const existingEntitlement = await dependencies.readEntitlement(sessionId)
-  if (existingEntitlement) return { status: 'already-fulfilled' }
-
   const now = dependencies.now?.() ?? Date.now()
   if (!Number.isSafeInteger(now)) throw new Error('Fulfillment time is invalid')
 
-  const paymentIntentId = getPaymentIntentId(session.payment_intent)
-  const entitlement: FieldGuideEntitlement = {
-    version: 1,
-    sessionId,
-    ...(paymentIntentId ? { paymentIntentId } : {}),
-    tier: selection.tier,
-    currency: selection.currency,
-    releaseId: FIELD_GUIDE_RELEASE.id,
-    customerEmail: getCustomerEmail(session),
-    paidAt: getPaidAt(session),
-    fulfilledAt: new Date(now).toISOString(),
-  }
+  const existingEntitlement = await dependencies.readEntitlement(sessionId)
+  let entitlement = existingEntitlement ?? createEntitlement(sessionId, session, selection, now)
 
   const writeResult = await dependencies.writeEntitlement(entitlement)
-  if (writeResult === 'already-fulfilled') return { status: 'already-fulfilled' }
+  if (writeResult === 'already-fulfilled' && !existingEntitlement) {
+    const winningEntitlement = await dependencies.readEntitlement(sessionId)
+    if (!winningEntitlement) throw new Error('Existing entitlement is invalid')
+    entitlement = winningEntitlement
+  }
+
+  const deliveryClaim = await dependencies.claimEmailDelivery(sessionId)
+  if (deliveryClaim.status === 'sent') {
+    return { status: writeResult === 'fulfilled' ? 'fulfilled' : 'already-fulfilled' }
+  }
+  if (deliveryClaim.status === 'in-progress') {
+    throw new Error('Field Guide access email delivery is in progress')
+  }
 
   const accessToken = dependencies.signAccessToken({
     sessionId,
-    expiresAt: now + ACCESS_TOKEN_TTL_MS,
+    expiresAt: accessTokenExpiry(entitlement),
   })
-  await dependencies.sendSupporterAccessEmail(entitlement, dependencies.createAccessUrl(accessToken))
+  try {
+    const delivery = await dependencies.sendSupporterAccessEmail(
+      entitlement,
+      dependencies.createAccessUrl(accessToken),
+      deliveryClaim.idempotencyKey,
+    )
+    if (!delivery.sent || delivery.skipped || !delivery.providerMessageId) {
+      throw new Error('Field Guide access email delivery is unavailable')
+    }
+    await dependencies.completeEmailDelivery(sessionId, deliveryClaim.claimId, delivery.providerMessageId)
+  } catch (error) {
+    try {
+      await dependencies.releaseEmailDeliveryClaim(sessionId, deliveryClaim.claimId)
+    } catch {
+      // A failed release becomes recoverable once the bounded claim expires.
+    }
+    throw error
+  }
 
-  return { status: 'fulfilled' }
+  return { status: writeResult === 'fulfilled' ? 'fulfilled' : 'already-fulfilled' }
 }
 
 export { getConfiguredPriceId }

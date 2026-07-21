@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { appendLeadToGoogleSheet, isLeadCaptureConfigured, type LeadCapturePayload } from '@/lib/google-sheets-leads'
-import { sendProfileEmail } from '@/lib/email-delivery'
+import { sendProfileEmail } from '@/lib/email-delivery-server'
 
 export const runtime = 'nodejs'
 

@@ -1,6 +1,6 @@
 import { fulfillProductionFieldGuideCheckout } from '@/lib/field-guide/fulfillment-server'
 import { getStripe } from '@/lib/field-guide/stripe'
-import { createWebhookPostHandler } from '@/lib/field-guide/webhook'
+import { createConfiguredWebhookPostHandler } from '@/lib/field-guide/webhook'
 
 export const runtime = 'nodejs'
 
@@ -13,10 +13,14 @@ type StripeWebhookClient = {
   }
 }
 
-export const POST = createWebhookPostHandler({
-  webhookSecret: process.env.STRIPE_WEBHOOK_SECRET,
-  constructEvent: (rawBody, signature, secret) => (
-    (getStripe() as unknown as StripeWebhookClient).webhooks.constructEvent(rawBody, signature, secret)
-  ),
-  fulfill: fulfillProductionFieldGuideCheckout,
+export const POST = createConfiguredWebhookPostHandler(() => {
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+  if (!webhookSecret) throw new Error('Stripe webhook is not configured')
+  const stripe = getStripe() as unknown as StripeWebhookClient
+
+  return {
+    webhookSecret,
+    constructEvent: (rawBody, signature, secret) => stripe.webhooks.constructEvent(rawBody, signature, secret),
+    fulfill: fulfillProductionFieldGuideCheckout,
+  }
 })

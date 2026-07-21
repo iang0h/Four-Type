@@ -11,6 +11,8 @@ type WebhookHandlerOptions = {
   fulfill: FulfillCheckout
 }
 
+type WebhookConfiguration = () => WebhookHandlerOptions
+
 const fulfilledEventTypes = new Set([
   'checkout.session.completed',
   'checkout.session.async_payment_succeeded',
@@ -62,5 +64,19 @@ export function createWebhookPostHandler({ webhookSecret, constructEvent, fulfil
     } catch {
       return new Response(null, { status: 500 })
     }
+  }
+}
+
+export function createConfiguredWebhookPostHandler(configuration: WebhookConfiguration) {
+  return async function POST(request: Request) {
+    let handler: ReturnType<typeof createWebhookPostHandler>
+
+    try {
+      handler = createWebhookPostHandler(configuration())
+    } catch {
+      return new Response(null, { status: 500 })
+    }
+
+    return handler(request)
   }
 }

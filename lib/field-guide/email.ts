@@ -1,7 +1,5 @@
 import type { FieldGuideEntitlement } from './entitlements'
-import { sendEmail, type EmailMessage } from '../email-delivery'
-
-type EmailSender = (message: EmailMessage, failureLabel: string) => Promise<{ sent: boolean; skipped: boolean }>
+import type { EmailMessage } from '../email-delivery'
 
 function getTierLabel(tier: FieldGuideEntitlement['tier']) {
   return tier === 'founding' ? 'Founding Supporter' : 'Field Guide Supporter'
@@ -66,12 +64,4 @@ export function createSupporterAccessEmail(entitlement: FieldGuideEntitlement, a
     text,
     html,
   }
-}
-
-export async function sendSupporterAccessEmail(
-  entitlement: FieldGuideEntitlement,
-  accessUrl: string,
-  sender: EmailSender = sendEmail,
-) {
-  return sender(createSupporterAccessEmail(entitlement, accessUrl), 'Supporter access email failed')
 }

@@ -1,7 +1,8 @@
 import 'server-only'
 
 import { readEntitlement, writeEntitlement } from './entitlements'
-import { sendSupporterAccessEmail } from './email'
+import { claimEmailDelivery, completeEmailDelivery, releaseEmailDeliveryClaim } from './delivery'
+import { sendSupporterAccessEmail } from './email-server'
 import {
   fulfillFieldGuideCheckout,
   type FieldGuideCheckoutSession,
@@ -51,6 +52,11 @@ export function createFieldGuideFulfillmentDependencies(
     getConfiguredPriceId: (tier, currency) => getConfiguredPriceId(tier, currency, environment),
     readEntitlement: (sessionId) => readEntitlement(sessionId, vercelPrivateBlobStore),
     writeEntitlement: (entitlement) => writeEntitlement(entitlement, vercelPrivateBlobStore, emailIndexSecret),
+    claimEmailDelivery: (sessionId) => claimEmailDelivery(sessionId, vercelPrivateBlobStore),
+    releaseEmailDeliveryClaim: (sessionId, claimId) => releaseEmailDeliveryClaim(sessionId, claimId, vercelPrivateBlobStore),
+    completeEmailDelivery: (sessionId, claimId, providerMessageId) => (
+      completeEmailDelivery(sessionId, claimId, providerMessageId, vercelPrivateBlobStore)
+    ),
     signAccessToken: (input) => signAccessToken(input, accessTokenSecret),
     createAccessUrl: (token) => getAccessUrl(token, environment.NEXT_PUBLIC_SITE_URL),
     sendSupporterAccessEmail,

@@ -3,7 +3,13 @@ import test from 'node:test'
 import { fulfillFieldGuideCheckout, type FieldGuideFulfillmentDependencies } from '../lib/field-guide/fulfillment'
 import { createSupporterAccessEmail } from '../lib/field-guide/email'
 import { FIELD_GUIDE_RELEASE } from '../lib/field-guide/release'
-import type { FieldGuideEntitlement } from '../lib/field-guide/entitlements'
+import {
+  findEntitlementsByEmail,
+  readEntitlement,
+  writeEntitlement,
+  type FieldGuideEntitlement,
+} from '../lib/field-guide/entitlements'
+import type { PrivateBlobStore } from '../lib/field-guide/blob'
 
 const configuredPriceIds = {
   'field-guide:usd': 'price_test_field_guide_usd',
@@ -27,6 +33,7 @@ function fakeDependencies(overrides: SessionOverrides = {}) {
   const entitlements = new Map<string, FieldGuideEntitlement>()
   const emailCalls: Array<{ entitlement: FieldGuideEntitlement; accessUrl: string }> = []
   const writeCalls: FieldGuideEntitlement[] = []
+  let deliveryState: 'pending' | 'sending' | 'sent' = 'pending'
   const session = {
     id: 'cs_test_paid',
     payment_status: 'paid' as const,
@@ -57,13 +64,53 @@ function fakeDependencies(overrides: SessionOverrides = {}) {
     },
     signAccessToken: ({ sessionId, expiresAt }) => `access-${sessionId}-${expiresAt}`,
     createAccessUrl: (token) => `https://www.fourtype.com/field-guide/access?token=${encodeURIComponent(token)}`,
+    claimEmailDelivery: async () => {
+      if (deliveryState === 'sent') return { status: 'sent' as const }
+      if (deliveryState === 'sending') return { status: 'in-progress' as const }
+      deliveryState = 'sending'
+      return { status: 'claimed' as const, claimId: 'claim-1', idempotencyKey: 'field-guide/cs-hash' }
+    },
+    releaseEmailDeliveryClaim: async () => {
+      deliveryState = 'pending'
+    },
+    completeEmailDelivery: async () => {
+      deliveryState = 'sent'
+    },
     sendSupporterAccessEmail: async (entitlement, accessUrl) => {
       emailCalls.push({ entitlement, accessUrl })
+      return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
     },
     now: () => 1_784_673_600_000,
   }
 
   return { dependencies, emailCalls, writeCalls, session }
+}
+
+class FailOnceEmailIndexStore implements PrivateBlobStore {
+  private readonly records = new Map<string, { body: string; etag: string }>()
+  private sequence = 0
+  failNextEmailIndexWrite = true
+
+  async get(pathname: string) {
+    return this.records.get(pathname) ?? null
+  }
+
+  async put(pathname: string, body: string, options: Parameters<PrivateBlobStore['put']>[2]) {
+    if (pathname.includes('/by-email/') && this.failNextEmailIndexWrite) {
+      this.failNextEmailIndexWrite = false
+      throw new Error('Email index unavailable')
+    }
+    if (!options.allowOverwrite && this.records.has(pathname)) {
+      throw Object.assign(new Error('Blob already exists'), { code: 'already-exists' })
+    }
+    if (options.ifMatch && this.records.get(pathname)?.etag !== options.ifMatch) {
+      throw Object.assign(new Error('Blob precondition failed'), { code: 'precondition-failed' })
+    }
+
+    const etag = `etag-${++this.sequence}`
+    this.records.set(pathname, { body, etag })
+    return { etag }
+  }
 }
 
 test('fulfills one paid supported Session idempotently and sends one access email', async () => {
@@ -74,7 +121,7 @@ test('fulfills one paid supported Session idempotently and sends one access emai
 
   assert.deepEqual(first, { status: 'fulfilled' })
   assert.deepEqual(second, { status: 'already-fulfilled' })
-  assert.equal(fake.writeCalls.length, 1)
+  assert.equal(fake.writeCalls.length, 2)
   assert.equal(fake.emailCalls.length, 1)
   assert.equal(fake.emailCalls[0].entitlement.tier, 'founding')
   assert.match(fake.emailCalls[0].accessUrl, /^https:\/\/www\.fourtype\.com\/field-guide\/access\?token=/)
@@ -86,6 +133,68 @@ test('never fulfills an unpaid Session', async () => {
   await assert.rejects(() => fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies), /not paid/)
   assert.equal(fake.writeCalls.length, 0)
   assert.equal(fake.emailCalls.length, 0)
+})
+
+test('retries a failed access email with the same provider idempotency key', async () => {
+  const fake = fakeDependencies()
+  const idempotencyKeys: string[] = []
+  let attempts = 0
+  fake.dependencies.sendSupporterAccessEmail = async (_entitlement, _accessUrl, idempotencyKey) => {
+    idempotencyKeys.push(idempotencyKey)
+    attempts += 1
+    if (attempts === 1) throw new Error('Email transport unavailable')
+    return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
+  }
+
+  await assert.rejects(() => fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies), /transport unavailable/)
+  assert.deepEqual(await fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies), { status: 'already-fulfilled' })
+  assert.equal(attempts, 2)
+  assert.equal(idempotencyKeys[0], idempotencyKeys[1])
+})
+
+test('does not silently fulfill when email delivery is skipped', async () => {
+  const fake = fakeDependencies()
+  fake.dependencies.sendSupporterAccessEmail = async () => ({ sent: false, skipped: true })
+
+  await assert.rejects(() => fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies), /unavailable/)
+})
+
+test('allows one concurrent access-email delivery claim', async () => {
+  const fake = fakeDependencies()
+  let releaseEmail: (() => void) | undefined
+  const emailStarted = new Promise<void>((resolve) => {
+    releaseEmail = resolve
+  })
+  let sendCalls = 0
+  fake.dependencies.sendSupporterAccessEmail = async () => {
+    sendCalls += 1
+    await emailStarted
+    return { sent: true, skipped: false, providerMessageId: 'email_test_123' }
+  }
+
+  const first = fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies)
+  await new Promise((resolve) => setImmediate(resolve))
+  const second = fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies)
+
+  await assert.rejects(second, /in progress/)
+  releaseEmail?.()
+  await first
+  assert.equal(sendCalls, 1)
+})
+
+test('repairs a partial email index before retrying access delivery', async () => {
+  const store = new FailOnceEmailIndexStore()
+  const fake = fakeDependencies()
+  fake.dependencies.readEntitlement = (sessionId) => readEntitlement(sessionId, store)
+  fake.dependencies.writeEntitlement = (entitlement) => writeEntitlement(entitlement, store, 'email-index-secret')
+
+  await assert.rejects(() => fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies), /Email index unavailable/)
+  assert.deepEqual(await fulfillFieldGuideCheckout('cs_test_paid', fake.dependencies), { status: 'already-fulfilled' })
+  assert.equal(fake.emailCalls.length, 1)
+  assert.deepEqual(
+    (await findEntitlementsByEmail('supporter@example.com', store, 'email-index-secret')).map((entitlement) => entitlement.sessionId),
+    ['cs_test_paid'],
+  )
 })
 
 test('rejects a Session whose metadata, currency, release, or Price does not exactly match the configured offer', async () => {
