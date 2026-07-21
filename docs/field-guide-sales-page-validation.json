@@ -40,6 +40,10 @@
       "NEXT_PUBLIC_SITE_URL",
       "STRIPE_SECRET_KEY",
       "STRIPE_WEBHOOK_SECRET",
+      "STRIPE_FIELD_GUIDE_USD_PRICE_ID",
+      "STRIPE_FIELD_GUIDE_MYR_PRICE_ID",
+      "STRIPE_FOUNDING_SUPPORTER_USD_PRICE_ID",
+      "STRIPE_FOUNDING_SUPPORTER_MYR_PRICE_ID",
       "BLOB_READ_WRITE_TOKEN",
       "FOURTYPE_ACCESS_TOKEN_SECRET",
       "RESEND_API_KEY",
@@ -100,13 +104,13 @@
     {
       "command": "node scripts/field-guide/audit_public_assets.mjs",
       "exitCode": 1,
-      "result": "first documentation-inclusive audit rejected complete reward filenames in this validation file; filenames were removed"
+      "result": "first audit run rejected complete reward filename text in this JSON validation record; filenames were removed"
     },
     {
       "command": "node scripts/field-guide/audit_public_assets.mjs",
-      "execution": "after removing complete reward filenames from handoff documentation",
+      "execution": "after removing complete reward filenames from the JSON validation record",
       "exitCode": 0,
-      "result": "passed against production output and documentation"
+      "result": "passed across public and build output plus production text sources; Markdown is outside this audit's scan scope"
     },
     {
       "command": "git diff --check",

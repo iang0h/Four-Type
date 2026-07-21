@@ -50,7 +50,7 @@ Release ID: `field-guide-edition-1-20260721`.
 
 `upload_release.mjs --dry-run` re-read all three local reward files and verified these hashes with exit code 0. The real upload was not run because no approved Blob credential is available.
 
-Public output contains the cover, social artwork, and approved preview derivatives only. The final public-asset audit passed after the production build and scans public/build artifacts for complete reward files and credential-shaped content.
+Public output contains the cover, social artwork, and approved preview derivatives only. The final public-asset audit passed after the production build. It scans `public/` and static build output for complete reward files and credential-shaped content, server build output for credential-shaped content, and non-ignored production text sources including JSON; Markdown is outside that command's scan scope.
 
 ## Stripe Catalog And Configuration
 
