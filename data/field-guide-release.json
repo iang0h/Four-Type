@@ -1,27 +1,38 @@
 {
-  "id": "field-guide-edition-1-20260721",
-  "edition": "Edition 1",
   "assets": {
-    "pdf": {
-      "pathname": "field-guide/edition-1/FourType-Field-Guide.pdf",
-      "customerFilename": "FourType-Field-Guide.pdf",
-      "mimeType": "application/pdf",
-      "sha256": "18aa32b98edd6c2e53d510d3aa660811177f0a63b62a0d7c370340649e974617",
-      "tiers": ["field-guide", "founding"]
-    },
     "epub": {
-      "pathname": "field-guide/edition-1/FourType-Field-Guide.epub",
+      "bytes": 12397208,
       "customerFilename": "FourType-Field-Guide.epub",
       "mimeType": "application/epub+zip",
+      "pathname": "field-guide/edition-1/FourType-Field-Guide.epub",
       "sha256": "f1b3ecdf1ba442f02c6ba37018de4748205584ec3d3659cc60dcf534d924b850",
-      "tiers": ["field-guide", "founding"]
+      "tiers": [
+        "field-guide",
+        "founding"
+      ]
+    },
+    "pdf": {
+      "bytes": 1032963,
+      "customerFilename": "FourType-Field-Guide.pdf",
+      "mimeType": "application/pdf",
+      "pathname": "field-guide/edition-1/FourType-Field-Guide.pdf",
+      "sha256": "18aa32b98edd6c2e53d510d3aa660811177f0a63b62a0d7c370340649e974617",
+      "tiers": [
+        "field-guide",
+        "founding"
+      ]
     },
     "worksheets": {
-      "pathname": "field-guide/edition-1/FourType-Field-Guide-Worksheets.pdf",
+      "bytes": 55439,
       "customerFilename": "FourType-Field-Guide-Worksheets.pdf",
       "mimeType": "application/pdf",
+      "pathname": "field-guide/edition-1/FourType-Field-Guide-Worksheets.pdf",
       "sha256": "153a9683e15687ba53c97ba59e2c5446d5e7a18dfe2666f94c382db64e1b3d6f",
-      "tiers": ["founding"]
+      "tiers": [
+        "founding"
+      ]
     }
-  }
+  },
+  "edition": "Edition 1",
+  "id": "field-guide-edition-1-20260721"
 }

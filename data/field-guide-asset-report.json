@@ -1,0 +1,117 @@
+{
+  "failures": [],
+  "privateAssets": [
+    {
+      "bytes": 12397208,
+      "key": "epub",
+      "path": "private/field-guide/edition-1/FourType-Field-Guide.epub",
+      "sha256": "f1b3ecdf1ba442f02c6ba37018de4748205584ec3d3659cc60dcf534d924b850",
+      "visibility": "private"
+    },
+    {
+      "bytes": 1032963,
+      "key": "pdf",
+      "path": "private/field-guide/edition-1/FourType-Field-Guide.pdf",
+      "sha256": "18aa32b98edd6c2e53d510d3aa660811177f0a63b62a0d7c370340649e974617",
+      "visibility": "private"
+    },
+    {
+      "bytes": 55439,
+      "key": "worksheets",
+      "path": "private/field-guide/edition-1/FourType-Field-Guide-Worksheets.pdf",
+      "sha256": "153a9683e15687ba53c97ba59e2c5446d5e7a18dfe2666f94c382db64e1b3d6f",
+      "visibility": "private"
+    }
+  ],
+  "publicAssets": [
+    {
+      "bytes": 102108,
+      "key": "cover",
+      "path": "public/images/field-guide/cover.webp",
+      "sha256": "16ac1e81883ce281a282875f76e293368b6ffe4ed6c79748fc91c17ff54bae73",
+      "visibility": "public"
+    },
+    {
+      "bytes": 102108,
+      "key": "preview-01",
+      "path": "public/images/field-guide/preview-01.webp",
+      "sha256": "16ac1e81883ce281a282875f76e293368b6ffe4ed6c79748fc91c17ff54bae73",
+      "visibility": "public"
+    },
+    {
+      "bytes": 93162,
+      "key": "preview-09",
+      "path": "public/images/field-guide/preview-09.webp",
+      "sha256": "46e2a5371211ac3a5e84c7569bc485bc43b8de12e1694cde8612e67c41e8b568",
+      "visibility": "public"
+    },
+    {
+      "bytes": 65536,
+      "key": "preview-10",
+      "path": "public/images/field-guide/preview-10.webp",
+      "sha256": "4d755e54bfebf0ad9216a3acc81f62bf515d50467a73fbf5c87679c7534ae489",
+      "visibility": "public"
+    },
+    {
+      "bytes": 81418,
+      "key": "preview-25",
+      "path": "public/images/field-guide/preview-25.webp",
+      "sha256": "636c0ce67c3d74b19146ca9f7c0d67c30a90df18ebedc61cc12bb7c2f56aad22",
+      "visibility": "public"
+    },
+    {
+      "bytes": 171522,
+      "key": "preview-77",
+      "path": "public/images/field-guide/preview-77.webp",
+      "sha256": "ea7b9a8df9a31a6534ae0beeb3355e48007060775343b53a598629a50b2ca1e5",
+      "visibility": "public"
+    },
+    {
+      "bytes": 111802,
+      "key": "preview-109",
+      "path": "public/images/field-guide/preview-109.webp",
+      "sha256": "a9af13bfa3583bc1b6fe40b468a58d8e74bf3474debee251f3c535337c7c817b",
+      "visibility": "public"
+    },
+    {
+      "bytes": 43342,
+      "key": "preview-131",
+      "path": "public/images/field-guide/preview-131.webp",
+      "sha256": "c32654006931d7164428a0faa31b78f188541aee3812aa6af5a5871e8cf772e2",
+      "visibility": "public"
+    },
+    {
+      "bytes": 68414,
+      "key": "preview-142",
+      "path": "public/images/field-guide/preview-142.webp",
+      "sha256": "abfc6f0cebc7ad3efbf8cc6c552dcbbeab5ac5ebaaede594f88000ed3c595374",
+      "visibility": "public"
+    },
+    {
+      "bytes": 64392,
+      "key": "social",
+      "path": "public/images/field-guide/field-guide-social.jpg",
+      "sha256": "daf9921ecc268d33ce38d70c291a0832dc615ab27b8102a30189a243acf4ae13",
+      "visibility": "public"
+    }
+  ],
+  "releaseId": "field-guide-edition-1-20260721",
+  "source": {
+    "epub": {
+      "bytes": 12397208,
+      "sha256": "f1b3ecdf1ba442f02c6ba37018de4748205584ec3d3659cc60dcf534d924b850"
+    },
+    "pdf": {
+      "bytes": 1032963,
+      "sha256": "18aa32b98edd6c2e53d510d3aa660811177f0a63b62a0d7c370340649e974617"
+    }
+  },
+  "validation": {
+    "epubXmlEntriesParsed": 147,
+    "pdfPageCount": 144,
+    "pdfPageSizePoints": [
+      504,
+      720
+    ]
+  }
+}
