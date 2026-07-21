@@ -5,7 +5,8 @@ import {
   assertTestStripeKey,
   createFieldGuideCheckout,
   getConfiguredPriceId,
-} from '../lib/field-guide/stripe'
+} from '../lib/field-guide/checkout'
+import { createCheckoutPostHandler } from '../lib/field-guide/checkout-route'
 
 const configuredPriceIds = {
   STRIPE_FIELD_GUIDE_USD_PRICE_ID: 'price_test_field_guide_usd',
@@ -86,4 +87,89 @@ test('keeps the catalog script from accepting a live Stripe key', () => {
 
   assert.match(script, /startsWith\('sk_test_'\)/)
   assert.doesNotMatch(script, /sk_live_/)
+})
+
+test('marks the Stripe client module as server-only', () => {
+  const stripeModule = readFileSync('lib/field-guide/stripe.ts', 'utf8')
+
+  assert.match(stripeModule, /import 'server-only'/)
+})
+
+test('resolves each catalog product once before sequential price processing', () => {
+  const script = readFileSync('scripts/field-guide/create_stripe_test_catalog.mjs', 'utf8')
+
+  assert.match(script, /const productsByTier = new Map\(\)/)
+  assert.match(script, /await getOrCreateProduct\(tier\)/)
+  assert.doesNotMatch(script, /Promise\.all\(prices\.map/)
+})
+
+function createRequest(body: string) {
+  return new Request('https://attacker.example/api/field-guide/checkout', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body,
+  })
+}
+
+function createTestHandler(siteUrl: string | undefined, origins: string[] = []) {
+  return createCheckoutPostHandler({
+    siteUrl,
+    createCheckout: async (_selection, origin) => {
+      origins.push(origin)
+      return { url: 'https://checkout.stripe.test/session' }
+    },
+  })
+}
+
+test('returns a bodyless 400 for malformed JSON', async () => {
+  const response = await createTestHandler('https://www.fourtype.com')(createRequest('{'))
+
+  assert.equal(response.status, 400)
+  assert.equal(await response.text(), '')
+})
+
+test('returns a bodyless 400 for unsupported selections', async () => {
+  const response = await createTestHandler('https://www.fourtype.com')(
+    createRequest(JSON.stringify({ tier: 'field-guide', currency: 'eur', amount: 1 })),
+  )
+
+  assert.equal(response.status, 400)
+  assert.equal(await response.text(), '')
+})
+
+test('returns a bodyless 503 when the canonical site URL is missing or invalid', async () => {
+  for (const siteUrl of [undefined, 'http://www.fourtype.com', 'https://www.fourtype.com/path']) {
+    const response = await createTestHandler(siteUrl)(
+      createRequest(JSON.stringify({ tier: 'field-guide', currency: 'usd' })),
+    )
+
+    assert.equal(response.status, 503)
+    assert.equal(await response.text(), '')
+  }
+})
+
+test('uses the configured HTTPS canonical origin instead of an attacker-controlled request URL', async () => {
+  const origins: string[] = []
+  const response = await createTestHandler('https://www.fourtype.com/', origins)(
+    createRequest(JSON.stringify({ tier: 'founding', currency: 'myr' })),
+  )
+
+  assert.equal(response.status, 200)
+  assert.deepEqual(await response.json(), { url: 'https://checkout.stripe.test/session' })
+  assert.deepEqual(origins, ['https://www.fourtype.com'])
+})
+
+test('allows an explicitly configured localhost canonical origin in test', async () => {
+  for (const [siteUrl, expectedOrigin] of [
+    ['http://localhost:3000', 'http://localhost:3000'],
+    ['http://127.0.0.1:3000', 'http://127.0.0.1:3000'],
+  ]) {
+    const origins: string[] = []
+    const response = await createTestHandler(siteUrl, origins)(
+      createRequest(JSON.stringify({ tier: 'field-guide', currency: 'usd' })),
+    )
+
+    assert.equal(response.status, 200)
+    assert.deepEqual(origins, [expectedOrigin])
+  }
 })

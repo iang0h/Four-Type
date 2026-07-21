@@ -35,8 +35,7 @@ async function getOrCreateProduct(tier) {
   return stripe.products.create(product)
 }
 
-async function getOrCreatePrice(environmentName, lookupKey, currency, unitAmount, tier) {
-  const product = await getOrCreateProduct(tier)
+async function getOrCreatePrice(environmentName, lookupKey, currency, unitAmount, product) {
   const existing = await stripe.prices.list({ lookup_keys: [lookupKey], active: true, limit: 1 })
   const price = existing.data[0]
 
@@ -58,7 +57,25 @@ async function getOrCreatePrice(environmentName, lookupKey, currency, unitAmount
   return [environmentName, created.id]
 }
 
-const assignments = await Promise.all(prices.map((price) => getOrCreatePrice(...price)))
+const productsByTier = new Map()
+
+for (const tier of Object.keys(products)) {
+  productsByTier.set(tier, await getOrCreateProduct(tier))
+}
+
+const assignments = []
+
+for (const [environmentName, lookupKey, currency, unitAmount, tier] of prices) {
+  assignments.push(
+    await getOrCreatePrice(
+      environmentName,
+      lookupKey,
+      currency,
+      unitAmount,
+      productsByTier.get(tier),
+    ),
+  )
+}
 
 for (const [environmentName, priceId] of assignments) {
   console.log(`${environmentName}=${priceId}`)

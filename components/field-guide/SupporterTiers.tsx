@@ -29,7 +29,7 @@ export default function SupporterTiers() {
 
   return (
     <>
-      <div className="field-guide-currency-selector" aria-label="Choose checkout currency">
+      <div className="field-guide-currency-selector" role="group" aria-label="Choose checkout currency">
         <span>Currency</span>
         <button type="button" aria-pressed={currency === 'usd'} onClick={() => selectCurrency('usd')}>USD</button>
         <button type="button" aria-pressed={currency === 'myr'} onClick={() => selectCurrency('myr')}>MYR</button>

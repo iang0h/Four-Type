@@ -39,3 +39,41 @@
 
 - `pnpm lint` remains unavailable because the repository has no ESLint executable/configuration; scope was not broadened to add one.
 - Next.js warns that the parent workspace lockfile is inferred as the Turbopack root. The production build still completed successfully.
+
+## Review Remediation Evidence
+
+### RED / GREEN
+
+- RED: focused checkout tests failed because the extracted pure checkout and route helpers did not yet exist, and the supporter currency controls did not expose an explicit accessible group.
+- GREEN: `pnpm exec tsx --test tests/field-guide-checkout.test.ts tests/field-guide-content.test.ts` passed all 14 focused tests.
+- GREEN: `pnpm test` passed all 37 tests; `pnpm exec tsc --noEmit` passed with no diagnostics.
+- GREEN: `pnpm build` completed successfully. The first build encountered an ignored Finder-created `.next/server/.DS_Store` cleanup conflict; moving only that generated `.next` directory aside and rebuilding succeeded.
+
+### Dependency Changes
+
+- Added `server-only` `0.0.1` to make the required production `import 'server-only'` boundary resolvable. Stripe remains pinned at `22.3.2`.
+
+### Security Checks
+
+- `lib/field-guide/stripe.ts` now begins with `import 'server-only'`; Stripe construction and secret-key validation remain in that server-only module.
+- Checkout construction is pure and dependency-injected for tests. The production wrapper still obtains Stripe only through the guarded module and rejects non-`sk_test_` keys.
+- The route no longer reads `request.url`, `Host`, or request origin to form redirects. It uses only `NEXT_PUBLIC_SITE_URL`, validates URL, host, credentials, path, query, hash, and protocol, requires HTTPS for non-local hosts, and permits HTTP only for `localhost` or `127.0.0.1`.
+- Missing or invalid canonical configuration produces a bodyless `503`; malformed JSON and unsupported tier/currency produce a bodyless `400`.
+- The handler returns only `{ url }` on success. Browser selection remains tier/currency-only; no amount or Price ID is accepted from the browser.
+- The catalog resolves each tier's product once, caches it before its two prices, and processes the approved prices in fixed sequence.
+
+### Route and Browser Smoke
+
+- Local development server: `NEXT_PUBLIC_SITE_URL=http://localhost:3010 pnpm dev --port 3010`.
+- Route smoke: malformed JSON returned `400` with 0 body bytes; unsupported selection returned `400` with 0 body bytes; a valid selection sent with `Host: attacker.example` returned bodyless `503` because no Stripe key was configured, without using that host as a redirect origin.
+- Browser smoke: Field Guide rendered one accessible `Choose checkout currency` group; MYR selected uniquely, updated pressed state, and remained selected after reload.
+- Catalog guard: `STRIPE_SECRET_KEY=sk_live_placeholder node scripts/field-guide/create_stripe_test_catalog.mjs` exited 1 with the test-mode-key refusal before any network operation.
+
+### External Credential Status
+
+- No valid Stripe test key was available. No Stripe network request, external object creation, customer, Checkout Session, charge, deployment, or publication occurred.
+
+### Self-Review
+
+- Reviewed the checkout diff for request-controlled origin use, client-controlled amount/Price ID, logging, metadata drift, and response shape. None found.
+- `git diff --check` completed without whitespace errors.

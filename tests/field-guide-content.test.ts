@@ -27,6 +27,8 @@ test('renders active supporter controls with explicit session-persisted currency
   assert.match(component, /sessionStorage/)
   assert.match(component, /USD/)
   assert.match(component, /MYR/)
+  assert.match(component, /role="group"/)
+  assert.match(component, /aria-label="Choose checkout currency"/)
   assert.match(component, /Support and receive the guide/)
   assert.match(component, /Become a Founding Supporter/)
   assert.doesNotMatch(component, /disabled aria-disabled="true"/)
