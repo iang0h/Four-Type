@@ -32,6 +32,7 @@ const footerLinks = {
   ],
   resources: [
     { href: '/quiz', label: 'Take the Quiz' },
+    { href: '/field-guide', label: 'Field Guide' },
     { href: '/blog', label: 'Blog' },
     { href: '/faq', label: 'FAQ' },
     { href: '/about', label: 'About FourType' },

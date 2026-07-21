@@ -97,6 +97,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       alternates: alternatesFor('/quiz'),
     },
     {
+      url: `${baseUrl}/field-guide`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/what-is-temperament-test`,
       lastModified: new Date(),
       changeFrequency: 'monthly',

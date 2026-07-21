@@ -41,6 +41,7 @@ const navLinks = [
       { href: '/blog/subtypes', label: '16 FourTypes' },
     ],
   },
+  { href: '/field-guide', label: 'Field Guide' },
   { href: '/blog', label: 'Blog' },
   { href: '/faq', label: 'FAQ' },
 ]
