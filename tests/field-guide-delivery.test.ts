@@ -122,6 +122,26 @@ test('retains an ambiguous provider attempt for 24 hours from its first provider
   if (ambiguousRetry.status !== 'claimed') throw new Error('Expected a retained email delivery claim')
   assert.equal(ambiguousRetry.idempotencyKey, first.idempotencyKey)
   assert.equal(ambiguousRetry.accessTokenExpiresAt, first.accessTokenExpiresAt)
+  assert.equal(
+    await recordEmailDeliveryProviderAttempt(
+      'cs_test_paid',
+      ambiguousRetry.claimId,
+      PAYLOAD_DIGEST_A,
+      store,
+      ambiguousRetryAt,
+    ),
+    'matches',
+  )
+  assert.equal(
+    await recordEmailDeliveryProviderAttempt(
+      'cs_test_paid',
+      ambiguousRetry.claimId,
+      PAYLOAD_DIGEST_B,
+      store,
+      ambiguousRetryAt,
+    ),
+    'payload-mismatch',
+  )
 
   await releaseEmailDeliveryClaim('cs_test_paid', ambiguousRetry.claimId, store)
   const windowEnd = await claimEmailDelivery('cs_test_paid', store, firstProviderAttemptAt + 24 * 60 * 60 * 1_000)

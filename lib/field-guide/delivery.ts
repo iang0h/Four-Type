@@ -129,6 +129,7 @@ export async function claimEmailDelivery(
       && remainingLifetime >= EMAIL_DELIVERY_REUSE_MIN_REMAINING_MS
       && remainingLifetime <= FIELD_GUIDE_ACCESS_TOKEN_MAX_AGE_MS
     const firstProviderAttemptAt = current?.value.firstProviderAttemptAt
+    const firstProviderPayloadDigest = current?.value.firstProviderPayloadDigest
     const reuseForProviderAmbiguity = typeof existingAttempt === 'number'
       && typeof firstProviderAttemptAt === 'number'
       && Number.isSafeInteger(firstProviderAttemptAt + EMAIL_DELIVERY_PROVIDER_IDEMPOTENCY_WINDOW_MS)
@@ -150,6 +151,9 @@ export async function claimEmailDelivery(
         accessTokenExpiresAt,
         ...(reuseAttempt && firstProviderAttemptAt !== undefined
           ? { firstProviderAttemptAt }
+          : {}),
+        ...(reuseAttempt && firstProviderPayloadDigest !== undefined
+          ? { firstProviderPayloadDigest }
           : {}),
         claimId,
         claimedAt: now,
