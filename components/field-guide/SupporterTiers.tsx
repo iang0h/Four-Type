@@ -32,7 +32,6 @@ export default function SupporterTiers() {
           >
             Get the Field Guide
           </CheckoutButton>
-          <p className="field-guide-tier-fine">Have a gift code? Enter it securely in Stripe Checkout.</p>
         </article>
     </div>
   )
