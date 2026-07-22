@@ -185,22 +185,25 @@
 }
 
 .field-guide-book-stage {
-  min-height: 510px;
+  min-height: 500px;
   display: grid;
   position: relative;
   place-items: center;
+  grid-template-rows: minmax(0, 1fr) auto;
+  padding: 12px 0 8px;
   perspective: 1100px;
 }
 
 .interactive-book {
-  width: min(352px, 72vw);
+  width: min(330px, 70vw);
   border: 0;
   padding: 0;
   position: relative;
   cursor: pointer;
   background: transparent;
   isolation: isolate;
-  transform: rotateX(var(--book-rotate-x, 3deg)) rotateY(var(--book-rotate-y, -10deg)) rotateZ(-1deg);
+  grid-row: 1;
+  transform: rotateX(var(--book-rotate-x, 3deg)) rotateY(var(--book-rotate-y, -15deg)) rotateZ(-1deg);
   transform-style: preserve-3d;
   transition: transform 180ms ease;
 }
@@ -210,60 +213,62 @@
   height: auto;
   display: block;
   position: relative;
-  z-index: 4;
-  transform: translateZ(17px);
+  z-index: 3;
+  border: 1px solid rgba(237, 225, 205, 0.18);
+  transform: translateZ(12px);
   transform-origin: left center;
-  box-shadow: 0 3px 0 rgba(255, 255, 255, 0.28), 18px 28px 42px rgba(0, 0, 0, 0.62);
+  box-shadow: 12px 22px 34px rgba(0, 0, 0, 0.58);
 }
 
 .field-guide-book-back {
   position: absolute;
   z-index: 1;
-  inset: 9px -18px -13px -13px;
-  background: linear-gradient(135deg, #e9dfcc, #b7ac9a);
-  box-shadow: 24px 34px 48px rgba(0, 0, 0, 0.52);
-  transform: translateZ(-14px);
+  inset: 7px -10px -7px -7px;
+  border: 1px solid #5b6373;
+  background: #121928;
+  box-shadow: 18px 24px 39px rgba(0, 0, 0, 0.5);
+  transform: translateZ(-8px);
 }
 
 .field-guide-book-spine {
-  width: 24px;
+  width: 18px;
   position: absolute;
-  z-index: 3;
-  top: 3px;
-  bottom: 0;
-  left: -19px;
+  z-index: 2;
+  top: 5px;
+  bottom: 3px;
+  left: -13px;
   background:
-    linear-gradient(90deg, #a89d8d 0 17%, #d9cfbf 18% 80%, #9c9283 81%),
-    repeating-linear-gradient(0deg, transparent 0 14px, rgba(75, 65, 52, 0.15) 14px 15px);
-  box-shadow: inset -2px 0 rgba(69, 60, 50, 0.25), -5px 8px 12px rgba(0, 0, 0, 0.32);
-  transform: rotateY(-62deg) translateZ(7px);
+    linear-gradient(90deg, #050814, #20293c 52%, #08101d),
+    repeating-linear-gradient(0deg, transparent 0 17px, rgba(217, 174, 71, 0.24) 17px 18px);
+  box-shadow: inset -1px 0 rgba(236, 210, 141, 0.38), -4px 7px 11px rgba(0, 0, 0, 0.34);
+  transform: rotateY(-72deg) translateZ(4px);
   transform-origin: right center;
 }
 
 .field-guide-book-pages {
-  width: 25px;
-  height: calc(100% - 4px);
+  width: 16px;
+  height: calc(100% - 10px);
   position: absolute;
   z-index: 2;
-  top: 3px;
-  right: -23px;
+  top: 5px;
+  right: -14px;
   border-left: 1px solid #978c7d;
   border-right: 1px solid #857b6e;
   background:
     linear-gradient(90deg, rgba(102, 92, 80, 0.28), transparent 26%, transparent 73%, rgba(92, 82, 72, 0.28)),
     repeating-linear-gradient(0deg, #f0e7d7 0 3px, #c8bdac 3px 4px);
-  box-shadow: 5px 4px 7px rgba(0, 0, 0, 0.25);
-  transform: rotateY(72deg) translateZ(-3px);
+  box-shadow: 4px 4px 7px rgba(0, 0, 0, 0.23);
+  transform: rotateY(78deg) translateZ(-2px);
   transform-origin: left center;
 }
 
-.interactive-book:active { transform: rotateX(0deg) rotateY(-4deg) rotateZ(-1deg) translateY(2px); }
+.interactive-book:active { transform: rotateX(0deg) rotateY(-6deg) rotateZ(-1deg) translateY(2px); }
 
 .field-guide-book-shadow {
-  width: 340px;
-  height: 54px;
+  width: 300px;
+  height: 42px;
   position: absolute;
-  top: 82%;
+  top: 78%;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.66);
   filter: blur(16px);
@@ -271,9 +276,11 @@
 
 .field-guide-book-caption {
   min-height: 38px;
-  position: absolute;
-  right: 2px;
-  bottom: 20px;
+  position: relative;
+  right: auto;
+  bottom: auto;
+  grid-row: 2;
+  justify-self: center;
   z-index: 3;
   display: inline-flex;
   align-items: center;
@@ -286,6 +293,7 @@
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
+  margin-top: 16px;
 }
 
 .field-guide-mission,
@@ -419,19 +427,6 @@
 .field-guide-reason-statement { border-left: 3px solid var(--fg-gold); padding-left: 22px; }
 .field-guide-reason .field-guide-prose { color: #cac1b3; }
 
-.field-guide-section-character {
-  display: block;
-  width: min(100%, 238px);
-  height: auto;
-  object-fit: contain;
-  pointer-events: none;
-  user-select: none;
-}
-
-.field-guide-section-character-commander {
-  margin: 28px 0 -45px auto;
-  filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.34));
-}
 
 .field-guide-inside-grid { align-items: end; }
 .field-guide-contents-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0; margin: 0; padding: 0; counter-reset: contents; list-style: none; }
@@ -475,8 +470,6 @@
 .field-guide-sr-only { width: 1px; height: 1px; position: absolute; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
 
 .field-guide-use { padding: 104px 0; background: #8f2b25; color: #fff6e9; }
-.field-guide-use-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, 0.34fr); gap: 44px; align-items: end; }
-.field-guide-section-character-bard { width: min(100%, 250px); justify-self: end; margin: 0 auto -28px; filter: drop-shadow(0 17px 14px rgba(51, 14, 12, 0.28)); }
 .field-guide-use .field-guide-eyebrow { color: #ffd47d; }
 .field-guide-use h2 { max-width: 620px; }
 .field-guide-moments { margin: 54px 0 0; padding: 0; border-top: 1px solid rgba(255, 245, 228, 0.43); list-style: none; }
@@ -490,7 +483,6 @@
 .field-guide-tools-list article { border-bottom: 1px solid #829397; padding: 17px 0; }
 .field-guide-tools-list h3 { margin-bottom: 6px; color: #243a3d; font-size: 1.02rem; }
 .field-guide-tools-list p { margin: 0; color: #4d5f61; font-size: 0.95rem; line-height: 1.55; }
-.field-guide-section-character-strategist { grid-column: 1 / -1; width: min(100%, 215px); justify-self: center; margin: -15px 0 -104px; filter: drop-shadow(0 15px 12px rgba(28, 52, 60, 0.25)); }
 
 .field-guide-goal {
   padding: 104px 0;
@@ -671,8 +663,6 @@
 .field-guide-purchase-assurances svg { color: #e5b63d; }
 
 .field-guide-fulfillment { padding: 100px 0; background: #171717; }
-.field-guide-fulfillment .field-guide-shell { position: relative; }
-.field-guide-section-character-guardian { width: min(100%, 184px); position: absolute; right: -12px; bottom: -35px; filter: drop-shadow(0 15px 14px rgba(0, 0, 0, 0.35)); }
 .field-guide-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 48px 0 0; padding: 0; border-top: 1px solid #6d5b2f; border-left: 1px solid #6d5b2f; list-style: none; }
 .field-guide-steps-three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .field-guide-steps li { min-height: 215px; border-right: 1px solid #6d5b2f; border-bottom: 1px solid #6d5b2f; padding: 21px; }
@@ -747,7 +737,6 @@
   .field-guide-mission-notes p:nth-child(3) { padding-left: 0; }
   .field-guide-preview-thumbnails { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
   .field-guide-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .field-guide-use-grid { grid-template-columns: minmax(0, 1fr) minmax(145px, 0.34fr); gap: 24px; }
 }
 
 @media (max-width: 680px) {
@@ -778,10 +767,6 @@
   .field-guide-tools-grid,
   .field-guide-faq-grid { grid-template-columns: 1fr; gap: 29px; }
   .field-guide-use-grid { grid-template-columns: 1fr; gap: 12px; }
-  .field-guide-section-character-commander { width: 170px; margin: 20px 0 -38px auto; }
-  .field-guide-section-character-bard { width: 165px; margin: -16px 0 -24px auto; }
-  .field-guide-section-character-strategist { width: 150px; margin: -8px auto -72px; }
-  .field-guide-section-character-guardian { width: 122px; right: 0; bottom: -26px; }
   .field-guide-mission-notes { grid-template-columns: 1fr; margin-top: 42px; }
   .field-guide-mission-notes p,
   .field-guide-mission-notes p + p,

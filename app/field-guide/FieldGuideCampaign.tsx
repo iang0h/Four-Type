@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { ArrowDown, ArrowRight, BookOpen, Check, ChevronRight, KeyRound, Sparkles } from 'lucide-react'
 import Footer from '@/components/Footer'
 import Navigation from '@/components/Navigation'
@@ -134,13 +133,6 @@ export default function FieldGuideCampaign() {
               <div className="field-guide-reason-statement">
                 <SectionEyebrow>Why this guide exists</SectionEyebrow>
                 <h2 id="reason-title">A useful pattern can still crowd out the room.</h2>
-                <Image
-                  className="field-guide-section-character field-guide-section-character-commander"
-                  src="/images/characters/commander.png"
-                  alt="Mara, the Commander character, considering the next move"
-                  width={580}
-                  height={580}
-                />
               </div>
               <div className="field-guide-prose">
                 <p>A stalled meeting may need Choleric direction. It may also need Sanguine possibility, Melancholic evidence or Phlegmatic steadiness.</p>
@@ -150,7 +142,7 @@ export default function FieldGuideCampaign() {
           </section>
 
           <section className="field-guide-use" aria-labelledby="use-title">
-            <div className="field-guide-shell field-guide-use-grid">
+            <div className="field-guide-shell">
               <div>
                 <SectionEyebrow>Keep it close when</SectionEyebrow>
                 <h2 id="use-title">The room needs more than a quick label.</h2>
@@ -162,13 +154,6 @@ export default function FieldGuideCampaign() {
                   <li><span>05</span>You want to replay an interaction more fairly.</li>
                 </ol>
               </div>
-              <Image
-                className="field-guide-section-character field-guide-section-character-bard"
-                src="/images/characters/bard.png"
-                alt="Noor, the Bard character, inviting possibility into a conversation"
-                width={580}
-                height={580}
-              />
             </div>
           </section>
 
@@ -186,13 +171,6 @@ export default function FieldGuideCampaign() {
                 <article><h3>Stress sequences</h3><p>Recognise what becomes louder under pressure and what helps another attention enter.</p></article>
                 <article><h3>Five-minute replay</h3><p>Revisit one exchange, track what helped and what disappeared, then prepare a better next move.</p></article>
               </div>
-              <Image
-                className="field-guide-section-character field-guide-section-character-strategist"
-                src="/images/characters/strategist.png"
-                alt="Tomas, the Strategist character, examining what the situation needs"
-                width={580}
-                height={580}
-              />
             </div>
           </section>
 
@@ -205,13 +183,6 @@ export default function FieldGuideCampaign() {
                 <li><span>02</span><strong>Pay securely through Stripe.</strong><p>Your payment details are handled by Stripe, not stored by FourType.</p></li>
                 <li><span>03</span><strong>Download immediately.</strong><p>Open your private access page for the PDF, EPUB and any included worksheets.</p></li>
               </ol>
-              <Image
-                className="field-guide-section-character field-guide-section-character-guardian"
-                src="/images/characters/guardian.png"
-                alt="Eli, the Guardian character, holding space for a steady next step"
-                width={580}
-                height={580}
-              />
             </div>
           </section>
 

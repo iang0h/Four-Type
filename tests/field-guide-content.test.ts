@@ -59,12 +59,9 @@ test('renders one USD-only founding digital supporter purchase control', () => {
   assert.doesNotMatch(component, /disabled aria-disabled="true"/)
 })
 
-test('uses the character art to give sparse sales sections a visual anchor', () => {
-  assert.match(campaign, /\/images\/characters\/commander\.png/)
-  assert.match(campaign, /\/images\/characters\/bard\.png/)
-  assert.match(campaign, /\/images\/characters\/strategist\.png/)
-  assert.match(campaign, /\/images\/characters\/guardian\.png/)
-  assert.match(campaign, /field-guide-section-character/)
+test('keeps the sales sections free of decorative character cutouts', () => {
+  assert.doesNotMatch(campaign, /\/images\/characters\//)
+  assert.doesNotMatch(campaign, /field-guide-section-character/)
 })
 
 test('places pricing after the preview and links to complete policy pages', () => {

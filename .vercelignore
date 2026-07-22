@@ -1,0 +1,11 @@
+.git/
+.next/
+.next-playwright/
+.worktrees/
+.superpowers/
+node_modules/
+private/
+test-results/
+tests/
+docs/
+*.local
