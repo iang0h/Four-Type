@@ -40,6 +40,7 @@ const footerLinks = {
 }
 
 const youtubeUrl = 'https://www.youtube.com/@fourtypequiz'
+const facebookUrl = 'https://www.facebook.com/fourtypequiz/'
 
 export default function Footer() {
   return (
@@ -135,6 +136,16 @@ export default function Footer() {
                   className="text-sm text-muted-foreground hover:text-primary transition-colors"
                 >
                   YouTube
+                </a>
+              </li>
+              <li>
+                <a
+                  href={facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Facebook
                 </a>
               </li>
             </ul>

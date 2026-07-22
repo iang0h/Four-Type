@@ -87,3 +87,9 @@ test('keeps the shared FourType promise consistent with the book', () => {
   assert.doesNotMatch(footer, /discover your true nature|know your true nature/i)
   assert.match(footer, /Notice your patterns\. Widen your choices\./)
 })
+
+test('links to FourType official social profiles in the shared footer', () => {
+  assert.match(footer, /https:\/\/www\.youtube\.com\/@fourtypequiz/)
+  assert.match(footer, /https:\/\/www\.facebook\.com\/fourtypequiz\//)
+  assert.match(footer, />\s*Facebook\s*</)
+})

@@ -103,7 +103,11 @@ export default function RootLayout({
           width: 512,
           height: 512,
         },
-        sameAs: ['https://www.fourtype.com', 'https://www.youtube.com/@fourtypequiz'],
+        sameAs: [
+          'https://www.fourtype.com',
+          'https://www.youtube.com/@fourtypequiz',
+          'https://www.facebook.com/fourtypequiz/',
+        ],
       },
       {
         '@type': 'Person',
