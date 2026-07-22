@@ -730,6 +730,7 @@ export const seoPages: SeoPage[] = [
         type: 'section',
         title: 'Temperament compatibility is about patterns, not perfect matches',
         body: [
+          'This guide uses Commander (Choleric), Bard (Sanguine), Strategist (Melancholic), and Guardian (Phlegmatic) as simple shorthand for the four patterns.',
           'Couples often struggle less because they are “incompatible” and more because they read each other through the wrong lens. A Choleric may think a Phlegmatic is avoiding the issue. A Phlegmatic may experience the same Choleric as unnecessarily intense.',
           'A temperament test gives couples shared language for emotional pace, decision-making, affection, conflict, and repair.',
         ],
@@ -3080,6 +3081,7 @@ export const blogArticles: BlogArticle[] = [
         type: 'section',
         title: 'Compatibility is a pattern, not a verdict',
         body: [
+          'This guide uses Commander (Choleric), Bard (Sanguine), Strategist (Melancholic), and Guardian (Phlegmatic) as simple shorthand for the four patterns.',
           'Four temperaments compatibility is not about finding the one perfect type who will never frustrate you. It is about understanding what each person protects under stress: control, connection, meaning, or peace.',
           'A Choleric may push for a fast decision because uncertainty feels inefficient. A Phlegmatic may slow the conversation because emotional pressure feels unsafe. Both people may care, but their default protection strategies are different.',
         ],
@@ -3159,6 +3161,7 @@ export const blogArticles: BlogArticle[] = [
         type: 'section',
         title: 'Why Choleric and Phlegmatic often attract',
         body: [
+          'This guide uses Commander (Choleric) and Guardian (Phlegmatic) as simple shorthand for these two patterns.',
           'A Choleric and Phlegmatic relationship can feel like movement meeting steadiness. The Choleric brings direction, decision, and courage. The Phlegmatic brings calm, loyalty, and emotional steadiness.',
           'At first, each person may admire what the other makes easier. The Choleric appreciates the Phlegmatic’s peaceful presence. The Phlegmatic may feel protected by the Choleric’s confidence and willingness to act.',
         ],
@@ -3238,6 +3241,7 @@ export const blogArticles: BlogArticle[] = [
         type: 'section',
         title: 'Why Sanguine and Melancholic can feel magnetic',
         body: [
+          'This guide uses Bard (Sanguine) and Strategist (Melancholic) as simple shorthand for these two patterns.',
           'Sanguine and Melancholic compatibility often starts with contrast. The Sanguine brings warmth, humor, possibility, and movement. The Melancholic brings depth, care, taste, memory, and meaning.',
           'The Sanguine may help the Melancholic breathe again. The Melancholic may help the Sanguine feel seen beneath the performance. At its best, this pairing turns lightness and depth into a fuller emotional range.',
         ],
@@ -3714,6 +3718,7 @@ export const blogArticles: BlogArticle[] = [
         type: 'section',
         title: 'Conflict reveals temperament quickly',
         body: [
+          'This guide uses Commander (Choleric), Bard (Sanguine), Strategist (Melancholic), and Guardian (Phlegmatic) as simple shorthand for the four patterns.',
           'Conflict strips away ideal self-image. When pressure rises, Choleric often pushes, Sanguine smooths or performs, Melancholic analyzes or withdraws, and Phlegmatic lowers the temperature or avoids the fight.',
           'None of these styles is automatically bad. Each has a protective instinct. The problem begins when protection becomes a pattern of harm.',
         ],
@@ -3792,6 +3797,7 @@ export const blogArticles: BlogArticle[] = [
         type: 'section',
         title: 'Communication style is temperament in motion',
         body: [
+          'This guide uses Commander (Choleric), Bard (Sanguine), Strategist (Melancholic), and Guardian (Phlegmatic) as simple shorthand for the four patterns.',
           'Temperament affects how quickly you speak, how much context you need, what feels respectful, and what makes you shut down. Choleric tends to be direct. Sanguine tends to be expressive. Melancholic tends to be careful. Phlegmatic tends to be diplomatic.',
           'Miscommunication often happens when one person’s natural style feels unsafe or disrespectful to another person’s temperament.',
         ],
@@ -3821,6 +3827,16 @@ export const blogArticles: BlogArticle[] = [
           'Adaptation is translation, not manipulation: the concern stays honest while the delivery gives the other person a fair chance to respond.',
         ],
         bullets: ['Choleric: “Here is the issue, and here is the decision I need help making.”', 'Sanguine: “I value us, and I need to stay with one concern for a minute.”', 'Melancholic: “I noticed this detail, and I want to understand what it meant.”', 'Phlegmatic: “I want your honest view; we can take a moment before answering.”'],
+      },
+      {
+        type: 'grid',
+        title: 'Ask for care and repair a missed signal',
+        items: [
+          { title: 'Commander (Choleric)', body: 'Ask for care: "Please give me the bottom line and one next step." Repair after a missed signal: "I moved too fast and missed what you were saying. Can you tell me again before I offer a solution?"', accent: 'red' },
+          { title: 'Bard (Sanguine)', body: 'Ask for care: "Please stay with me for a minute before we move on." Repair after a missed signal: "I tried to lighten this too soon. What did you need me to hear?"', accent: 'gold' },
+          { title: 'Strategist (Melancholic)', body: 'Ask for care: "Please explain the change and give me time to think about it." Repair after a missed signal: "I focused on the details and missed your feeling. What part mattered most to you?"', accent: 'blue' },
+          { title: 'Guardian (Phlegmatic)', body: 'Ask for care: "Please ask for my view and give me a moment to answer honestly." Repair after a missed signal: "I went quiet instead of telling you I was hurt. Can we come back to it tonight?"', accent: 'green' },
+        ],
       },
       {
         type: 'section',
@@ -4552,7 +4568,7 @@ export const blogArticles: BlogArticle[] = [
     accent: 'pink',
     icon: Heart,
     image: '/images/blog/temperament-compatibility-chart.jpg',
-    imageAlt: 'A couple using a temperament discussion guide to talk through communication and repair',
+    imageAlt: 'Four temperament characters around a compatibility map',
     published: '2026-07-22',
     blocks: [
       {
@@ -4565,10 +4581,11 @@ export const blogArticles: BlogArticle[] = [
         title: 'A 30-minute conversation',
         columns: ['Time', 'Question', 'What to listen for'],
         rows: [
-          ['5 minutes', 'What do I do under pressure?', 'The first move, not the best answer.'],
-          ['10 minutes', 'What helps me feel cared for?', 'Different needs for pace and reassurance.'],
-          ['10 minutes', 'How do we repair after a miss?', 'One practical return to the conversation.'],
-          ['5 minutes', 'What will we try this week?', 'A small agreement that both people can keep.'],
+          ['5 minutes', 'Under pressure, what do you need me to notice before I try to solve anything?', 'The first stress signal and the care that helps.'],
+          ['5 minutes', 'What kind of affection helps you feel cared for?', 'Specific actions, words, touch, time, or space.'],
+          ['8 minutes', 'When conflict starts, what helps you stay engaged instead of pushing, joking, analyzing, or withdrawing?', 'The cue that makes honesty safer.'],
+          ['7 minutes', 'What pace helps you discuss a hard feeling or make a decision?', 'A time limit, a pause, or a slower return.'],
+          ['5 minutes', 'After a missed signal, what repair helps us reconnect?', 'One direct apology and a concrete return.'],
         ],
       },
       {
@@ -4647,9 +4664,15 @@ export const blogArticles: BlogArticle[] = [
         ],
       },
       {
-        type: 'section',
+        type: 'table',
         title: 'A family repair after a hard afternoon',
-        body: ['The adult first lowers their own pressure, names what happened without blame, and offers one workable next step. The goal is not to control a child’s temperament. It is to help the child feel understood while learning responsibility.'],
+        columns: ['Adult reaction', 'Child situation', 'Repair script', 'Workable next step'],
+        rows: [[
+          'You raise your voice and rush the child after a spilled drink.',
+          'The child goes quiet and will not help clean up.',
+          '"I was too loud. The spill is fixable, and you are not in trouble for needing a minute. Will you help me get towels when you are ready?"',
+          'Take a two-minute reset, then clean up together and choose where the cup will go next time.',
+        ]],
       },
       {
         type: 'callout',
@@ -4875,6 +4898,7 @@ export const coreGuideLinks: LinkCard[] = [
 
 export const relationshipGuideLinks: LinkCard[] = [
   { href: '/relationships', title: 'Temperament Relationships', description: 'Start with compatibility, communication, conflict, and repair.' },
+  { href: '/temperament-test-for-couples', title: 'Temperament Test for Couples', description: 'Compare communication and conflict patterns together.' },
   { href: '/blog/couples-discussion-guide-by-temperament', title: 'Couples Discussion Guide', description: 'Use a 30-minute conversation after taking the quiz separately.' },
   { href: '/blog/four-temperaments-compatibility', title: 'Four Temperaments Compatibility', description: 'Understand how all four temperament patterns relate.' },
   { href: '/blog/temperament-compatibility-chart', title: 'Temperament Compatibility Chart', description: 'See how the four temperaments relate in relationships.' },
@@ -4883,7 +4907,6 @@ export const relationshipGuideLinks: LinkCard[] = [
   { href: '/blog/temperament-conflict-style', title: 'Temperament Conflict Style', description: 'Learn how each type fights, avoids, apologizes, and repairs.' },
   { href: '/blog/temperament-communication-style', title: 'Temperament Communication Style', description: 'Understand how each type talks, listens, and gives feedback.' },
   { href: '/blog/parenting-by-temperament', title: 'Parenting by Temperament', description: 'Notice a child’s patterns without turning them into labels.' },
-  { href: '/temperament-test-for-couples', title: 'Temperament Test for Couples', description: 'Compare communication and conflict patterns together.' },
   { href: '/blog/personality-test-for-relationships', title: 'Personality Test for Relationships', description: 'Use temperament to improve couple communication and repair.' },
   { href: '/blog/choleric-sanguine-melancholic-phlegmatic', title: 'How to Tell the Four Temperaments Apart', description: 'Spot the real-life differences between the four patterns.' },
   { href: '/subtypes', title: 'Temperament Subtypes', description: 'Go beyond the primary label with blended subtype patterns.' },

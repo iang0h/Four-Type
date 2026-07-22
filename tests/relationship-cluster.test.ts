@@ -48,6 +48,25 @@ test('couples action page gives partners a shared three-step flow', () => {
   assert.equal(page.ctaLabel, 'Take the Quiz Together')
 })
 
+test('relationship guides introduce the FourType role names where they first help readers', () => {
+  const expectedRoles: Record<string, string[]> = {
+    'temperament-test-for-couples': ['Commander (Choleric)', 'Bard (Sanguine)', 'Strategist (Melancholic)', 'Guardian (Phlegmatic)'],
+    'four-temperaments-compatibility': ['Commander (Choleric)', 'Bard (Sanguine)', 'Strategist (Melancholic)', 'Guardian (Phlegmatic)'],
+    'choleric-phlegmatic-relationship': ['Commander (Choleric)', 'Guardian (Phlegmatic)'],
+    'sanguine-melancholic-compatibility': ['Bard (Sanguine)', 'Strategist (Melancholic)'],
+    'temperament-conflict-style': ['Commander (Choleric)', 'Bard (Sanguine)', 'Strategist (Melancholic)', 'Guardian (Phlegmatic)'],
+    'temperament-communication-style': ['Commander (Choleric)', 'Bard (Sanguine)', 'Strategist (Melancholic)', 'Guardian (Phlegmatic)'],
+  }
+
+  Object.entries(expectedRoles).forEach(([slug, roles]) => {
+    const content = slug === 'temperament-test-for-couples'
+      ? JSON.stringify(getSeoPage(slug)!.blocks)
+      : JSON.stringify(getBlogArticle(slug)!.blocks)
+
+    roles.forEach((role) => assert.match(content, new RegExp(role.replace(/[()]/g, '\\$&'))))
+  })
+})
+
 test('new relationship guides use practical and responsible framing', () => {
   const couples = getBlogArticle('couples-discussion-guide-by-temperament')!
   const parenting = getBlogArticle('parenting-by-temperament')!
@@ -59,6 +78,52 @@ test('new relationship guides use practical and responsible framing', () => {
   assert.match(parentingCopy, /not a diagnosis/i)
   assert.match(parentingCopy, /do not.*label|never.*label/i)
   assert.match(parentingCopy, /Commander \(Choleric\)|Choleric.*Commander/i)
+})
+
+test('couples discussion guide uses all five relationship topics in its 30-minute table', () => {
+  const couples = getBlogArticle('couples-discussion-guide-by-temperament')!
+  const discussion = couples.blocks.find((block) => block.type === 'table' && block.title === 'A 30-minute conversation')
+
+  assert.ok(discussion && discussion.type === 'table')
+  assert.equal(discussion.rows.reduce((total, [time]) => total + Number.parseInt(time, 10), 0), 30)
+  const questions = discussion.rows.map(([, question]) => question).join(' ')
+  ;['pressure', 'affection', 'conflict', 'pace', 'repair'].forEach((topic) => assert.match(questions, new RegExp(topic, 'i')))
+})
+
+test('communication guide gives every pattern a care request and missed-signal repair sentence', () => {
+  const communication = getBlogArticle('temperament-communication-style')!
+  const scripts = communication.blocks.find((block) => block.type === 'grid' && block.title === 'Ask for care and repair a missed signal')
+
+  assert.ok(scripts && scripts.type === 'grid')
+  assert.equal(scripts.items.length, 4)
+  scripts.items.forEach((item) => {
+    assert.match(item.body, /Ask for care:/)
+    assert.match(item.body, /Repair after a missed signal:/)
+  })
+})
+
+test('parenting guide models a concrete adult-child repair interaction', () => {
+  const parenting = getBlogArticle('parenting-by-temperament')!
+  const repair = parenting.blocks.find((block) => block.type === 'table' && block.title === 'A family repair after a hard afternoon')
+
+  assert.ok(repair && repair.type === 'table')
+  assert.deepEqual(repair.columns, ['Adult reaction', 'Child situation', 'Repair script', 'Workable next step'])
+  assert.equal(repair.rows.length, 1)
+  assert.match(repair.rows[0][2], /I was too loud/i)
+})
+
+test('relationship guide links start with the shared relationship path and couples actions', () => {
+  assert.deepEqual(
+    relationshipGuideLinks.slice(0, 3).map((link) => link.href),
+    ['/relationships', '/temperament-test-for-couples', '/blog/couples-discussion-guide-by-temperament'],
+  )
+})
+
+test('couples discussion guide image describes the shared compatibility map', () => {
+  assert.equal(
+    getBlogArticle('couples-discussion-guide-by-temperament')!.imageAlt,
+    'Four temperament characters around a compatibility map',
+  )
 })
 
 test('new practical guides point to the right next relationship actions', () => {
