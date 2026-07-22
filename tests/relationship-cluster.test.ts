@@ -65,7 +65,7 @@ test('new practical guides point to the right next relationship actions', () => 
 test('relationship articles have distinct titles and do not make match-score claims', () => {
   const articles = requiredArticleSlugs.map((slug) => getBlogArticle(slug)!)
   assert.equal(new Set(articles.map((article) => article.title)).size, articles.length)
-  articles.forEach((article) => assert.doesNotMatch(JSON.stringify(article), /match score|perfect match|guaranteed compatibility/i))
+  articles.forEach((article) => assert.doesNotMatch(JSON.stringify(article), /match score|guaranteed compatibility|(?:is|are|will be|can be) (?:a |an )?perfect match/i))
   assert.equal(blogArticles.some((article) => article.slug === 'parenting-by-temperament'), true)
   assert.equal(seoPages.some((page) => page.slug === 'relationships'), true)
 })

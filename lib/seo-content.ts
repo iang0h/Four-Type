@@ -3080,7 +3080,7 @@ export const blogArticles: BlogArticle[] = [
         type: 'section',
         title: 'Compatibility is a pattern, not a verdict',
         body: [
-          'Four temperaments compatibility is not about finding the one flawless type who will never frustrate you. It is about understanding what each person protects under stress: control, connection, meaning, or peace.',
+          'Four temperaments compatibility is not about finding the one perfect type who will never frustrate you. It is about understanding what each person protects under stress: control, connection, meaning, or peace.',
           'A Choleric may push for a fast decision because uncertainty feels inefficient. A Phlegmatic may slow the conversation because emotional pressure feels unsafe. Both people may care, but their default protection strategies are different.',
         ],
       },
@@ -3127,7 +3127,7 @@ export const blogArticles: BlogArticle[] = [
       { href: '/blog/sanguine-melancholic-compatibility', title: 'Sanguine and Melancholic Compatibility', description: 'Understand the playful-depth pairing.' },
     ],
     faq: [
-      { question: 'Which four temperaments are most compatible?', answer: 'There is no single guaranteed pairing. Choleric and Phlegmatic often balance each other, Sanguine and Phlegmatic can feel warm and steady, and Sanguine and Melancholic can grow through a lightness-depth balance.' },
+      { question: 'Which four temperaments are most compatible?', answer: 'There is no single perfect match. Choleric and Phlegmatic often balance each other, Sanguine and Phlegmatic can feel warm and steady, and Sanguine and Melancholic can grow through a lightness-depth balance.' },
       { question: 'Can opposite temperaments work in relationships?', answer: 'Yes. Opposite temperaments can work well when both people respect different stress responses and do not treat their own pace as the only normal one.' },
       { question: 'Is temperament compatibility only for dating?', answer: 'No. It can also help friendships, family, teams, leadership, and coworker relationships because it describes communication pace and stress patterns.' },
       { question: 'Should I avoid a temperament pairing that looks difficult?', answer: 'No. A difficult pairing can still become strong with emotional maturity, repair, and clear communication. The chart is a guide, not a rule.' },
