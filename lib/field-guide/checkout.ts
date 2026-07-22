@@ -60,7 +60,7 @@ export function getConfiguredPriceIds(
   const priceIds = [getConfiguredPriceId(tier, currency, environment)]
 
   // Keep a formerly sold Founding Supporter checkout verifiable after the
-  // public offer moves to the single Founding Digital Supporter edition.
+  // public offer moves to the single Complete Digital Edition.
   if (tier === 'founding' && currency === 'usd') {
     const legacyPriceId = environment.STRIPE_FOUNDING_SUPPORTER_USD_PRICE_ID
     if (legacyPriceId && !priceIds.includes(legacyPriceId)) priceIds.push(legacyPriceId)

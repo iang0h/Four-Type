@@ -16,7 +16,7 @@ export default function FieldGuideContactPage() {
       <ul>
         <li>The email address used at Stripe Checkout.</li>
         <li>The approximate purchase date.</li>
-        <li>That you purchased Founding Digital Supporter.</li>
+        <li>That you purchased Complete Digital Edition.</li>
         <li>A short description of what happened.</li>
       </ul>
       <p>Do not send a card number, security code, password or private Stripe credential. FourType does not need those details to find a purchase.</p>

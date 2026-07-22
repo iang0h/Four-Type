@@ -41,7 +41,7 @@ const productSchema = {
   category: 'Digital book',
   offers: {
     '@type': 'Offer',
-    name: 'Founding Digital Supporter',
+    name: 'Complete Digital Edition',
     price: getSupporterOffer('founding', 'usd').amount / 100,
     priceCurrency: 'USD',
     url: canonicalUrl,

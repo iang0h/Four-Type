@@ -642,13 +642,19 @@
 .field-guide-currency-selector > span { margin-right: 4px; color: #a89e91; font-size: 0.69rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
 .field-guide-currency-selector button { min-height: 42px; border: 1px solid #77663d; padding: 8px 12px; cursor: pointer; background: transparent; color: #d8cfbf; font-size: 0.73rem; font-weight: 700; letter-spacing: 0.08em; }
 .field-guide-currency-selector button[aria-pressed='true'] { border-color: var(--fg-gold); background: rgba(225, 173, 59, 0.14); color: #f3c65e; }
-.field-guide-tier-grid { display: grid; grid-template-columns: minmax(0, 620px); justify-content: start; gap: 16px; }
+.field-guide-tier-grid { display: grid; grid-template-columns: minmax(0, 920px); justify-content: start; gap: 16px; }
 .field-guide-tier { border: 1px solid #5a513d; padding: clamp(25px, 4vw, 42px); background: var(--fg-panel); }
-.field-guide-tier-primary { border-color: var(--fg-gold); background: linear-gradient(130deg, #1c180e, #121317 62%); }
+.field-guide-tier-primary { display: grid; grid-template-columns: minmax(225px, 0.72fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); align-items: center; border-color: var(--fg-gold); background: linear-gradient(130deg, #1c180e, #121317 62%); }
+.field-guide-bundle-visual { min-height: 300px; position: relative; display: grid; place-items: center; }
+.field-guide-bundle-book { width: min(190px, 56%); height: auto; position: relative; z-index: 2; border: 1px solid rgba(245, 230, 197, 0.22); box-shadow: 13px 20px 30px rgba(0, 0, 0, 0.48), -7px 7px 0 #bdb2a0; transform: rotate(-5deg); }
+.field-guide-bundle-worksheet { width: min(182px, 54%); position: absolute; z-index: 1; top: 18px; right: 2%; padding: 8px 8px 25px; background: #f2ecdf; box-shadow: 9px 15px 24px rgba(0, 0, 0, 0.38); transform: rotate(8deg); }
+.field-guide-bundle-worksheet img { width: 100%; height: auto; display: block; }
+.field-guide-bundle-worksheet span { display: block; margin-top: 9px; color: #4f4537; font-size: 0.56rem; font-weight: 700; letter-spacing: 0.11em; text-align: center; text-transform: uppercase; }
+.field-guide-tier-details { min-width: 0; }
 .field-guide-tier-kicker { margin-bottom: 16px; color: #d5cabc; font-family: var(--font-cinzel), Cinzel, serif; font-size: 1.2rem; }
 .field-guide-tier-price { margin-bottom: 16px; color: #f2c455; font-family: var(--font-cinzel), Cinzel, serif; font-size: clamp(2.1rem, 4vw, 3.3rem); line-height: 1; }
 .field-guide-tier-price span { color: #b8ad9d; font-size: 0.45em; }
-.field-guide-tier-intro { min-height: 54px; margin-bottom: 24px; color: #b5ab9d; font-size: 0.96rem; line-height: 1.55; }
+.field-guide-tier-intro { max-width: 480px; min-height: 0; margin-bottom: 24px; color: #b5ab9d; font-size: 0.96rem; line-height: 1.55; }
 .field-guide-tier ul { margin: 0 0 29px; padding: 0; border-top: 1px solid rgba(227, 215, 190, 0.16); list-style: none; }
 .field-guide-tier li { border-bottom: 1px solid rgba(227, 215, 190, 0.16); padding: 10px 0 10px 24px; position: relative; color: #e0d6c7; font-size: 0.88rem; line-height: 1.4; }
 .field-guide-tier li::before { content: '•'; position: absolute; left: 7px; color: var(--fg-gold); }
@@ -658,7 +664,7 @@
 .field-guide-tier-fine { margin: 15px 0 0; color: #94897c; font-size: 0.75rem; line-height: 1.45; }
 .field-guide-pricing-heading { max-width: 690px; }
 .field-guide-purchase-support { display: flex; align-items: center; gap: 7px; margin: 14px 0 0; color: #c7bca7; font-size: 0.82rem; line-height: 1.5; }
-.field-guide-purchase-assurances { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px 28px; margin-top: 28px; color: #d8cdb8; font-size: 0.78rem; }
+.field-guide-purchase-assurances { display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 14px 28px; margin-top: 22px; color: #d8cdb8; font-size: 0.78rem; }
 .field-guide-purchase-assurances span { display: inline-flex; align-items: center; gap: 7px; }
 .field-guide-purchase-assurances svg { color: #e5b63d; }
 
@@ -794,6 +800,11 @@
   .field-guide-final,
   .field-guide-boundary { padding: 72px 0; }
   .field-guide-tier-grid { grid-template-columns: 1fr; }
+  .field-guide-tier-primary { grid-template-columns: 1fr; gap: 22px; }
+  .field-guide-bundle-visual { min-height: 250px; }
+  .field-guide-bundle-book { width: 155px; }
+  .field-guide-bundle-worksheet { width: 145px; right: calc(50% - 126px); }
+  .field-guide-purchase-assurances { justify-content: flex-start; }
   .field-guide-tier-intro { min-height: 0; }
   .field-guide-goal-grid { grid-template-columns: 1fr; }
   .field-guide-goal-card { padding: 20px; }

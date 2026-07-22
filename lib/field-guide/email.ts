@@ -2,7 +2,7 @@ import type { FieldGuideEntitlement } from './entitlements'
 import type { EmailMessage } from '../email-delivery'
 
 function getTierLabel(tier: FieldGuideEntitlement['tier']) {
-  return tier === 'founding' ? 'Founding Supporter' : 'Field Guide Supporter'
+  return tier === 'founding' ? 'Complete Digital Edition' : 'Field Guide Supporter'
 }
 
 function getRewards(tier: FieldGuideEntitlement['tier']) {

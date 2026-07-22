@@ -11,9 +11,9 @@ import { getFieldGuidePolicies } from '@/lib/field-guide/policies'
 
 const faqItems = [
   {
-    question: 'What does each edition include?',
+    question: 'What is included?',
     answer:
-      'Founding Digital Supporter includes the complete 144-page PDF, a reflowable EPUB, a separate printable worksheet pack and a personal-use licence.',
+      'Complete Digital Edition includes the full 144-page PDF, a reflowable EPUB, a separate printable worksheet pack and a personal-use licence.',
   },
   {
     question: 'Is this a physical book?',
@@ -115,7 +115,7 @@ export default function FieldGuideCampaign() {
           <section id="supporter-levels" className="field-guide-support" aria-labelledby="support-title">
             <div className="field-guide-shell">
               <div className="field-guide-section-heading field-guide-pricing-heading">
-                <SectionEyebrow>Choose your edition</SectionEyebrow>
+                <SectionEyebrow>The complete digital edition.</SectionEyebrow>
                 <h2 id="support-title">Start reading today.</h2>
                 <p>Pay securely through Stripe. Download your PDF and EPUB immediately.</p>
               </div>
@@ -179,7 +179,7 @@ export default function FieldGuideCampaign() {
               <SectionEyebrow>Simple delivery</SectionEyebrow>
               <h2 id="fulfillment-title">From checkout to reading in three steps.</h2>
               <ol className="field-guide-steps field-guide-steps-three">
-                <li><span>01</span><strong>Choose your edition.</strong><p>Founding Digital Supporter includes the PDF, EPUB and printable worksheet pack.</p></li>
+                <li><span>01</span><strong>Choose your edition.</strong><p>Complete Digital Edition includes the PDF, EPUB and printable worksheet pack.</p></li>
                 <li><span>02</span><strong>Pay securely through Stripe.</strong><p>Your payment details are handled by Stripe, not stored by FourType.</p></li>
                 <li><span>03</span><strong>Download immediately.</strong><p>Open your private access page for the PDF, EPUB and any included worksheets.</p></li>
               </ol>

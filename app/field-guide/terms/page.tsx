@@ -13,7 +13,7 @@ export default function FieldGuideTermsPage() {
       <p>By purchasing and downloading the FourType Field Guide, you agree to these terms.</p>
 
       <h2>Your edition</h2>
-      <p>Founding Digital Supporter includes the complete PDF, reflowable EPUB and listed printable worksheet pack. It is a digital product, not a physical book, and does not include future FourType publications.</p>
+      <p>Complete Digital Edition includes the complete PDF, reflowable EPUB and listed printable worksheet pack. It is a digital product, not a physical book, and does not include future FourType publications.</p>
 
       <h2>Personal-use licence</h2>
       <p>You may read the files on your own devices and print reasonable copies for your own use. You may not repost, redistribute, resell, upload to a shared library, remove ownership notices or package the files into another product. Organisations, workshops and commercial programmes need separate written permission.</p>

@@ -47,15 +47,19 @@ test('publishes truthful metadata without ratings', () => {
   assert.doesNotMatch(page, /InStock/)
 })
 
-test('renders one USD-only founding digital supporter purchase control', () => {
+test('renders one USD-only complete digital edition purchase control', () => {
   assert.match(campaign, /<SupporterTiers \/>/)
+  assert.match(campaign, /The complete digital edition\./)
+  assert.match(campaign, /What is included\?/)
 
   const component = readFileSync(supporterTiers, 'utf8')
   assert.match(component, /getSupporterOffer\('founding', 'usd'\)/)
-  assert.match(component, /Founding Digital Supporter/)
-  assert.doesNotMatch(component, /Digital Edition|US\$25/)
+  assert.match(component, /Complete Digital Edition/)
+  assert.match(component, /Get instant access · US\$12/)
+  assert.match(component, /field-guide-bundle-visual/)
+  assert.doesNotMatch(component, /Founding Digital Supporter|US\$25/)
   assert.doesNotMatch(component, /MYR|RM39|RM79|sessionStorage|Choose checkout currency/)
-  assert.match(component, /Get the Field Guide/)
+  assert.match(component, /Get instant access · US\$12/)
   assert.doesNotMatch(component, /disabled aria-disabled="true"/)
 })
 

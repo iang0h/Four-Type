@@ -423,7 +423,7 @@ test('builds a supporter email with tier rewards and only the private access rou
     'https://www.fourtype.com/field-guide/access?token=signed-access-token',
   )
 
-  assert.match(email.text, /Founding Supporter/)
+  assert.match(email.text, /Complete Digital Edition/)
   assert.match(email.text, /worksheet pack/i)
   assert.match(email.text, /personal use/i)
   assert.match(email.html, /\/field-guide\/access\?token=/)
