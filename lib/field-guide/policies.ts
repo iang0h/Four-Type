@@ -19,6 +19,13 @@ const policyEnvironmentKeys: Record<FieldGuidePolicyKey, string> = {
   contact: 'FOURTYPE_CONTACT_URL',
 }
 
+const policyDefaultUrls: Record<FieldGuidePolicyKey, string> = {
+  refund: '/field-guide/refunds',
+  privacy: '/field-guide/privacy',
+  terms: '/field-guide/terms',
+  contact: '/field-guide/contact',
+}
+
 const policyFallbackCopy: Record<FieldGuidePolicyKey, string> = {
   refund: 'Refund policy is being finalized; this page does not make a refund promise.',
   privacy: 'Privacy details are being finalized; no privacy link is available yet.',
@@ -63,12 +70,17 @@ function normalizePolicyUrl(value: unknown) {
   return value
 }
 
-export function getFieldGuidePolicies(environment: Record<string, string | undefined> = process.env): FieldGuidePolicies {
+export function getFieldGuidePolicies(environment?: Record<string, string | undefined>): FieldGuidePolicies {
+  const source = environment ?? process.env
+  const useDefaults = environment === undefined
   const missing: FieldGuidePolicyKey[] = []
   const policies = {} as Record<FieldGuidePolicyKey, FieldGuidePolicy>
 
   for (const key of FIELD_GUIDE_POLICY_KEYS) {
-    const href = normalizePolicyUrl(environment[policyEnvironmentKeys[key]])
+    const configuredValue = Object.prototype.hasOwnProperty.call(source, policyEnvironmentKeys[key])
+      ? source[policyEnvironmentKeys[key]]
+      : useDefaults ? policyDefaultUrls[key] : undefined
+    const href = normalizePolicyUrl(configuredValue)
     if (!href) missing.push(key)
     policies[key] = {
       href,

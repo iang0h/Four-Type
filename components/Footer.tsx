@@ -51,14 +51,14 @@ export default function Footer() {
             <Link href="/" className="inline-flex mb-4">
               <Image
                 src="/fourtype-logo.png"
-                alt="FourType — The Temperament Quest"
+                alt="FourType: The Temperament Quest"
                 width={220}
                 height={85}
                 className="h-14 sm:h-16 w-auto object-contain"
               />
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Discover your true nature through the ancient wisdom of the four temperaments, reimagined for modern understanding.
+              Notice recurring temperament patterns, understand what they bring to a room and widen the choices available.
             </p>
           </div>
 
@@ -144,7 +144,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            {new Date().getFullYear()} FourType. Know your true nature.
+            {new Date().getFullYear()} FourType. Notice your patterns. Widen your choices.
           </p>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <LanguageSwitcher />

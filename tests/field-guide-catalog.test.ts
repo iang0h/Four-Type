@@ -5,17 +5,16 @@ import {
   parseSupporterSelection,
 } from '../lib/field-guide/catalog'
 
-test('maps each approved tier and currency to the exact display amount', () => {
+test('maps each approved tier to its USD display amount', () => {
   assert.equal(getSupporterOffer('field-guide', 'usd').amount, 1200)
-  assert.equal(getSupporterOffer('field-guide', 'myr').amount, 3900)
   assert.equal(getSupporterOffer('founding', 'usd').amount, 2500)
-  assert.equal(getSupporterOffer('founding', 'myr').amount, 7900)
 })
 
 test('rejects client-controlled prices and unsupported keys', () => {
-  assert.deepEqual(parseSupporterSelection({ tier: 'founding', currency: 'myr' }), {
+  assert.deepEqual(parseSupporterSelection({ tier: 'founding', currency: 'usd' }), {
     tier: 'founding',
-    currency: 'myr',
+    currency: 'usd',
   })
+  assert.equal(parseSupporterSelection({ tier: 'founding', currency: 'myr' }), null)
   assert.equal(parseSupporterSelection({ tier: 'founding', currency: 'eur', amount: 1 }), null)
 })

@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto'
+import { createHash, randomUUID } from 'node:crypto'
 import type { PrivateBlobStore } from './blob'
 
 const MAX_WRITE_ATTEMPTS = 3
@@ -50,12 +50,27 @@ function isBoundedWindow(windowMs: number) {
     && windowMs <= MAX_SAFE_RATE_LIMIT_WINDOW_SECONDS * 1_000
 }
 
-export function buildRateLimitNamespace(action: string) {
+export function buildRateLimitNamespace(action: string, identifier?: string) {
   const normalizedAction = action.trim().toLowerCase()
   if (!/^[a-z0-9-]+$/.test(normalizedAction)) {
     throw new Error('Rate-limit action is invalid')
   }
-  return `field-guide/rate-limit/${normalizedAction}.json`
+  if (!identifier) return `field-guide/rate-limit/${normalizedAction}.json`
+  const identifierHash = createHash('sha256').update(identifier).digest('hex')
+  return `field-guide/rate-limit/${normalizedAction}/${identifierHash}.json`
+}
+
+export function getRateLimitIdentifier(request: Request) {
+  const forwardedFor = request.headers.get('x-vercel-forwarded-for')
+    ?? request.headers.get('x-forwarded-for')
+    ?? request.headers.get('x-real-ip')
+  const identifier = forwardedFor?.split(',', 1)[0]?.trim()
+
+  if (identifier && identifier.length <= MAX_SAFE_RATE_LIMIT_IDENTIFIER_BYTES && /^[0-9a-f.:]+$/i.test(identifier)) {
+    return identifier
+  }
+
+  return 'local'
 }
 
 export type RateLimitOptions = {
@@ -78,12 +93,13 @@ export function createRateLimiter({
   }
   if (!isBoundedWindow(windowMs)) throw new Error('Rate-limit window is invalid')
 
-  const pathname = buildRateLimitNamespace(action)
   const request = randomUUID()
 
-  return async function consumeRateLimit(nowAtRequest = now ?? Date.now()): Promise<RateLimitResult> {
+  return async function consumeRateLimit(identifier: string, nowAtRequest = now ?? Date.now()): Promise<RateLimitResult> {
+    if (!identifier || identifier.length > MAX_SAFE_RATE_LIMIT_IDENTIFIER_BYTES) throw new Error('Rate-limit identifier is invalid')
     if (!Number.isSafeInteger(nowAtRequest)) throw new Error('Rate-limit time is invalid')
 
+    const pathname = buildRateLimitNamespace(action, identifier)
     const windowStart = Math.floor(nowAtRequest / windowMs) * windowMs
 
     for (let attempt = 0; attempt < MAX_WRITE_ATTEMPTS; attempt += 1) {

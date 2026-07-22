@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 import type { PrivateBlobStore } from '../lib/field-guide/blob'
-import { createRateLimiter } from '../lib/field-guide/rate-limit'
+import { createRateLimiter, getRateLimitIdentifier } from '../lib/field-guide/rate-limit'
 
 type PutCall = {
   pathname: string
@@ -58,9 +58,9 @@ test('allows requests up to capacity and rejects the next request', async () => 
   const store = new MemoryBlobStore()
   const limiter = createRateLimiter({ store, action: 'request-test', capacity: 2, windowMs: 60_000 })
 
-  assert.equal(await limiter(1), 'allowed')
-  assert.equal(await limiter(1), 'allowed')
-  assert.equal(await limiter(1), 'rate-limited')
+  assert.equal(await limiter('203.0.113.8', 1), 'allowed')
+  assert.equal(await limiter('203.0.113.8', 1), 'allowed')
+  assert.equal(await limiter('203.0.113.8', 1), 'rate-limited')
   assert.equal(store.putCalls.length, 2)
 })
 
@@ -68,8 +68,8 @@ test('advances count into a later fixed window', async () => {
   const store = new MemoryBlobStore()
   const limiter = createRateLimiter({ store, action: 'request-test', capacity: 1, windowMs: 60_000 })
 
-  assert.equal(await limiter(0), 'allowed')
-  assert.equal(await limiter(60_000), 'allowed')
+  assert.equal(await limiter('203.0.113.8', 0), 'allowed')
+  assert.equal(await limiter('203.0.113.8', 60_000), 'allowed')
   assert.equal(store.putCalls.length, 2)
   assert.equal(JSON.parse(store.putCalls[0].body).windowStartMs, 0)
   assert.equal(JSON.parse(store.putCalls[1].body).windowStartMs, 60_000)
@@ -79,9 +79,28 @@ test('retries on precondition failures without corrupting rate accounting', asyn
   const store = new MemoryBlobStore()
   const limiter = createRateLimiter({ store, action: 'request-test', capacity: 5, windowMs: 60_000 })
 
-  assert.equal(await limiter(0), 'allowed')
+  assert.equal(await limiter('203.0.113.8', 0), 'allowed')
   store.addPreconditionFailures(2)
-  assert.equal(await limiter(0), 'allowed')
+  assert.equal(await limiter('203.0.113.8', 0), 'allowed')
 
   assert.equal(store.preconditionConflictCalls >= 2, true)
+})
+
+test('isolates visitors and never stores raw client IP addresses', async () => {
+  const store = new MemoryBlobStore()
+  const limiter = createRateLimiter({ store, action: 'checkout', capacity: 1, windowMs: 60_000 })
+
+  assert.equal(await limiter('203.0.113.8', 0), 'allowed')
+  assert.equal(await limiter('203.0.113.9', 0), 'allowed')
+  assert.equal(await limiter('203.0.113.8', 0), 'rate-limited')
+  assert.equal(store.putCalls.length, 2)
+  assert(store.putCalls.every((call) => !call.pathname.includes('203.0.113')))
+  assert.notEqual(store.putCalls[0].pathname, store.putCalls[1].pathname)
+})
+
+test('uses Vercel client IP headers and a bounded local fallback', () => {
+  assert.equal(getRateLimitIdentifier(new Request('https://www.fourtype.com', {
+    headers: { 'x-vercel-forwarded-for': '203.0.113.8' },
+  })), '203.0.113.8')
+  assert.equal(getRateLimitIdentifier(new Request('http://localhost:3000')), 'local')
 })

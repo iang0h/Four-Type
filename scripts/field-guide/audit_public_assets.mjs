@@ -12,12 +12,12 @@ const artifactRules = [
   { label: 'complete Field Guide worksheets filename or content', pattern: /FourType-Field-Guide-Worksheets\.pdf/i },
 ]
 const credentialRules = [
-  { label: 'Stripe secret-shaped content', pattern: /sk_(test|live)_[A-Za-z0-9]{8,}/ },
+  { label: 'Stripe server key-shaped content', pattern: /(?:sk|rk)_(test|live)_[A-Za-z0-9]{8,}/ },
   { label: 'Stripe webhook secret-shaped content', pattern: /whsec_[A-Za-z0-9]{8,}/ },
   { label: 'Blob token assignment', pattern: /\bBLOB_READ_WRITE_TOKEN\s*(?:=|:)\s*(?:['"`]|[A-Za-z0-9])/ },
 ]
 const credentialFilenameRules = [
-  { label: 'Stripe secret-shaped filename', pattern: /sk_(test|live)_[A-Za-z0-9]{8,}/ },
+  { label: 'Stripe server key-shaped filename', pattern: /(?:sk|rk)_(test|live)_[A-Za-z0-9]{8,}/ },
   { label: 'Stripe webhook secret-shaped filename', pattern: /whsec_[A-Za-z0-9]{8,}/ },
   { label: 'Blob token-shaped filename', pattern: /BLOB_READ_WRITE_TOKEN/i },
 ]
@@ -28,6 +28,7 @@ const ignoredProductionPrefixes = [
   '.next/',
   '.next-playwright/',
   '.superpowers/',
+  '.worktrees/',
   'coverage/',
   'node_modules/',
   'playwright-report/',
@@ -54,7 +55,7 @@ function filesIn(directory) {
 function redactedLocation(pathname) {
   return relative(root, pathname)
     .replaceAll('\\', '/')
-    .replace(/sk_(test|live)_[A-Za-z0-9]+/g, '[redacted]')
+    .replace(/(?:sk|rk)_(test|live)_[A-Za-z0-9]+/g, '[redacted]')
     .replace(/whsec_[A-Za-z0-9]+/g, '[redacted]')
     .replace(/BLOB_READ_WRITE_TOKEN[^/]*/gi, '[redacted]')
 }
@@ -234,7 +235,7 @@ function aggregateClientFragments(paths) {
   const fragments = paths
     .sort((first, second) => redactedLocation(first).localeCompare(redactedLocation(second)))
     .flatMap((pathname) => extractedStringFragments(readFileSync(pathname).toString('utf8')))
-  const pending = fragments.filter((fragment) => /^(?:sk_?|whsec_?|BLOB_READ_WRITE_TOKEN[_-]?)$/i.test(fragment))
+  const pending = fragments.filter((fragment) => /^(?:[sr]k_?|whsec_?|BLOB_READ_WRITE_TOKEN[_-]?)$/i.test(fragment))
 
   for (let depth = 0; depth < 3 && pending.length > 0; depth += 1) {
     const next = new Set()
@@ -245,7 +246,7 @@ function aggregateClientFragments(paths) {
             findings.add('public+client-build/[redacted-fragments]: aggregate credential-shaped content')
             return
           }
-          if (/^(?:sk_(?:test|live)_?|whsec_?|BLOB_READ_WRITE_TOKEN[_-]?)$/i.test(candidate)) next.add(candidate)
+          if (/^(?:[sr]k_(?:test|live)_?|whsec_?|BLOB_READ_WRITE_TOKEN[_-]?)$/i.test(candidate)) next.add(candidate)
         }
       }
     }

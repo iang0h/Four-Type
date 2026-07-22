@@ -21,9 +21,7 @@ const products = {
 
 const prices = [
   ['STRIPE_FIELD_GUIDE_USD_PRICE_ID', 'fourtype_field_guide_usd', 'usd', 1200, 'field-guide'],
-  ['STRIPE_FIELD_GUIDE_MYR_PRICE_ID', 'fourtype_field_guide_myr', 'myr', 3900, 'field-guide'],
   ['STRIPE_FOUNDING_SUPPORTER_USD_PRICE_ID', 'fourtype_founding_usd', 'usd', 2500, 'founding'],
-  ['STRIPE_FOUNDING_SUPPORTER_MYR_PRICE_ID', 'fourtype_founding_myr', 'myr', 7900, 'founding'],
 ]
 
 async function getOrCreateProduct(tier) {

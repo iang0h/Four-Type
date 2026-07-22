@@ -47,7 +47,7 @@ export default async function FieldGuideAccessPage({
               <h1>This access link is no longer available.</h1>
               <p className="field-guide-lede">Request a fresh access link with the email used at checkout.</p>
               <SupporterAccessRequest />
-              <Link className="field-guide-text-link" href="/field-guide">Return to the campaign page</Link>
+              <Link className="field-guide-text-link" href="/field-guide">Return to the Field Guide</Link>
             </>
           )}
           <FieldGuidePolicyLinks policies={policy} />

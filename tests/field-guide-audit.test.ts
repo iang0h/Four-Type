@@ -69,7 +69,7 @@ test('public asset audit rejects complete rewards and token-shaped bundle conten
 
     assert.equal(result.status, 1)
     assert.match(result.output, /complete Field Guide PDF filename or content/)
-    assert.match(result.output, /Stripe secret-shaped content/)
+    assert.match(result.output, /Stripe server key-shaped content/)
   } finally {
     rmSync(root, { force: true, recursive: true })
   }
@@ -237,14 +237,15 @@ test('public asset audit redacts filenames that contain credential-shaped text',
   try {
     mkdirSync(join(root, 'public'), { recursive: true })
     writeFileSync(join(root, 'public', 'sk_live_auditvalue.js'), 'safe')
+    writeFileSync(join(root, 'public', 'rk_live_auditvalue.js'), 'safe')
     writeFileSync(join(root, 'public', 'BLOB_READ_WRITE_TOKEN_auditvalue.js'), 'safe')
 
     const result = runAudit(root)
 
     assert.equal(result.status, 1)
-    assert.match(result.output, /public\/\[redacted-filename\]: Stripe secret-shaped filename/i)
+    assert.match(result.output, /public\/\[redacted-filename\]: Stripe server key-shaped filename/i)
     assert.match(result.output, /public\/\[redacted-filename\]: Blob token-shaped filename/i)
-    assert.doesNotMatch(result.output, /sk_live_auditvalue|BLOB_READ_WRITE_TOKEN_auditvalue/)
+    assert.doesNotMatch(result.output, /sk_live_auditvalue|rk_live_auditvalue|BLOB_READ_WRITE_TOKEN_auditvalue/)
   } finally {
     rmSync(root, { force: true, recursive: true })
   }

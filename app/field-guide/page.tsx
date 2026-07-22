@@ -6,21 +6,21 @@ import { getSupporterOffer } from '@/lib/field-guide/catalog'
 const canonicalUrl = 'https://www.fourtype.com/field-guide'
 
 export const metadata: Metadata = {
-  title: 'Support FourType Field Guide Edition 1',
+  title: 'FourType Field Guide · Illustrated Digital Book',
   description:
-    'Back the FourType campaign and get early access to the complete 144-page illustrated Field Guide in PDF and EPUB, with practical tools for work, relationships, tension and repair.',
+    'Get the complete 144-page FourType Field Guide in PDF and EPUB, with practical tools for work, relationships, tension and repair.',
   alternates: { canonical: canonicalUrl },
   openGraph: {
     type: 'website',
     url: canonicalUrl,
-    title: 'Help more people read the room · FourType',
-    description: 'Back the next chapter of FourType and receive the complete illustrated Field Guide.',
+    title: 'Read the room. Widen your range. · FourType',
+    description: 'A practical illustrated field guide for work, relationships, tension and repair.',
     images: [
       {
         url: '/images/field-guide/field-guide-social.jpg',
         width: 1200,
         height: 630,
-        alt: 'The FourType Field Guide supporter campaign',
+        alt: 'The FourType Field Guide illustrated digital book',
       },
     ],
   },
@@ -42,30 +42,16 @@ const productSchema = {
   offers: [
     {
       '@type': 'Offer',
-      name: 'Field Guide Supporter (USD)',
+      name: 'Digital Edition',
       price: getSupporterOffer('field-guide', 'usd').amount / 100,
       priceCurrency: 'USD',
       url: canonicalUrl,
     },
     {
       '@type': 'Offer',
-      name: 'Field Guide Supporter (MYR)',
-      price: getSupporterOffer('field-guide', 'myr').amount / 100,
-      priceCurrency: 'MYR',
-      url: canonicalUrl,
-    },
-    {
-      '@type': 'Offer',
-      name: 'Founding Supporter (USD)',
+      name: 'Founding Supporter',
       price: getSupporterOffer('founding', 'usd').amount / 100,
       priceCurrency: 'USD',
-      url: canonicalUrl,
-    },
-    {
-      '@type': 'Offer',
-      name: 'Founding Supporter (MYR)',
-      price: getSupporterOffer('founding', 'myr').amount / 100,
-      priceCurrency: 'MYR',
       url: canonicalUrl,
     },
   ],

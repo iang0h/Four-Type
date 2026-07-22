@@ -1,50 +1,23 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import CheckoutButton from './CheckoutButton'
 import { trackFieldGuideEvent } from './CampaignAnalytics'
-import { getSupporterOffer, type CurrencyKey } from '@/lib/field-guide/catalog'
-
-const currencyStorageKey = 'fourtype-field-guide-currency'
+import { getSupporterOffer } from '@/lib/field-guide/catalog'
 
 export default function SupporterTiers() {
-  const [currency, setCurrency] = useState<CurrencyKey>('usd')
-
-  useEffect(() => {
-    const savedCurrency = window.sessionStorage.getItem(currencyStorageKey)
-
-    if (savedCurrency === 'usd' || savedCurrency === 'myr') {
-      const restoreCurrency = window.setTimeout(() => setCurrency(savedCurrency), 0)
-      return () => window.clearTimeout(restoreCurrency)
-    }
-  }, [])
-
-  function selectCurrency(nextCurrency: CurrencyKey) {
-    setCurrency(nextCurrency)
-    window.sessionStorage.setItem(currencyStorageKey, nextCurrency)
-    trackFieldGuideEvent({ event: 'field-guide-currency-select', currency: nextCurrency })
-  }
-
   function trackTierSelection(tier: 'field-guide' | 'founding') {
-    trackFieldGuideEvent({ event: 'field-guide-tier-select', tier, currency })
+    trackFieldGuideEvent({ event: 'field-guide-tier-select', tier, currency: 'usd' })
   }
 
-  const fieldGuidePrice = getSupporterOffer('field-guide', currency).label
-  const foundingPrice = getSupporterOffer('founding', currency).label
+  const fieldGuidePrice = getSupporterOffer('field-guide', 'usd').label
+  const foundingPrice = getSupporterOffer('founding', 'usd').label
 
   return (
-    <>
-      <div className="field-guide-currency-selector" role="group" aria-label="Choose checkout currency">
-        <span>Currency</span>
-        <button type="button" aria-pressed={currency === 'usd'} onClick={() => selectCurrency('usd')}>USD</button>
-        <button type="button" aria-pressed={currency === 'myr'} onClick={() => selectCurrency('myr')}>MYR</button>
-      </div>
-
-      <div className="field-guide-tier-grid">
+    <div className="field-guide-tier-grid">
         <article className="field-guide-tier field-guide-tier-primary">
-          <p className="field-guide-tier-kicker">Field Guide Supporter</p>
+          <p className="field-guide-tier-kicker">Digital Edition</p>
           <p className="field-guide-tier-price">{fieldGuidePrice}</p>
-          <p className="field-guide-tier-intro">The complete illustrated guide for your own reading and practice.</p>
+          <p className="field-guide-tier-intro">The complete illustrated book for reading, reflection and everyday practice.</p>
           <ul>
             <li>Complete 144-page PDF</li>
             <li>Reflowable EPUB</li>
@@ -53,11 +26,11 @@ export default function SupporterTiers() {
           </ul>
           <CheckoutButton
             tier="field-guide"
-            currency={currency}
+            currency="usd"
             className="field-guide-button field-guide-button-primary"
             onBeforeCheckoutStart={() => trackTierSelection('field-guide')}
           >
-            Support and receive the guide
+            Get the Field Guide
           </CheckoutButton>
         </article>
         <article className="field-guide-tier">
@@ -73,7 +46,7 @@ export default function SupporterTiers() {
           </ul>
           <CheckoutButton
             tier="founding"
-            currency={currency}
+            currency="usd"
             className="field-guide-button field-guide-button-secondary"
             onBeforeCheckoutStart={() => trackTierSelection('founding')}
           >
@@ -81,7 +54,6 @@ export default function SupporterTiers() {
           </CheckoutButton>
           <p className="field-guide-tier-fine">Edition 1 revisions are revised files within this edition, not every future book or a future edition.</p>
         </article>
-      </div>
-    </>
+    </div>
   )
 }

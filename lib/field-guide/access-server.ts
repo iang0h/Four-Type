@@ -112,17 +112,19 @@ async function sendFreshProductionAccessEmail(entitlement: FieldGuideEntitlement
 export function createProductionRequestAccessPostHandler(
   schedule: RequestAccessDependencies['schedule'],
 ) {
+  const consumeRequestAccessRateLimit = createRateLimiter({
+    store: vercelPrivateBlobStore,
+    action: 'request-access',
+    capacity: 120,
+    windowMs: 60_000,
+  })
+
   return createRequestAccessPostHandler({
     findEntitlementsByEmail: (email) => findEntitlementsByEmail(email, vercelPrivateBlobStore, getAccessTokenSecret()),
     sendFreshAccessEmail: sendFreshProductionAccessEmail,
     claimCooldown: (email) => claimReaccessCooldown(email, vercelPrivateBlobStore, getAccessTokenSecret()),
     canonicalOrigin: resolveCanonicalCheckoutOrigin(process.env.NEXT_PUBLIC_SITE_URL) ?? undefined,
-    rateLimit: createRateLimiter({
-      store: vercelPrivateBlobStore,
-      action: 'request-access',
-      capacity: 120,
-      windowMs: 60_000,
-    }),
+    rateLimit: (now) => consumeRequestAccessRateLimit('all', now),
     schedule,
   })
 }

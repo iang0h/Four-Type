@@ -11,6 +11,16 @@ test('never invents a refund promise when policy is missing', () => {
   assert(policy.missing.includes('refund'))
 })
 
+test('uses complete first-party policy routes by default', () => {
+  const policy = getFieldGuidePolicies()
+
+  assert.equal(policy.refund.href, '/field-guide/refunds')
+  assert.equal(policy.privacy.href, '/field-guide/privacy')
+  assert.equal(policy.terms.href, '/field-guide/terms')
+  assert.equal(policy.contact.href, '/field-guide/contact')
+  assert.deepEqual(policy.missing, [])
+})
+
 test('accepts root-relative and first-party HTTPS policy URLs', () => {
   const policy = getFieldGuidePolicies({
     FOURTYPE_REFUND_POLICY_URL: '/refunds',

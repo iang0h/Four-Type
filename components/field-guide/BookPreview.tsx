@@ -7,14 +7,69 @@ import { trackFieldGuideEvent } from './CampaignAnalytics'
 import { consumePreviewClickGuard, getPreviewSwipeDirection, getWrappedPreviewIndex, type InteractionPoint } from './interaction-logic'
 
 export const PREVIEW_PAGES = [
-  { page: 1, src: '/images/field-guide/preview-01.webp', title: 'The Field Guide cover', alt: 'The FourType Field Guide cover' },
-  { page: 9, src: '/images/field-guide/preview-09.webp', title: 'The FourType map', alt: 'The FourType map and attention patterns' },
-  { page: 10, src: '/images/field-guide/preview-10.webp', title: 'The two-axis view', alt: 'A two-axis FourType diagram' },
-  { page: 25, src: '/images/field-guide/preview-25.webp', title: 'The attention patterns', alt: 'An opening page for a FourType attention pattern' },
-  { page: 77, src: '/images/field-guide/preview-77.webp', title: 'Directional blends', alt: 'A FourType directional blend spread' },
-  { page: 109, src: '/images/field-guide/preview-109.webp', title: 'FourType in real life', alt: 'A FourType real-life scenario' },
-  { page: 131, src: '/images/field-guide/preview-131.webp', title: 'Stress and repair', alt: 'A practical FourType repair method' },
-  { page: 142, src: '/images/field-guide/preview-142.webp', title: 'Field practice worksheet', alt: 'A printable Field Guide worksheet' },
+  {
+    page: 24,
+    pages: '24-25',
+    left: '/images/field-guide/preview-24.webp',
+    right: '/images/field-guide/preview-25.webp',
+    title: 'Method and the Commander',
+    leftAlt: 'FourType method summary page',
+    rightAlt: 'Commander Choleric chapter opener with an illustrated workplace scene',
+  },
+  {
+    page: 36,
+    pages: '36-37',
+    left: '/images/field-guide/preview-36.webp',
+    right: '/images/field-guide/preview-37.webp',
+    title: 'Worked case and the Bard',
+    leftAlt: 'Commander Choleric workplace case study page',
+    rightAlt: 'Bard Sanguine chapter opener with an illustrated creative scene',
+  },
+  {
+    page: 48,
+    pages: '48-49',
+    left: '/images/field-guide/preview-48.webp',
+    right: '/images/field-guide/preview-49.webp',
+    title: 'Worked case and the Strategist',
+    leftAlt: 'Bard Sanguine worked case page',
+    rightAlt: 'Strategist Melancholic chapter opener with an illustrated analysis scene',
+  },
+  {
+    page: 60,
+    pages: '60-61',
+    left: '/images/field-guide/preview-60.webp',
+    right: '/images/field-guide/preview-61.webp',
+    title: 'Worked case and the Guardian',
+    leftAlt: 'Strategist Melancholic worked case page',
+    rightAlt: 'Guardian Phlegmatic chapter opener with an illustrated household scene',
+  },
+  {
+    page: 76,
+    pages: '76-77',
+    left: '/images/field-guide/preview-76.webp',
+    right: '/images/field-guide/preview-77.webp',
+    title: 'Blend field lab',
+    leftAlt: 'Writable directional blend field lab',
+    rightAlt: 'Commander-Bard directional blend with an illustrated meeting scene',
+  },
+  {
+    page: 108,
+    pages: '108-109',
+    left: '/images/field-guide/preview-108.webp',
+    right: '/images/field-guide/preview-109.webp',
+    title: 'FourType in real life',
+    leftAlt: 'Twelve-blend practice map',
+    rightAlt: 'Illustrated meeting scene showing FourType in real life',
+  },
+  {
+    page: 130,
+    pages: '130-131',
+    left: '/images/field-guide/preview-130.webp',
+    right: '/images/field-guide/preview-131.webp',
+    title: 'Field practice',
+    leftAlt: 'Writable field note worksheet',
+    rightAlt: 'Observe before you label reflection worksheet',
+  },
 ] as const
 
 type BookPreviewContextValue = {
@@ -109,7 +164,7 @@ export default function BookPreview() {
   const dialogRef = useRef<HTMLDivElement | null>(null)
   const touchStartRef = useRef<InteractionPoint | null>(null)
   const isInlinePreview = useInlinePreview()
-  const activePage = PREVIEW_PAGES[activeIndex]
+  const activeSpread = PREVIEW_PAGES[activeIndex]
 
   useEffect(() => {
     if (!isOpen) return
@@ -218,15 +273,18 @@ export default function BookPreview() {
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
           onClick={handleOpenPreviewClick}
-          aria-label={`Open page ${activePage.page}, ${activePage.title}, in an enlarged preview`}
+          aria-label={`Open pages ${activeSpread.pages}, ${activeSpread.title}, in an enlarged preview`}
         >
-          <Image src={activePage.src} alt={activePage.alt} width={980} height={1400} sizes="(max-width: 680px) 100vw, 460px" />
+          <span className="field-guide-preview-spread">
+            <Image src={activeSpread.left} alt={activeSpread.leftAlt} width={980} height={1400} sizes="(max-width: 680px) 50vw, 430px" />
+            <Image src={activeSpread.right} alt={activeSpread.rightAlt} width={980} height={1400} sizes="(max-width: 680px) 50vw, 430px" />
+          </span>
         </button>
         <div className="field-guide-preview-controls">
           <button type="button" className="field-guide-icon-button" onClick={() => navigatePreview(-1)} aria-label="Show previous preview page">
             <ChevronLeft aria-hidden="true" size={19} />
           </button>
-          <p aria-live="polite"><span>Page {activePage.page}</span> {activeIndex + 1} of {PREVIEW_PAGES.length} · {activePage.title}</p>
+          <p aria-live="polite"><span>Pages {activeSpread.pages}</span> {activeIndex + 1} of {PREVIEW_PAGES.length} · {activeSpread.title}</p>
           <button type="button" className="field-guide-icon-button" onClick={() => navigatePreview(1)} aria-label="Show next preview page">
             <ChevronRight aria-hidden="true" size={19} />
           </button>
@@ -236,14 +294,17 @@ export default function BookPreview() {
       <div className="field-guide-preview-thumbnails" aria-label="Select a Field Guide preview page">
         {PREVIEW_PAGES.map((page, index) => (
           <button
-            key={page.src}
+            key={page.pages}
             type="button"
             className={index === activeIndex ? 'is-selected' : ''}
             aria-pressed={index === activeIndex}
             onClick={() => selectPreview(index)}
           >
-            <Image src={page.src} alt="" width={180} height={257} sizes="(max-width: 680px) 20vw, 90px" />
-            <span className="field-guide-sr-only">Page {page.page}: {page.title}</span>
+            <span className="field-guide-preview-thumbnail-spread" aria-hidden="true">
+              <Image src={page.left} alt="" width={180} height={257} sizes="(max-width: 680px) 10vw, 55px" />
+              <Image src={page.right} alt="" width={180} height={257} sizes="(max-width: 680px) 10vw, 55px" />
+            </span>
+            <span className="field-guide-sr-only">Pages {page.pages}: {page.title}</span>
           </button>
         ))}
       </div>
@@ -255,20 +316,23 @@ export default function BookPreview() {
             className="field-guide-preview-dialog-panel"
             role={isInlinePreview ? undefined : 'dialog'}
             aria-modal={isInlinePreview ? undefined : true}
-            aria-label={`Enlarged preview of page ${activePage.page}: ${activePage.title}`}
+            aria-label={`Enlarged preview of pages ${activeSpread.pages}: ${activeSpread.title}`}
             tabIndex={-1}
           >
             <button ref={closeButtonRef} type="button" className="field-guide-preview-close" onClick={closePreview} aria-label="Close enlarged preview">
               <X aria-hidden="true" size={20} />
             </button>
             <button type="button" className="field-guide-preview-dialog-page" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} onClick={handleDialogPreviewClick} aria-label="Show next preview page">
-              <Image src={activePage.src} alt={activePage.alt} width={980} height={1400} sizes="(max-width: 680px) 100vw, 70vw" />
+              <span className="field-guide-preview-spread">
+                <Image src={activeSpread.left} alt={activeSpread.leftAlt} width={980} height={1400} sizes="(max-width: 680px) 50vw, 520px" />
+                <Image src={activeSpread.right} alt={activeSpread.rightAlt} width={980} height={1400} sizes="(max-width: 680px) 50vw, 520px" />
+              </span>
             </button>
             <div className="field-guide-preview-controls">
               <button type="button" className="field-guide-icon-button" onClick={() => navigatePreview(-1)} aria-label="Show previous preview page">
                 <ChevronLeft aria-hidden="true" size={19} />
               </button>
-              <p aria-live="polite"><span>Page {activePage.page}</span> {activeIndex + 1} of {PREVIEW_PAGES.length} · {activePage.title}</p>
+              <p aria-live="polite"><span>Pages {activeSpread.pages}</span> {activeIndex + 1} of {PREVIEW_PAGES.length} · {activeSpread.title}</p>
               <button type="button" className="field-guide-icon-button" onClick={() => navigatePreview(1)} aria-label="Show next preview page">
                 <ChevronRight aria-hidden="true" size={19} />
               </button>

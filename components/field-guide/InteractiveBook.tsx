@@ -70,7 +70,7 @@ export default function InteractiveBook() {
           sizes="(max-width: 760px) 230px, 340px"
         />
       </button>
-      <p className="field-guide-book-caption"><BookOpen aria-hidden="true" size={16} /> Your supporter reward</p>
+      <p className="field-guide-book-caption"><BookOpen aria-hidden="true" size={16} /> Open the book preview</p>
     </div>
   )
 }

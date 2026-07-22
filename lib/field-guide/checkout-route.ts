@@ -7,7 +7,7 @@ type CheckoutCreator = (selection: SupporterSelection, origin: string) => Promis
 type CheckoutRouteOptions = {
   siteUrl: string | undefined
   createCheckout: CheckoutCreator
-  rateLimit?: () => Promise<'allowed' | 'rate-limited'>
+  rateLimit?: (request: Request) => Promise<'allowed' | 'rate-limited'>
 }
 
 const localHosts = new Set(['localhost', '127.0.0.1'])
@@ -46,7 +46,7 @@ export function resolveCanonicalCheckoutOrigin(siteUrl: string | undefined) {
 export function createCheckoutPostHandler({ siteUrl, createCheckout, rateLimit }: CheckoutRouteOptions) {
   return async function POST(request: Request) {
     if (rateLimit) {
-      const requestLimit = await rateLimit().catch(() => 'rate-limited' as const)
+      const requestLimit = await rateLimit(request).catch(() => 'rate-limited' as const)
       if (requestLimit === 'rate-limited') return new Response(null, { status: 429 })
     }
 

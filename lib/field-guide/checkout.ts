@@ -31,6 +31,12 @@ export function assertTestStripeKey(key: string) {
   }
 }
 
+export function assertServerStripeKey(key: string) {
+  if (!/^(?:sk|rk)_(?:test|live)_/.test(key)) {
+    throw new Error('A server-side Stripe key is required')
+  }
+}
+
 export function getConfiguredPriceId(
   tier: SupporterTierKey,
   currency: CurrencyKey,

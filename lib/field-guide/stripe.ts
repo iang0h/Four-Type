@@ -4,12 +4,12 @@ import { env } from 'node:process'
 import Stripe from 'stripe'
 import { type CurrencyKey, type SupporterTierKey } from './catalog'
 import {
-  assertTestStripeKey,
+  assertServerStripeKey,
   createFieldGuideCheckout as createCheckoutSession,
   type StripeCheckoutClient,
 } from './checkout'
 
-export { assertTestStripeKey, getConfiguredPriceId, type StripeCheckoutClient } from './checkout'
+export { assertServerStripeKey, assertTestStripeKey, getConfiguredPriceId, type StripeCheckoutClient } from './checkout'
 
 export function getStripe(): StripeCheckoutClient {
   const key = env.STRIPE_SECRET_KEY
@@ -18,7 +18,7 @@ export function getStripe(): StripeCheckoutClient {
     throw new Error('Stripe Checkout is not configured')
   }
 
-  assertTestStripeKey(key)
+  assertServerStripeKey(key)
   return new Stripe(key) as unknown as StripeCheckoutClient
 }
 

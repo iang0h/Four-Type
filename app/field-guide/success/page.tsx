@@ -48,7 +48,7 @@ export default async function FieldGuideSuccessPage({
               <SupporterDownloads tier={entitlement.tier} currency={entitlement.currency} downloads={downloads} />
               <div className="field-guide-actions field-guide-access-actions">
                 <Link className="field-guide-button field-guide-button-secondary" href="/field-guide#inside-the-guide">
-                  View campaign preview pages
+                  View book preview pages
                 </Link>
               </div>
             </>

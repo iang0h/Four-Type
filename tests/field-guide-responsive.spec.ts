@@ -5,7 +5,7 @@ const screenshotWidths = [320, 768, 1440]
 
 async function expectCampaignFitsViewport(page: Page) {
   expect(await page.evaluate(() => document.documentElement.scrollWidth === document.documentElement.clientWidth)).toBe(true)
-  await expect(page.getByRole('link', { name: /become a supporter/i }).first()).toBeVisible()
+  await expect(page.getByRole('link', { name: /get the field guide/i }).first()).toBeVisible()
   await expect(page.getByRole('button', { name: /open the field guide page preview/i })).toBeVisible()
   await expect(page.getByRole('button', { name: /show previous preview page/i }).first()).toBeVisible()
   await expect(page.getByRole('button', { name: /show next preview page/i }).first()).toBeVisible()
@@ -48,7 +48,7 @@ async function expectCampaignFitsViewport(page: Page) {
 async function swipePreviewThenUseArrow(page: Page) {
   const preview = page.locator('.field-guide-preview-page')
 
-  await page.getByRole('button', { name: /page 1: the field guide cover/i }).click()
+  await page.getByRole('button', { name: /pages 24-25: method and the commander/i }).click()
   await preview.evaluate((element) => {
     const target = element as HTMLElement
     const start = new Touch({ identifier: 1, target, clientX: 240, clientY: 180 })
@@ -58,9 +58,9 @@ async function swipePreviewThenUseArrow(page: Page) {
     target.dispatchEvent(new TouchEvent('touchend', { bubbles: true, cancelable: true, changedTouches: [end] }))
   })
 
-  await expect(page.getByText(/2 of 8/i).first()).toBeVisible()
+  await expect(page.getByText(/2 of 7/i).first()).toBeVisible()
   await page.getByRole('button', { name: /show next preview page/i }).first().click()
-  await expect(page.getByText(/3 of 8/i).first()).toBeVisible()
+  await expect(page.getByText(/3 of 7/i).first()).toBeVisible()
 }
 
 test('Field Guide remains contained and operable at every supported width', async ({ page }) => {
@@ -80,7 +80,7 @@ test('Field Guide mobile preview supports keyboard navigation and arrows after a
   await page.keyboard.press('Enter')
   await expect(page.locator('.field-guide-preview-dialog.is-inline')).toBeVisible()
   await page.keyboard.press('ArrowRight')
-  await expect(page.getByText(/2 of 8/i).last()).toBeVisible()
+  await expect(page.getByText(/2 of 7/i).last()).toBeVisible()
   await page.keyboard.press('Escape')
   await expect(page.locator('.field-guide-preview-dialog')).toBeHidden()
   await expect(book).toBeFocused()
@@ -95,9 +95,9 @@ test('Field Guide Selected pages target clears the fixed navigation after fresh-
     await page.evaluate(() => window.scrollTo(0, 0))
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
 
-    const previewLink = page.getByRole('link', { name: /preview the field guide/i })
+    const previewLink = page.getByRole('link', { name: /read sample spreads/i })
     const previewTarget = page.locator('#field-guide-preview')
-    const previewHeading = page.getByRole('heading', { name: /open the guide where the work happens/i })
+    const previewHeading = page.getByRole('heading', { name: /seven real spreads from the finished book/i })
     await expect(previewLink).toHaveAttribute('href', '#field-guide-preview')
     await previewLink.click()
     const navBottom = await page.locator('nav.fixed').evaluate((nav) => nav.getBoundingClientRect().bottom)
@@ -116,14 +116,14 @@ test('Field Guide captures desktop, tablet, and mobile campaign screenshots', as
     await page.goto('/field-guide')
     await page.evaluate(() => window.scrollTo(0, 0))
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
-    const previewLink = page.getByRole('link', { name: /preview the field guide/i })
+    const previewLink = page.getByRole('link', { name: /read sample spreads/i })
     const previewTarget = page.locator('#field-guide-preview')
-    const previewHeading = page.getByRole('heading', { name: /open the guide where the work happens/i })
+    const previewHeading = page.getByRole('heading', { name: /seven real spreads from the finished book/i })
     await expect(previewLink).toHaveAttribute('href', '#field-guide-preview')
     await previewLink.click()
     const navBottom = await page.locator('nav.fixed').evaluate((nav) => nav.getBoundingClientRect().bottom)
     expect(await previewHeading.evaluate((heading) => heading.getBoundingClientRect().top)).toBeGreaterThanOrEqual(navBottom)
-    await expect(page.locator('.field-guide-preview-thumbnails img[loading="lazy"]')).toHaveCount(8)
+    await expect(page.locator('.field-guide-preview-thumbnails img[loading="lazy"]')).toHaveCount(14)
     expect(await page.locator('.field-guide-preview-thumbnails img').evaluateAll((images) =>
       images.every((image) => image.hasAttribute('width') && image.hasAttribute('height')),
     )).toBe(true)

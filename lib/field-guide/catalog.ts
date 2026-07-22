@@ -1,13 +1,11 @@
 export const SUPPORTER_TIERS = ['field-guide', 'founding'] as const
-export const SUPPORTER_CURRENCIES = ['usd', 'myr'] as const
+export const SUPPORTER_CURRENCIES = ['usd'] as const
 export type SupporterTierKey = (typeof SUPPORTER_TIERS)[number]
 export type CurrencyKey = (typeof SUPPORTER_CURRENCIES)[number]
 
 const offers = {
   'field-guide:usd': { amount: 1200, label: 'US$12', priceEnv: 'STRIPE_FIELD_GUIDE_USD_PRICE_ID' },
-  'field-guide:myr': { amount: 3900, label: 'RM39', priceEnv: 'STRIPE_FIELD_GUIDE_MYR_PRICE_ID' },
   'founding:usd': { amount: 2500, label: 'US$25', priceEnv: 'STRIPE_FOUNDING_SUPPORTER_USD_PRICE_ID' },
-  'founding:myr': { amount: 7900, label: 'RM79', priceEnv: 'STRIPE_FOUNDING_SUPPORTER_MYR_PRICE_ID' },
 } as const
 
 export function getSupporterOffer(tier: SupporterTierKey, currency: CurrencyKey) {

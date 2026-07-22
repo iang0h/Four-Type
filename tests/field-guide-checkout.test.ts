@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 import { readFileSync } from 'node:fs'
 import {
+  assertServerStripeKey,
   assertTestStripeKey,
   createFieldGuideCheckout,
   getConfiguredPriceId,
@@ -10,9 +11,7 @@ import { createCheckoutPostHandler } from '../lib/field-guide/checkout-route'
 
 const configuredPriceIds = {
   STRIPE_FIELD_GUIDE_USD_PRICE_ID: 'price_test_field_guide_usd',
-  STRIPE_FIELD_GUIDE_MYR_PRICE_ID: 'price_test_field_guide_myr',
   STRIPE_FOUNDING_SUPPORTER_USD_PRICE_ID: 'price_test_founding_usd',
-  STRIPE_FOUNDING_SUPPORTER_MYR_PRICE_ID: 'price_test_founding_myr',
 }
 
 async function withConfiguredPrices<T>(run: () => T | Promise<T>): Promise<T> {
@@ -32,12 +31,10 @@ async function withConfiguredPrices<T>(run: () => T | Promise<T>): Promise<T> {
   }
 }
 
-test('maps every approved selection to its configured Price ID', async () => {
+test('maps every approved USD selection to its configured Price ID', async () => {
   await withConfiguredPrices(() => {
     assert.equal(getConfiguredPriceId('field-guide', 'usd'), 'price_test_field_guide_usd')
-    assert.equal(getConfiguredPriceId('field-guide', 'myr'), 'price_test_field_guide_myr')
     assert.equal(getConfiguredPriceId('founding', 'usd'), 'price_test_founding_usd')
-    assert.equal(getConfiguredPriceId('founding', 'myr'), 'price_test_founding_myr')
   })
 })
 
@@ -56,7 +53,7 @@ test('creates an exact server-owned Checkout Session for an approved selection',
     }
 
     const result = await createFieldGuideCheckout(
-      { tier: 'founding', currency: 'myr' },
+      { tier: 'founding', currency: 'usd' },
       'http://localhost:3000',
       stripe,
     )
@@ -65,11 +62,11 @@ test('creates an exact server-owned Checkout Session for an approved selection',
     assert.deepEqual(created, [{
       mode: 'payment',
       customer_creation: 'always',
-      line_items: [{ price: 'price_test_founding_myr', quantity: 1 }],
+      line_items: [{ price: 'price_test_founding_usd', quantity: 1 }],
       metadata: {
         product: 'fourtype-field-guide',
         tier: 'founding',
-        currency: 'myr',
+        currency: 'usd',
         releaseId: 'field-guide-edition-1-20260721',
       },
       success_url: 'http://localhost:3000/field-guide/success?session_id={CHECKOUT_SESSION_ID}',
@@ -80,6 +77,13 @@ test('creates an exact server-owned Checkout Session for an approved selection',
 
 test('rejects a live Stripe secret in this test-only implementation', () => {
   assert.throws(() => assertTestStripeKey('sk_live_secret'), /test-mode/)
+})
+
+test('accepts secret and restricted server keys while rejecting publishable keys', () => {
+  assert.doesNotThrow(() => assertServerStripeKey('sk_test_secret'))
+  assert.doesNotThrow(() => assertServerStripeKey('sk_live_secret'))
+  assert.doesNotThrow(() => assertServerStripeKey('rk_live_restricted'))
+  assert.throws(() => assertServerStripeKey('pk_live_publishable'), /server-side/)
 })
 
 test('keeps the catalog script from accepting a live Stripe key', () => {
@@ -125,8 +129,15 @@ test('returns 429 when checkout request-rate limit denies', async () => {
   const response = await createCheckoutPostHandler({
     siteUrl: 'https://www.fourtype.com',
     createCheckout: () => Promise.resolve({ url: 'https://checkout.stripe.test/session' }),
-    rateLimit: async () => 'rate-limited',
-  })(createRequest(JSON.stringify({ tier: 'field-guide', currency: 'usd' })))
+    rateLimit: async (request) => {
+      assert.equal(request.headers.get('x-forwarded-for'), '203.0.113.8')
+      return 'rate-limited'
+    },
+  })(new Request('https://www.fourtype.com/api/field-guide/checkout', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'x-forwarded-for': '203.0.113.8' },
+    body: JSON.stringify({ tier: 'field-guide', currency: 'usd' }),
+  }))
 
   assert.equal(response.status, 429)
 })
@@ -161,7 +172,7 @@ test('returns a bodyless 503 when the canonical site URL is missing or invalid',
 test('uses the configured HTTPS canonical origin instead of an attacker-controlled request URL', async () => {
   const origins: string[] = []
   const response = await createTestHandler('https://www.fourtype.com/', origins)(
-    createRequest(JSON.stringify({ tier: 'founding', currency: 'myr' })),
+    createRequest(JSON.stringify({ tier: 'founding', currency: 'usd' })),
   )
 
   assert.equal(response.status, 200)
