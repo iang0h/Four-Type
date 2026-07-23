@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import re
 import shutil
 import subprocess
 import tempfile
@@ -15,7 +16,7 @@ from pypdf import PdfReader, PdfWriter
 PREVIEW_PAGES = [1, 9, 10, 25, 77, 109, 131, 142]
 WORKSHEET_PAGES = list(range(131, 141))
 EXPECTED_PDF_SHA256 = "18aa32b98edd6c2e53d510d3aa660811177f0a63b62a0d7c370340649e974617"
-EXPECTED_EPUB_SHA256 = "f1b3ecdf1ba442f02c6ba37018de4748205584ec3d3659cc60dcf534d924b850"
+EXPECTED_EPUB_SHA256 = "0e6de6d2e22876daec0b1b7fb0bbbaabc59a4058a63b595ab3e336c35a9c5b32"
 EXPECTED_WORKSHEET_SHA256 = "153a9683e15687ba53c97ba59e2c5446d5e7a18dfe2666f94c382db64e1b3d6f"
 EXPECTED_WORKSHEET_BYTES = 55439
 PDF_PAGE_COUNT = 144
@@ -56,9 +57,17 @@ def local_asset_path(root: Path, asset: dict) -> Path:
     if not isinstance(filename, str) or Path(filename).name != filename:
         raise ValueError("Field Guide asset has an unsafe customer filename")
     pathname = asset.get("pathname")
-    if not isinstance(pathname, str) or pathname != f"field-guide/edition-1/{filename}":
+    path = Path(pathname) if isinstance(pathname, str) else None
+    if (
+        path is None
+        or path.is_absolute()
+        or len(path.parts) != 3
+        or path.parts[0] != "field-guide"
+        or not re.fullmatch(r"edition-1(?:-[a-z0-9]+)*", path.parts[1])
+        or path.name != filename
+    ):
         raise ValueError("Field Guide asset pathname does not match its customer filename")
-    return root / "private" / pathname
+    return root / "private" / path
 
 
 def validate_pdf(path: Path) -> PdfReader:

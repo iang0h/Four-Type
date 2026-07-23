@@ -8,6 +8,7 @@ type FieldGuideAsset = {
   pathname: string
   customerFilename: string
   mimeType: string
+  bytes: number
   sha256: string
   tiers: readonly SupporterTierKey[]
 }
@@ -43,6 +44,9 @@ function validateRelease(value: unknown): FieldGuideRelease {
       typeof asset.pathname !== 'string' ||
       typeof asset.customerFilename !== 'string' ||
       typeof asset.mimeType !== 'string' ||
+      typeof asset.bytes !== 'number' ||
+      !Number.isSafeInteger(asset.bytes) ||
+      asset.bytes <= 0 ||
       !/^[a-f0-9]{64}$/.test(typeof asset.sha256 === 'string' ? asset.sha256 : '') ||
       !Array.isArray(asset.tiers) ||
       !asset.tiers.every(isSupporterTier)
